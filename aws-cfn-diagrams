@@ -1,0 +1,885 @@
+#!/usr/bin/env python3
+"""AWS CloudFormation Diagrams main script."""
+
+import argparse
+import datetime
+import importlib
+import json
+import os
+import sys
+import yaml
+import diagrams
+from diagrams import Edge, Cluster
+from diagrams.aws.enablement import ManagedServices
+
+#
+# Trace message management
+#
+
+def debug(message: str) -> None:
+    """
+        Print a debug message.
+        
+        :param message: Debug message to print
+        :type message: str
+    """
+    print(f"\33[34m[Debug] {message}.\33[0m")
+
+def info(message: str) -> None:
+    """
+        Print an info message.
+        
+        :param message: Info message to print
+        :type message: str
+    """
+    print(f"[Info] {message}.")
+
+def warning(message: str) -> None:
+    """
+        Print a warning message.
+        
+        :param message: Warning message to print
+        :type message: str
+    """
+    print(f"\33[33m[Warning] {message}!\33[0m")
+
+#
+# PyYAML constructors for AWS CloudFormation functions
+#
+
+def node_constructor(
+        node: object,
+        constructor: yaml.constructor.BaseConstructor
+    ):
+    """
+        Generic node constructor.
+    
+        :param node: PyYAML node
+        :type node: object
+        :param constructor: PyYAML constructor
+        :type constructor: yaml.constructor.BaseConstructor
+    """
+    if isinstance(node, yaml.ScalarNode):
+        return constructor.construct_scalar(node)
+    if isinstance(node, yaml.MappingNode):
+        return constructor.construct_mapping(node)
+    if isinstance(node, yaml.SequenceNode):
+        return constructor.construct_sequence(node)
+    return node
+
+def base64_constructor(
+        constructor: yaml.constructor.BaseConstructor,
+        node: object
+    ):
+    """
+        Constructor for !Base64 AWS CloudFormation Function.
+    
+        :param constructor: PyYAML constructor
+        :type constructor: yaml.constructor.BaseConstructor
+        :param node: PyYAML node
+        :type node: object
+    """
+    return { "Fn::Base64": node_constructor(node, constructor) }
+yaml.add_constructor("!Base64", base64_constructor)
+
+def condition_constructor(
+        constructor: yaml.constructor.BaseConstructor,
+        node: object
+    ):
+    """
+        Constructor for !Condition AWS CloudFormation Function.
+    
+        :param constructor: PyYAML constructor
+        :type constructor: yaml.constructor.BaseConstructor
+        :param node: PyYAML node
+        :type node: object
+    """
+    return { "Fn::Condition": constructor.construct_scalar(node) }
+yaml.add_constructor("!Condition", condition_constructor)
+
+def equals_constructor(
+        constructor: yaml.constructor.BaseConstructor,
+        node: object
+    ):
+    """
+        Constructor for !Equals AWS CloudFormation Function.
+    
+        :param constructor: PyYAML constructor
+        :type constructor: yaml.constructor.BaseConstructor
+        :param node: PyYAML node
+        :type node: object
+    """
+    return { "Fn::Equals": constructor.construct_sequence(node) }
+yaml.add_constructor("!Equals", equals_constructor)
+
+def if_constructor(
+        constructor: yaml.constructor.BaseConstructor,
+        node: object
+    ):
+    """
+        Constructor for !If AWS CloudFormation Function.
+    
+        :param constructor: PyYAML constructor
+        :type constructor: yaml.constructor.BaseConstructor
+        :param node: PyYAML node
+        :type node: object
+    """
+    return { "Fn::If": constructor.construct_sequence(node) }
+yaml.add_constructor("!If", if_constructor)
+
+def importvalue_constructor(
+        constructor: yaml.constructor.BaseConstructor,
+        node: object
+    ):
+    """
+        Constructor for !ImportValue AWS CloudFormation Function.
+    
+        :param constructor: PyYAML constructor
+        :type constructor: yaml.constructor.BaseConstructor
+        :param node: PyYAML node
+        :type node: object
+    """
+    return { "Fn::ImportValue": node_constructor(node, constructor) }
+yaml.add_constructor("!ImportValue", importvalue_constructor)
+
+def findinmap_constructor(
+        constructor: yaml.constructor.BaseConstructor,
+        node: object
+    ):
+    """
+        Constructor for !FindInMap AWS CloudFormation Function.
+    
+        :param constructor: PyYAML constructor
+        :type constructor: yaml.constructor.BaseConstructor
+        :param node: PyYAML node
+        :type node: object
+    """
+    return { "Fn::FindInMap": constructor.construct_sequence(node) }
+yaml.add_constructor("!FindInMap", findinmap_constructor)
+
+def getatt_constructor(
+        constructor: yaml.constructor.BaseConstructor,
+        node: object
+    ):
+    """
+        Constructor for !GetAtt AWS CloudFormation Function.
+    
+        :param constructor: PyYAML constructor
+        :type constructor: yaml.constructor.BaseConstructor
+        :param node: PyYAML node
+        :type node: object
+    """
+    value = constructor.construct_scalar(node)
+    return { "Fn::GetAtt": value.split(".") }
+yaml.add_constructor("!GetAtt", getatt_constructor)
+
+def getazs_constructor(
+        constructor: yaml.constructor.BaseConstructor,
+        node: object
+    ):
+    """
+        Constructor for !GetAZs AWS CloudFormation Function.
+    
+        :param constructor: PyYAML constructor
+        :type constructor: yaml.constructor.BaseConstructor
+        :param node: PyYAML node
+        :type node: object
+    """
+    return { "Fn::GetAZs": node_constructor(node, constructor) }
+yaml.add_constructor("!GetAZs", getazs_constructor)
+
+def join_constructor(
+        constructor: yaml.constructor.BaseConstructor,
+        node: object
+    ):
+    """
+        Constructor for !Join AWS CloudFormation Function.
+    
+        :param constructor: PyYAML constructor
+        :type constructor: yaml.constructor.BaseConstructor
+        :param node: PyYAML node
+        :type node: object
+    """
+    return { "Fn::Join": constructor.construct_sequence(node) }
+yaml.add_constructor("!Join", join_constructor)
+
+def not_constructor(
+        constructor: yaml.constructor.BaseConstructor,
+        node: object
+    ):
+    """
+        Constructor for !Not AWS CloudFormation Function.
+    
+        :param constructor: PyYAML constructor
+        :type constructor: yaml.constructor.BaseConstructor
+        :param node: PyYAML node
+        :type node: object
+    """
+    return { "Fn::Not": constructor.construct_sequence(node) }
+yaml.add_constructor("!Not", not_constructor)
+
+def or_constructor(
+        constructor: yaml.constructor.BaseConstructor,
+        node: object
+    ):
+    """
+        Constructor for !Or AWS CloudFormation Function.
+    
+        :param constructor: PyYAML constructor
+        :type constructor: yaml.constructor.BaseConstructor
+        :param node: PyYAML node
+        :type node: object
+    """
+    return { "Fn::Or": constructor.construct_sequence(node) }
+yaml.add_constructor("!Or", or_constructor)
+
+def rain_embed_constructor(
+        constructor: yaml.constructor.BaseConstructor,
+        node: object
+    ):
+    """
+        Constructor for !Rain::Embed AWS CloudFormation Function.
+    
+        :param constructor: PyYAML constructor
+        :type constructor: yaml.constructor.BaseConstructor
+        :param node: PyYAML node
+        :type node: object
+    """
+    return { "Rain::Embed": constructor.construct_scalar(node) }
+yaml.add_constructor("!Rain::Embed", rain_embed_constructor)
+
+def rain_module_constructor(
+        constructor: yaml.constructor.BaseConstructor,
+        node: object
+    ):
+    """
+        Constructor for !Rain::Module AWS CloudFormation Function.
+    
+        :param constructor: PyYAML constructor
+        :type constructor: yaml.constructor.BaseConstructor
+        :param node: PyYAML node
+        :type node: object
+    """
+    return { "Rain::Module": constructor.construct_scalar(node) }
+yaml.add_constructor("!Rain::Module", rain_module_constructor)
+
+def rain_s3_constructor(
+        constructor: yaml.constructor.BaseConstructor,
+        node: object
+    ):
+    """
+        Constructor for !Rain::S3 AWS CloudFormation Function.
+    
+        :param constructor: PyYAML constructor
+        :type constructor: yaml.constructor.BaseConstructor
+        :param node: PyYAML node
+        :type node: object
+    """
+    return { "Rain::S3": constructor.construct_mapping(node) }
+yaml.add_constructor("!Rain::S3", rain_s3_constructor)
+
+def ref_constructor(
+        constructor: yaml.constructor.BaseConstructor,
+        node: object
+    ):
+    """
+        Constructor for !Ref AWS CloudFormation Function.
+    
+        :param constructor: PyYAML constructor
+        :type constructor: yaml.constructor.BaseConstructor
+        :param node: PyYAML node
+        :type node: object
+    """
+    return { "Ref": constructor.construct_scalar(node) }
+yaml.add_constructor("!Ref", ref_constructor)
+
+def select_constructor(
+        constructor: yaml.constructor.BaseConstructor,
+        node: object
+    ):
+    """
+        Constructor for !Select AWS CloudFormation Function.
+    
+        :param constructor: PyYAML constructor
+        :type constructor: yaml.constructor.BaseConstructor
+        :param node: PyYAML node
+        :type node: object
+    """
+    return { "Fn::Select": constructor.construct_sequence(node) }
+yaml.add_constructor("!Select", select_constructor)
+
+def sub_constructor(
+        constructor: yaml.constructor.BaseConstructor,
+        node: object
+    ):
+    """
+        Constructor for !Sub AWS CloudFormation Function.
+    
+        :param constructor: PyYAML constructor
+        :type constructor: yaml.constructor.BaseConstructor
+        :param node: PyYAML node
+        :type node: object
+    """
+    return { "Fn::Sub": node_constructor(node, constructor) }
+yaml.add_constructor("!Sub", sub_constructor)
+
+def split_constructor(
+        constructor: yaml.constructor.BaseConstructor,
+        node: object
+    ):
+    """
+        Constructor for !Split AWS CloudFormation Function.
+    
+        :param constructor: PyYAML constructor
+        :type constructor: yaml.constructor.BaseConstructor
+        :param node: PyYAML node
+        :type node: object
+    """
+    return { "Fn::Split": node_constructor(node, constructor) }
+yaml.add_constructor("!Split", split_constructor)
+
+def valueof_constructor(
+        constructor: yaml.constructor.BaseConstructor,
+        node: object
+    ):
+    """
+        Constructor for !ValueOf AWS CloudFormation Function.
+    
+        :param constructor: PyYAML constructor
+        :type constructor: yaml.constructor.BaseConstructor
+        :param node: PyYAML node
+        :type node: object
+    """
+    return { "Fn::ValueOf": constructor.construct_sequence(node) }
+yaml.add_constructor("!ValueOf", valueof_constructor)
+
+#
+# Extensions to the Diagrams library.
+#
+
+# All dot output formats are listed in https://graphviz.org/docs/outputs/
+# If you need a format not listed below, just add it below.
+SUPPORTED_OUTPUT_FORMATS = (
+    "dot", "dot_json", "gif", "jp2", "jpe", "jpeg", "jpg", "pdf", "png",
+    "svg", "tif", "tiff"
+)
+class Diagram(diagrams.Diagram):
+    """ Enhanced Diagram class with new output formats. """
+    # pylint: disable-next=unused-private-member
+    __outformats = SUPPORTED_OUTPUT_FORMATS
+
+# Inspired from https://github.com/mingrammer/diagrams/pull/853
+def icon(node: object, label: str, size=64):
+    """
+    Function adds a Diagrams-compatible icon
+
+    :param node: Diagrams object, like VPC or Docker
+    :param label: Label text, like "subnet-a"
+    :param size: Icon size in px.
+    :returns: "Label prefixed with a specified icon"
+    """
+    # pylint: disable-next=too-few-public-methods
+    class Node(node):
+        """Overloading Node class."""
+        def __init__(self):
+            """Initialisation."""
+            # pass # do nothing!
+
+    # pylint: disable-next=protected-access
+    icon_path = Node()._load_icon()
+    return '<<table border="0" width="100%"><tr><td fixedsize="true" width="' \
+            + str(size) + '" height="' + str(size) \
+            + '"><img src="' + icon_path + '" /></td><td>' \
+            + label + '</td></tr></table>>'
+
+#
+# Create diagram nodes
+#
+
+# Maximum length for diagram node labels
+MAX_NODE_LABEL_LENGTH = 16
+
+# Separators in node labels
+NODE_LABEL_SEPARATORS = [" ", ":", "-", "."]
+
+def split_node_label(node_label):
+    """Split node labels into multi-lines."""
+    result = ""
+    last_pos = 0
+    max_pos = len(node_label) - MAX_NODE_LABEL_LENGTH
+    while last_pos < max_pos:
+        part = node_label[last_pos:last_pos+MAX_NODE_LABEL_LENGTH]
+        idx = MAX_NODE_LABEL_LENGTH - 1
+        while idx > 0:
+            if part[idx] in NODE_LABEL_SEPARATORS:
+                part = part[:idx]
+                break
+            idx -= 1
+        result += part
+        result += "\n"
+        last_pos += len(part)
+    result += node_label[last_pos:]
+    return result
+
+def get_diagram_class(resource):
+    """
+        Get a diagram class from an AWS CloudFormation resource.
+    """
+    # Search diagram node class
+    configuration = get_config(resource)
+    cicon = configuration.get("icon", {})
+    if "eval" in cicon:
+        # pylint: disable-next=unused-variable
+        properties = resource.get("Properties", {})
+        # pylint: disable-next=eval-used
+        diagram_node_classname = eval(cicon["eval"])
+    elif "classname" in cicon:
+        diagram_node_classname = cicon["classname"]
+    else:
+        diagram_node_classname = None
+    diagram_node_class = ManagedServices
+    if diagram_node_classname is not None:
+        # Import Diagrams node class module
+        idx = diagram_node_classname.rfind('.')
+        if idx != -1:
+            module = importlib.import_module(diagram_node_classname[:idx])
+            # Get diagram node class
+            diagram_node_class = getattr(module, diagram_node_classname[idx+1:])
+    return diagram_node_class
+
+def create_diagram_node(name, resource):
+    """
+        Create a diagram node from an AWS CloudFormation resource.
+    """
+    return get_diagram_class(resource)(split_node_label(name))
+
+def compute_style(style):
+    """
+        Compute style.
+
+        
+    """
+    if isinstance(style, str):
+        return config["styles"].get(style, {})
+    if isinstance(style, dict):
+        return style
+    return None
+
+def get_rds_dbinstance_icon(properties):
+    """
+        Get icon for AWS::RDS::DBInstance.
+        
+        :param properties: AWS::RDS::DBInstance properties 
+    """
+    engine = properties.get("Engine")
+    if engine is None:
+        sourcedb = properties.get("SourceDBInstanceIdentifier")
+        if sourcedb is not None:
+            if "Ref" in sourcedb:
+                return get_rds_dbinstance_icon(
+                    cloud_formation_data["Resources"]
+                        [sourcedb["Ref"]]["Properties"]
+                )
+    classes = { #TODO check keys
+        "MariaDB": "diagrams.aws.database.RDSMariadbInstance",
+        "MySQL": "diagrams.aws.database.RDSMysqlInstance",
+        "Oracle": "diagrams.aws.database.RDSOracleInstance",
+        "PostgreSQL": "diagrams.aws.database.RDSPostgresqlInstance",
+        "SqlServer": "diagrams.aws.database.RDSSqlServerInstance",
+    }
+    return classes.get(engine) or "diagrams.aws.database.RDSInstance"
+
+
+def get_type(resource: dict) -> str:
+    """
+        Get the type of an AWS resource.
+        
+        :param resource: An AWS resource 
+    """
+    resource_type = resource["Type"]
+    if isinstance(resource_type, dict):
+        if len(resource_type) == 1 and list(resource_type.keys()) == ["Rain::Module"]:
+            resource_type = "Rain::Module"
+        else:
+            resource_type = "DICT_TYPE"
+    return resource_type
+
+def get_config(resource: dict, default_config: bool = True) -> dict:
+    """
+        Get configuration associated to an AWS resource.
+        
+        :param resource: An AWS resource
+        :param default_config: default configuration
+    """
+    resource_type = get_type(resource)
+    if resource_type.startswith("Custom::"):
+        return {
+            **config.get("resources", {}).get("Custom"),
+            "edges": list(resource["Properties"].keys())
+        }
+    return config.get("resources", {}) \
+                .get(resource_type, {} if default_config else None)
+
+# Directory where this script is.
+DIRNAME = os.path.dirname(__file__)
+
+# Load configuration.
+config = {}
+with open(DIRNAME + "/aws-cfn-diagrams.yaml", encoding="utf-8") as stream:
+    config = yaml.safe_load(stream) # load YAML config file
+
+# Parse arguments
+parser = argparse.ArgumentParser(
+    prog="aws-cfn-diagrams",
+    description="Generate AWS architecture diagrams from AWS CloudFormation templates")
+parser.add_argument("filename",
+    help="the AWS CloudFormation template to process")
+parser.add_argument("-o", "--output", type=str,
+    help="output diagram filename")
+parser.add_argument("-f", "--format", type=str,
+    help="output format, allowed formats are " \
+        + ", ".join(SUPPORTED_OUTPUT_FORMATS) \
+        + ", set to png by default",
+    default="png")
+parser.add_argument("--embed-all-icons",
+    help="embed all icons into svg or dot_json output diagrams",
+    action="store_true", default=False)
+#TODO
+#parser.add_argument("-v", "--version",
+#    help="print the version",
+#    action="store_true", default=False)
+args = parser.parse_args()
+
+# Process arguments.
+if args.output is None:
+    args.output = args.filename[:args.filename.rfind('.')]
+else:
+    dot_idx = args.output.rfind('.')
+    if dot_idx != -1:
+        args.format = args.output[dot_idx+1:]
+        args.output = args.output[:dot_idx]
+
+if args.format not in SUPPORTED_OUTPUT_FORMATS:
+    SOF = "' or '".join(SUPPORTED_OUTPUT_FORMATS)
+    print(f"Error: '{args.format}' output format unsupported,"
+            f" use '{SOF}' instead!", file=sys.stderr)
+    sys.exit(1)
+
+aws_cloud_formation_filename = args.filename
+
+# Open AWS CloudFormation file.
+with open(aws_cloud_formation_filename, encoding="utf-8") as stream:
+    file_format = aws_cloud_formation_filename[aws_cloud_formation_filename.rfind(".")+1:]
+    LOADER_FUNCTIONS = {
+        "yml": yaml.full_load,
+        "yaml": yaml.full_load,
+        "json": json.load
+    }
+    cloud_formation_data = LOADER_FUNCTIONS[file_format](stream)
+
+if "Parameters" not in cloud_formation_data:
+    cloud_formation_data["Parameters"] = {}
+
+#print("Parameters:")
+
+for pname, pdata in cloud_formation_data["Parameters"].items():
+    ptype = pdata["Type"]
+    if ptype.endswith("::Id"):
+        rtype = ptype[:-4]
+        if pname not in cloud_formation_data["Resources"]:
+            info(f"Parameters:{pname} - Resource {pname}(Type: {rtype}) added")
+            cloud_formation_data["Resources"][pname] = {
+                "Type": rtype,
+                "Properties": {}
+            }
+        else:
+            info(f"Parameters:{pname} - Resource {pname} already defined")
+
+#print("Resources:")
+for rname, rdata in cloud_formation_data["Resources"].items():
+    rtype = get_type(rdata)
+#    print("-", rname, "Type", rtype)
+    rconfig = get_config(rdata, None)
+    if rconfig is None:
+        warning(f"Resources:{rname} - Type '{rtype}' undefined in aws-cf-diagrams.yaml")
+
+#
+# Generate diagram
+#
+with Diagram("", filename=args.output, show=False, direction="TB", outformat=args.format):
+    nodes = {}
+    def generate_node(name, data) -> None:
+        """
+            Generate a node.
+        """
+        nodes[name] = create_diagram_node(name, data)
+
+    def compute_edges(pname, pdata, the_nodes) -> None:
+        """
+            Compute edges.
+        """
+        if isinstance(pdata, (int, datetime.date)):
+            pass # nothing to do
+        elif isinstance(pdata, str):
+            if pname == "Roles": # TODO: avoid specific cases
+                for k, v in cloud_formation_data["Resources"].items():
+                    if get_type(v) == "AWS::IAM::Role" \
+                            and v["Properties"].get("RoleName") == pdata:
+                        the_nodes.append(k)
+                        return
+#TBR            debug(f"{pname}: {pdata}")
+        elif isinstance(pdata, list):
+            for data in pdata:
+                compute_edges(pname, data, the_nodes)
+        elif isinstance(pdata, dict):
+            if pname == "Bucket": # TODO: avoid specific cases
+                for k, v in cloud_formation_data["Resources"].items():
+                    if get_type(v) == "AWS::S3::Bucket" \
+                            and v["Properties"].get("BucketName") == pdata:
+                        the_nodes.append(k)
+                        return
+            if len(pdata) == 1:
+                if "Ref" in pdata:
+                    node = pdata["Ref"]
+                    if node in cloud_formation_data["Resources"]:
+                        the_nodes.append(node)
+                elif "Fn::GetAtt" in pdata:
+                    node = pdata["Fn::GetAtt"][0]
+                    if node in cloud_formation_data["Resources"]:
+                        the_nodes.append(node)
+                elif "Fn::Sub" in pdata:
+                    sub_params = pdata["Fn::Sub"]
+                    if isinstance(sub_params, str):
+#TBR                        if sub_params.startswith("arn:"):
+#TBR                            debug(f"{pname}: {pdata}")
+                        idx1 = sub_params.rfind(".Arn}")
+                        if idx1 != -1:
+                            idx2 = sub_params[:idx1].rfind("{")
+                            the_nodes.append(sub_params[idx2+1:idx1])
+                else:
+                    for k, v in pdata.items():
+                        compute_edges(k, v, the_nodes)
+            else:
+                for k, v in pdata.items():
+                    compute_edges(k, v, the_nodes)
+        else:
+            warning(f"[TODO] Resources:{rname}:Properties:{pname} - {pdata} ({type(pdata)})")
+
+    def process_edge_to(edge, pdata, nodes) -> None:
+        """
+            Process edge to.
+        """
+        if isinstance(edge, str):
+            if isinstance(pdata, dict):
+                if edge in pdata:
+                    compute_edges(edge, pdata[edge], nodes)
+            elif isinstance(pdata, list):
+                for vv in pdata:
+                    process_edge_to(edge, vv, nodes)
+#           else:
+#                        print("TODO", edge, pdata)
+        elif isinstance(edge, dict):
+            if isinstance(pdata, dict):
+                for k, v in edge.items():
+                    if k in pdata:
+                        process_edge_to(v, pdata[k], nodes)
+            elif isinstance(pdata, list):
+                for vv in pdata:
+                    process_edge_to(edge, vv, nodes)
+        elif isinstance(edge, list):
+            for v in edge:
+                process_edge_to(v, pdata, nodes)
+        else:
+            warning(f"TODO process_edge_to {edge}")
+
+    clusters = {}
+    children = []
+    for rname, rdata in cloud_formation_data["Resources"].items():
+        rconfig = get_config(rdata)
+        rkind = rconfig.get("kind", "node")
+        if rkind == "cluster":
+            clusters[rname] = {
+                "is_root": rname not in children,
+                "nodes": [],
+                "style": rconfig.get("style", {})
+            }
+            rconfig_children = rconfig.get("children")
+            if rconfig_children is not None:
+                process_edge_to(
+                    rconfig_children,
+                    rdata.get("Properties") or {},
+                    clusters[rname]["nodes"]
+                )
+                children.extend(clusters[rname]["nodes"])
+                for n in clusters[rname]["nodes"]:
+                    if n in clusters:
+                        clusters[n]["is_root"] = False
+
+    for rname, rdata in cloud_formation_data["Resources"].items():
+        rconfig = get_config(rdata)
+        pcp = rconfig.get("parent_cluster_property")
+        if pcp is not None:
+            parents = []
+            process_edge_to(pcp, rdata["Properties"], parents)
+            if len(parents) == 1 and parents[0] in clusters:
+                clusters[parents[0]]["nodes"].append(rname)
+                if rname in clusters:
+                    clusters[rname]["is_root"] = False
+            else:
+                if rname not in clusters:
+                    generate_node(rname, rdata)
+        else:
+            if rname not in children and rconfig.get("kind") == "node":
+                generate_node(rname, rdata)
+
+    def generate_cluster(cname, cdata):
+        """
+            Generate a cluster.
+        """
+        if len(cdata["nodes"]) == 0:
+            generate_node(cname, cloud_formation_data["Resources"][cname])
+            return
+
+        # Generate a visual cluster only when there are several nodes inside.
+        with Cluster(
+            icon(
+                get_diagram_class(
+                    cloud_formation_data["Resources"][cname]
+                ),
+                cname,
+            ),
+            graph_attr=compute_style(cdata["style"])
+        ):
+            rdata = cloud_formation_data["Resources"][cname]
+            generate_node(cname, rdata)
+            for rname in cdata["nodes"]:
+                if rname in clusters:
+                    generate_cluster(rname, clusters[rname])
+                else:
+                    rdata = cloud_formation_data["Resources"][rname]
+                    kind = get_config(rdata).get("kind", "node")
+                    if kind == "node":
+                        generate_node(rname, rdata)
+
+    for cname, cdata in clusters.items():
+        if cdata["is_root"]:
+            generate_cluster(cname, cdata)
+
+    for rname, rdata in cloud_formation_data["Resources"].items():
+        rconfig = get_config(rdata)
+        kind = rconfig.get("kind", "node")
+        edges = []
+        if kind == "edge":
+            def compute_nodes(properties, edge):
+                """
+                    Compute nodes.
+                """
+                nodes = []
+                if isinstance(edge, str):
+                    if edge in properties:
+                        compute_edges(edge, properties[edge], nodes)
+                elif isinstance(edge, list):
+                    for f in edge:
+                        if f in properties:
+                            compute_edges(f, properties[f], nodes)
+                else:
+                    warning(f"[TODO] {edge}")
+                return nodes
+
+            rconfig_style = rconfig.get("style", {})
+            for from_node in compute_nodes(rdata["Properties"], rconfig.get("from")):
+                for to_node in compute_nodes(rdata["Properties"], rconfig.get("to")):
+                    edges.append([from_node, to_node, rconfig_style])
+
+        elif kind in ["node", "cluster"]:
+            depends_on = rdata.get("DependsOn")
+            if isinstance(depends_on, str):
+                edges.append([rname, depends_on, "DependsOn"])
+            elif isinstance(depends_on, list):
+                for d in depends_on:
+                    edges.append([rname, d, "DependsOn"])
+            config_node_edges = rconfig.get("edges", [])
+            to_nodes = []
+            process_edge_to(config_node_edges, rdata.get("Properties") or {}, to_nodes)
+            for to_node in to_nodes:
+                edges.append([rname, to_node, "Reference"])
+
+            other_nodes = []
+            compute_edges("", rdata.get("Properties") or {}, other_nodes)
+            for other_node in other_nodes:
+                if other_node not in to_nodes:
+                    debug(f"Resources:{rname} - Other link to resource '{other_node}'")
+                    edges.append([rname, other_node, "OtherLink"])
+
+        for edge in edges:
+            from_node = edge[0]
+            to_node = edge[1]
+            estyle = edge[2]
+            if from_node not in nodes:
+                warning(f"Resources:{rname} - No graphical node for resource '{from_node}'")
+            elif to_node not in nodes:
+                warning(f"Resources:{rname} - No graphical node for resource '{to_node}'")
+            else:
+                _ = nodes[from_node] >> Edge(**compute_style(estyle)) >> nodes[to_node]
+
+print(f"{args.output}.{args.format} generated.")
+
+if args.format in ("svg", "dot_json"):
+    FILENAME = f"{args.output}.{args.format}"
+    print("Post-process paths of icons...")
+    # read all the lines of the generated file
+    with open(FILENAME, "rt", encoding="utf-8") as fs:
+        lines = fs.readlines()
+    # compute absolute paths to be replaced by urls
+    from pathlib import Path
+    DIAGRAMS_PATH = str(Path(os.path.abspath(os.path.dirname(diagrams.__file__))).parent)
+    DIAGRAMS_URL = \
+        "https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master"
+    CFD_PATH = str(Path(os.path.abspath(os.path.dirname(__file__))).parent)
+    CFD_URL = \
+        "https://raw.githubusercontent.com/philippemerle/AWS CloudFormation Diagrams/refs/heads/main"
+    if args.format == "svg":
+        what_to_search = [
+            r'image xlink:href="([^"]+)"',
+        ]
+    elif args.format == "dot_json":
+        DIAGRAMS_PATH = DIAGRAMS_PATH.replace("/", "\\/")
+        CFD_PATH = CFD_PATH.replace("/", "\\/")
+        what_to_search = [
+            r'"image": "([^"]+)"',
+            r'img src=\\"([^"]+)\\"',
+        ]
+    else:
+        what_to_search = []
+    # rewrite all the lines of the generated file
+    with open(FILENAME, "wt", encoding="utf-8") as fs:
+        for line in lines:
+            for wts in what_to_search:
+                import re
+                img_paths = re.findall(wts, line)
+                for img_path in img_paths:
+                    if not args.embed_all_icons:
+                        # replace absolute paths by urls
+                        if DIAGRAMS_PATH in line:
+                            line = line.replace(DIAGRAMS_PATH, DIAGRAMS_URL)
+                            continue
+                        if CFD_PATH in line:
+                            line = line.replace(CFD_PATH, CFD_URL)
+                            continue
+                    full_img_path = Path(img_path.replace("\\/", "/"))
+                    if full_img_path.exists():
+                        # read the image
+                        with open(full_img_path, 'rb') as img_file:
+                            img_data = img_file.read()
+                        # encode the image in base64
+                        import base64
+                        MIME_TYPE = 'image/png'
+                        b64_data = base64.b64encode(img_data).decode('ascii')
+                        DATA_URI = f"data:{MIME_TYPE};base64,{b64_data}"
+                        # replace absolute path by image encoded in base64
+                        line = line.replace(img_path, DATA_URI)
+                    else:
+                        print(f"Warning: Image not found: {full_img_path}")
+            # write the line
+            fs.write(line)
+    print(f"{FILENAME} saved.")

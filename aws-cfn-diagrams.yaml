@@ -1,0 +1,1465 @@
+#
+# Graphical styles
+#
+
+styles:
+
+  #
+  # Cluster styles
+  #
+
+  Compute:
+    bgcolor: "#fff5e6"
+  Database:
+    bgcolor: "#e6ecff"
+  IoT:
+    bgcolor: "#e6ffee"
+  Management:
+    bgcolor: "#ffe6f2"
+  Network:
+    bgcolor: "#f2e6ff"
+  Security:
+    bgcolor: "#ffe6e6"
+  Storage:
+    bgcolor: "#e6ffe6"
+
+  #
+  # Edge styles
+  #
+
+  Association:
+    color: black
+    #dir: both
+    forward: true
+    reverse: true
+  DependsOn: { # default Diagrams style
+  }
+  Reference:
+    color: black
+  OtherLink:
+    color: brown
+
+#
+# AWS resources
+#
+
+resources:
+
+  #
+  # AWS::ApiGateway resource types.
+  #
+
+  AWS::ApiGateway::Authorizer:
+    kind: node
+    icon:
+      classname: diagrams.aws.network.APIGateway
+    edges:
+      - ProviderARNs
+      - RestApiId
+    parent_cluster_property: RestApiId
+
+  AWS::ApiGateway::Deployment:
+    kind: node
+    icon:
+      classname: diagrams.aws.network.APIGateway
+    edges:
+      - RestApiId
+    parent_cluster_property: RestApiId
+
+  AWS::ApiGateway::Method:
+    kind: node
+    icon:
+      classname: diagrams.aws.network.APIGateway
+    edges:
+      - AuthorizerId
+      - Integration:
+          - Uri
+      - RequestModels:
+        - application/json
+      - ResourceId
+      - RestApiId
+    parent_cluster_property: ResourceId
+
+  AWS::ApiGateway::Model:
+    kind: node
+    icon:
+      classname: diagrams.aws.network.APIGateway
+    edges:
+      - RestApiId
+    parent_cluster_property: RestApiId
+
+  AWS::ApiGateway::Resource:
+    kind: cluster
+    style: Network
+    icon:
+      classname: diagrams.aws.network.APIGateway
+    edges:
+      - ParentId # ???
+      - RestApiId
+    parent_cluster_property: RestApiId
+
+  AWS::ApiGateway::RestApi:
+    kind: cluster
+    style: Network
+    icon:
+      classname: diagrams.aws.network.APIGateway
+
+  AWS::ApiGateway::Stage:
+    kind: node
+    icon:
+      classname: diagrams.aws.network.APIGateway
+    edges:
+      - DeploymentId
+      - RestApiId
+    parent_cluster_property: RestApiId
+
+  #
+  # AWS::ApplicationAutoScaling resource types.
+  #
+
+  AWS::ApplicationAutoScaling::ScalableTarget:
+    kind: node
+    icon:
+      classname: diagrams.aws.compute.ApplicationAutoScaling
+    edges:
+      - ResourceId
+      - RoleARN
+
+  AWS::ApplicationAutoScaling::ScalingPolicy:
+    kind: node
+    icon:
+      classname: diagrams.aws.compute.ApplicationAutoScaling
+    edges:
+      - ScalingTargetId
+
+  #
+  # AWS::AppRunner resource types.
+  #
+
+  AWS::AppRunner::Service:
+    kind: node
+    icon:
+      classname: diagrams.aws.compute.AppRunner
+    edges:
+      - SourceConfiguration:
+        - AuthenticationConfiguration:
+          - AccessRoleArn
+
+  #
+  # AWS::AutoScaling resource types.
+  #
+
+  AWS::AutoScaling::AutoScalingGroup:
+    kind: cluster
+    style: Management
+    icon:
+      classname: diagrams.aws.management.AutoScaling
+    edges:
+      - LaunchConfigurationName
+      - LaunchTemplate:
+        - LaunchTemplateId
+      - LoadBalancerNames
+      - NotificationConfigurations:
+        - TopicARN
+      - TargetGroupARNs
+      - VPCZoneIdentifier
+
+  AWS::AutoScaling::LaunchConfiguration:
+    kind: node
+    icon:
+      classname: diagrams.aws.management.AutoScaling
+    edges:
+      - IamInstanceProfile
+      - SecurityGroups
+    parent_cluster_property: SecurityGroups
+
+  AWS::AutoScaling::ScalingPolicy:
+    kind: node
+    icon:
+      classname: diagrams.aws.management.AutoScaling
+    edges:
+      - AutoScalingGroupName
+    parent_cluster_property: AutoScalingGroupName
+
+  AWS::AutoScaling::ScheduledAction:
+    kind: node
+    icon:
+      classname: diagrams.aws.management.AutoScaling
+    edges:
+      - AutoScalingGroupName
+    parent_cluster_property: AutoScalingGroupName
+
+  #
+  # AWS::CloudFormation resource types.
+  #
+
+  AWS::CloudFormation::Stack:
+    kind: node
+    icon:
+      classname: diagrams.aws.management.CloudformationStack
+    edges:
+      - Parameters
+
+  AWS::CloudFormation::WaitConditionHandle:
+    kind: node
+    icon:
+      classname: diagrams.aws.management.Cloudformation
+
+  AWS::CloudFormation::WaitCondition:
+    kind: node
+    icon:
+      classname: diagrams.aws.management.Cloudformation
+    edges:
+      - Handle
+
+  #
+  # AWS::CloudFront resource types.
+  #
+
+  AWS::CloudFront::CachePolicy:
+    kind: node
+    icon:
+      classname: diagrams.aws.network.CloudFront
+        
+  AWS::CloudFront::Distribution:
+    kind: node
+    icon:
+      classname: diagrams.aws.network.CloudFrontDownloadDistribution
+    edges:
+      - DistributionConfig:
+        - CacheBehaviors:
+          - CachePolicyId
+          - OriginRequestPolicyId
+          - TargetOriginId
+        - DefaultCacheBehavior:
+          - CachePolicyId
+          - LambdaFunctionAssociations:
+              - LambdaFunctionARN
+          - OriginRequestPolicyId
+          - TargetOriginId
+        - Logging:
+          - Bucket
+        - Origins:
+          - DomainName
+          - OriginAccessControlId
+        - WebACLId
+
+  AWS::CloudFront::OriginAccessControl:
+    kind: node
+    icon:
+      classname: diagrams.aws.network.CloudFront
+
+  #
+  # AWS::CloudWatch resource types.
+  #
+
+  AWS::CloudWatch::Alarm:
+    kind: node
+    icon:
+      classname: diagrams.aws.management.CloudwatchAlarm
+    edges:
+      - AlarmActions
+      - Dimensions:
+        - Value
+      - InsufficientDataActions
+    parent_cluster_property:
+      Dimensions:
+        - Value
+
+  AWS::CloudWatch::Dashboard:
+    kind: node
+    icon:
+      classname: diagrams.aws.management.Cloudwatch
+
+  #
+  # AWS::CertificateManager resource types.
+  #
+
+  AWS::CertificateManager::Certificate:
+    kind: node
+    icon:
+      classname: diagrams.aws.security.CertificateManager
+    edges:
+      - DomainValidationOptions:
+        - HostedZoneId
+
+  #
+  # AWS::CodeBuild resource types.
+  #
+
+  AWS::CodeBuild::Project:
+    Properties:
+    kind: node
+    icon:
+      classname: diagrams.aws.devtools.Codebuild
+    edges:
+      - ServiceRole
+
+  #
+  # AWS::CodeCommit resource types.
+  #
+
+  AWS::CodeCommit::Repository:
+    kind: node
+    icon:
+      classname: diagrams.aws.devtools.Codecommit
+
+  #
+  # AWS::CodePipeline resource types.
+  #
+
+  AWS::CodePipeline::Pipeline:
+    kind: node
+    icon:
+      classname: diagrams.aws.devtools.Codepipeline
+    edges:
+      - RoleArn
+
+  #
+  # AWS::Cognito resource types.
+  #
+
+  AWS::Cognito::UserPool:
+    kind: cluster
+    style: Security
+    icon:
+      classname: diagrams.aws.security.Cognito
+
+  AWS::Cognito::UserPoolDomain:
+    kind: node
+    icon:
+      classname: diagrams.aws.security.Cognito
+    edges:
+      - UserPoolId
+    parent_cluster_property: UserPoolId
+
+  AWS::Cognito::UserPoolClient:
+    kind: node
+    icon:
+      classname: diagrams.aws.security.Cognito
+    edges:
+      - UserPoolId
+    parent_cluster_property: UserPoolId
+
+  #
+  # AWS::Config resource types.
+  #
+
+  AWS::Config::ConfigRule:
+    kind: node
+    icon:
+      classname: diagrams.aws.management.Config
+    edges:
+      - Scope:
+        - ComplianceResourceId
+      - Source:
+        - SourceIdentifier
+
+  AWS::Config::ConfigurationRecorder:
+    kind: node
+    icon:
+      classname: diagrams.aws.management.Config
+    edges:
+      - RoleARN
+
+  AWS::Config::DeliveryChannel:
+    kind: node
+    icon:
+      classname: diagrams.aws.management.Config
+    edges:
+      - S3BucketName
+      - SnsTopicARN
+
+  #
+  # AWS::DataPipeline resource types.
+  #
+
+  AWS::DataPipeline::Pipeline:
+    kind: node
+    icon:
+      classname: diagrams.aws.analytics.DataPipeline
+
+  #
+  # AWS::DirectoryService resource types.
+  #
+
+  AWS::DirectoryService::MicrosoftAD:
+    kind: node
+    icon:
+      classname: diagrams.aws.security.DirectoryService
+    edges:
+      - VpcSettings:
+        - SubnetIds
+        - VpcId
+
+  AWS::DirectoryService::SimpleAD:
+    kind: node
+    icon:
+      classname: diagrams.aws.security.DirectoryService
+    edges:
+      - VpcSettings:
+        - SubnetIds
+        - VpcId
+
+  #
+  # AWS::DMS resource types.
+  #
+
+  AWS::DMS::Endpoint:
+    kind: node
+    icon:
+      classname: diagrams.aws.database.DatabaseMigrationService
+    edges:
+      - S3Settings:
+        - BucketName
+        - ServiceAccessRoleArn
+      - ServerName
+
+  AWS::DMS::ReplicationInstance:
+    kind: cluster
+    style: Database
+    icon:
+      classname: diagrams.aws.database.DatabaseMigrationService
+    edges:
+      - AvailabilityZone
+      - ReplicationSubnetGroupIdentifier
+      - VpcSecurityGroupIds
+    children:
+      - ReplicationSubnetGroupIdentifier
+
+  AWS::DMS::ReplicationSubnetGroup:
+    kind: node
+    icon:
+      classname: diagrams.aws.database.DatabaseMigrationService
+    edges:
+      - SubnetIds
+
+  AWS::DMS::ReplicationTask:
+    kind: cluster
+    style: Database
+    icon:
+      classname: diagrams.aws.database.DatabaseMigrationService
+    edges:
+      - ReplicationInstanceArn
+      - SourceEndpointArn
+      - TargetEndpointArn
+    children:
+      - ReplicationInstanceArn
+      - SourceEndpointArn
+      - TargetEndpointArn
+
+  #
+  # AWS::DynamoDB resource types.
+  #
+
+  AWS::DynamoDB::Table:
+    kind: node
+    icon:
+      classname: diagrams.aws.database.DynamodbTable
+
+  #
+  # AWS::EC2 resource types.
+  #
+
+  AWS::EC2::DHCPOptions:
+    kind: node
+    icon:
+      classname: diagrams.aws.compute.EC2
+    edges:
+      - DomainNameServers
+
+  AWS::EC2::EIP:
+    kind: node
+    icon:
+      classname: diagrams.aws.compute.EC2ElasticIpAddress
+
+  AWS::EC2::EIPAssociation:
+    kind: edge
+    style: Association
+    from: AllocationId
+    to:
+      - InstanceId
+      - NetworkInterfaceId
+
+  AWS::EC2::FlowLog:
+    kind: node
+    icon:
+      classname: diagrams.aws.network.VPCFlowLogs
+    edges:
+      - DeliverLogsPermissionArn
+      - LogDestination
+      - LogGroupName
+      - ResourceId
+    parent_cluster_property: ResourceId
+
+  AWS::EC2::Image:
+    kind: node
+    icon:
+      classname: diagrams.aws.compute.EC2Ami
+
+  AWS::EC2::Instance:
+    kind: node
+    icon:
+      classname: diagrams.aws.compute.EC2Instance
+    edges:
+      - IamInstanceProfile
+      - ImageId
+      - NetworkInterfaces:
+          - NetworkInterfaceId
+          - SubnetId
+      - SecurityGroupIds
+      - SsmAssociations:
+        - DocumentName
+      - SubnetId
+      - UserData
+    parent_cluster_property:
+      - SecurityGroupIds
+      - SubnetId
+
+  AWS::EC2::InternetGateway:
+    kind: node
+    icon:
+      classname: diagrams.aws.general.InternetGateway
+
+  AWS::EC2::LaunchTemplate:
+    kind: node
+    icon:
+      classname: diagrams.aws.compute.EC2
+    edges:
+      - LaunchTemplateData:
+          - SecurityGroups
+          - SecurityGroupIds
+          - IamInstanceProfile:
+            - Arn
+            - Name
+    parent_cluster_property:
+      - LaunchTemplateData:
+        - SecurityGroups
+        - SecurityGroupIds
+
+  AWS::EC2::NatGateway:
+    kind: node
+    icon:
+      classname: diagrams.aws.network.NATGateway
+    edges:
+      - AllocationId
+      - SubnetId
+    parent_cluster_property: SubnetId
+
+  AWS::EC2::NetworkAcl:
+    kind: cluster
+    style: Network
+    icon:
+      classname: diagrams.aws.network.Nacl
+    edges:
+      - VpcId
+    parent_cluster_property: VpcId
+
+  AWS::EC2::NetworkAclEntry:
+    kind: node
+    icon:
+      classname: diagrams.aws.network.Nacl
+    edges:
+      - NetworkAclId
+    parent_cluster_property: NetworkAclId
+
+  AWS::EC2::NetworkInterface:
+    kind: node
+    icon:
+      classname: diagrams.aws.network.VPCElasticNetworkInterface
+    edges:
+      - GroupSet
+      - SubnetId
+    parent_cluster_property:
+      - GroupSet
+      - SubnetId
+
+  AWS::EC2::Route:
+    kind: edge
+    style: Association
+    from:
+      - NatGatewayId
+      - GatewayId
+    to: RouteTableId
+
+  AWS::EC2::RouteTable:
+    kind: node
+    icon:
+      classname: diagrams.aws.network.RouteTable
+    edges:
+      - VpcId
+    parent_cluster_property: VpcId
+
+  AWS::EC2::SecurityGroup:
+    kind: cluster
+    style: Compute
+    icon:
+      classname: diagrams.aws.compute.EC2
+    edges:
+      - GroupId
+      - SourceSecurityGroupId
+      - SecurityGroupIngress:
+        - SourceSecurityGroupId # ???
+        - SourceSecurityGroupName
+      - VpcId
+    parent_cluster_property:
+      - GroupId
+      - SourceSecurityGroupId
+      - SecurityGroupIngress:
+        - SourceSecurityGroupId
+        - SourceSecurityGroupName
+      - VpcId
+
+  AWS::EC2::SecurityGroupEgress:
+    kind: node
+    icon:
+      classname: diagrams.aws.compute.EC2
+    edges:
+      - GroupId
+      - DestinationSecurityGroupId
+    parent_cluster_property: GroupId
+
+  AWS::EC2::SecurityGroupIngress:
+    kind: node
+    icon:
+      classname: diagrams.aws.compute.EC2
+    edges:
+      - GroupId
+      - SourceSecurityGroupId
+    parent_cluster_property: GroupId
+
+  AWS::EC2::Subnet:
+    kind: cluster
+    style: Network
+    icon:
+      eval: |
+        "diagrams.aws.network.PrivateSubnet" \
+          if properties.get("MapPublicIpOnLaunch") == False \
+        else "diagrams.aws.network.PublicSubnet"
+    edges:
+      - AvailabilityZone
+      - VpcId
+    parent_cluster_property: VpcId
+
+  AWS::EC2::SubnetNetworkAclAssociation:
+    kind: edge
+    style: Association
+    from: NetworkAclId
+    to: SubnetId
+
+  AWS::EC2::SubnetRouteTableAssociation:
+    kind: edge
+    style: Association
+    from: SubnetId
+    to: RouteTableId
+
+  AWS::EC2::Volume:
+    kind: node
+    icon:
+      classname: diagrams.aws.storage.ElasticBlockStoreEBSVolume
+
+  AWS::EC2::VPC:
+    kind: cluster
+    style: Network
+    icon:
+      classname: diagrams.aws.network.VPC
+
+  AWS::EC2::VPCDHCPOptionsAssociation:
+    kind: edge
+    style: Association
+    from: VpcId
+    to: DhcpOptionsId
+
+  AWS::EC2::VPCEndpoint:
+    kind: node
+    icon:
+        classname: diagrams.aws.network.Endpoint
+    edges:
+      - RouteTableIds
+      - SecurityGroupIds
+      - SubnetIds
+      - VpcId
+    parent_cluster_property: VpcId
+
+  AWS::EC2::VPCEndpointService:
+    kind: cluster
+    style: Network
+    icon:
+      classname: diagrams.aws.network.VPC
+    edges:
+      - NetworkLoadBalancerArns
+    parent_cluster_property: NetworkLoadBalancerArns
+
+  AWS::EC2::VPCEndpointServicePermissions:
+    kind: node
+    icon:
+      classname: diagrams.aws.network.VPC
+    edges:
+      - ServiceId
+    parent_cluster_property: ServiceId
+
+  AWS::EC2::VPCGatewayAttachment:
+    kind: edge
+    style: Association
+    from: InternetGatewayId
+    to: VpcId
+
+  AWS::EC2::VPCPeeringConnection:
+    kind: node
+    icon:
+      classname: diagrams.aws.network.VPCPeering
+    edges:
+      - VpcId
+      - PeerVpcId
+      - PeerOwnerId
+      - PeerRoleArn
+    parent_cluster_property: VpcId
+
+  #
+  # AWS::ECS resource types.
+  #
+
+  AWS::ECS::Cluster:
+    kind: cluster
+    style: Compute
+    icon:
+      classname: diagrams.aws.compute.ECS
+
+  AWS::ECS::Service:
+    kind: node
+    icon:
+      classname: diagrams.aws.compute.ElasticContainerServiceService
+    edges:
+      - Cluster
+      - LoadBalancers:
+        - TargetGroupArn
+      - Role
+      - TaskDefinition
+    parent_cluster_property: Cluster
+
+  AWS::ECS::TaskDefinition:
+    kind: node
+    icon:
+      classname: diagrams.aws.compute.ECS
+    edges:
+      - ContainerDefinitions:
+        - LogConfiguration:
+          - Options:
+              - awslogs-group
+
+  #
+  # AWS::EFS resource types.
+  #
+  
+  AWS::EFS::FileSystem:
+    kind: cluster
+    style: Storage
+    icon:
+      classname: diagrams.aws.storage.ElasticFileSystemEFSFileSystem
+
+  AWS::EFS::MountTarget:
+    kind: node
+    icon:
+      classname: diagrams.aws.storage.EFS
+    edges:
+      - FileSystemId
+      - SecurityGroups
+      - SubnetId
+    parent_cluster_property: FileSystemId
+
+  AWS::EFS::AccessPoint:
+    kind: node
+    icon:
+      classname: diagrams.aws.storage.EFS
+    edges:
+      - FileSystemId
+    parent_cluster_property: FileSystemId
+
+  #
+  # AWS::EKS resource types.
+  #
+
+  AWS::EKS::Cluster:
+    kind: cluster
+    style: Compute
+    icon:
+      classname: diagrams.aws.compute.ElasticKubernetesService
+    edges:
+      - ResourcesVpcConfig:
+          - SecurityGroupIds
+          - SubnetIds
+      - RoleArn
+    parent_cluster_property:
+      - ResourcesVpcConfig:
+          - SecurityGroupIds
+#          - SubnetIds
+
+  AWS::EKS::Nodegroup:
+    kind: node
+    icon:
+      classname: diagrams.aws.compute.ElasticKubernetesService
+    edges:
+      - ClusterName
+      - LaunchTemplate:
+         - Id
+      - NodeRole
+      - Subnets
+    parent_cluster_property: ClusterName
+
+  #
+  # AWS::ElastiCache resource types.
+  #
+
+  AWS::ElastiCache::ParameterGroup:
+    kind: node
+    icon:
+      classname: diagrams.aws.database.Elasticache
+
+  AWS::ElastiCache::ReplicationGroup:
+    kind: cluster
+    style: Database
+    icon:
+      classname: diagrams.aws.database.Elasticache
+    edges:
+      - CacheParameterGroupName
+      - CacheSubnetGroupName
+      - SecurityGroupIds
+    children:
+      - CacheParameterGroupName
+      - CacheSubnetGroupName
+
+  AWS::ElastiCache::SubnetGroup:
+    kind: node
+    icon:
+      classname: diagrams.aws.database.Elasticache
+    edges:
+      - SubnetIds
+
+  #
+  # AWS::ElasticLoadBalancing resource types.
+  #
+
+  AWS::ElasticLoadBalancing::LoadBalancer:
+    kind: node
+    icon:
+      eval: |
+        "diagrams.aws.network.ElbApplicationLoadBalancer" \
+          if properties.get("Type") == "application" \
+        else "diagrams.aws.network.ElasticLoadBalancing"
+    edges:
+      - AccessLoggingPolicy:
+        - S3BucketName
+      - Instances
+      - SecurityGroups
+      - Subnets
+
+  #
+  # AWS::ElasticLoadBalancingV2 resource types.
+  #
+
+  AWS::ElasticLoadBalancingV2::Listener:
+    kind: cluster
+    style: Network
+    icon:
+      classname: diagrams.aws.network.ElasticLoadBalancing
+    edges:
+      - Certificates:
+        - CertificateArn
+      - DefaultActions:
+        - TargetGroupArn
+      - LoadBalancerArn
+    parent_cluster_property: LoadBalancerArn
+
+  AWS::ElasticLoadBalancingV2::ListenerRule:
+    kind: node
+    icon:
+      classname: diagrams.aws.network.ElasticLoadBalancing
+    edges:
+      - Actions:
+        - TargetGroupArn
+      - ListenerArn
+    parent_cluster_property: ListenerArn
+  
+  AWS::ElasticLoadBalancingV2::LoadBalancer:
+    kind: cluster
+    style: Network
+    icon:
+      eval: |
+        "diagrams.aws.network.ElbApplicationLoadBalancer" \
+          if properties.get("Type") == "application" \
+        else "diagrams.aws.network.ElbNetworkLoadBalancer" \
+          if properties.get("Type") == "network" \
+        else "diagrams.aws.network.ElasticLoadBalancing"
+    edges:
+      - SecurityGroups
+      - SubnetMappings:
+        - AllocationId
+        - SubnetId
+      - Subnets
+
+  AWS::ElasticLoadBalancingV2::TargetGroup:
+    kind: node
+    icon:
+      classname: diagrams.aws.network.ElasticLoadBalancing
+    edges:
+      - Targets:
+        - Id
+      - VpcId
+    parent_cluster_property: VpcId
+
+  #
+  # AWS::EMR resource types.
+  #
+
+  AWS::EMR::Cluster:
+    kind: cluster
+    icon:
+      classname: diagrams.aws.analytics.EMRCluster
+    edges:
+      - Instances:
+        - Ec2SubnetId
+      - JobFlowRole
+      - ServiceRole
+
+  #
+  # AWS::Events resource types.
+  #
+
+  AWS::Events::Rule:
+    kind: node
+    icon:
+      classname: diagrams.aws.management.CloudwatchEventEventBased # ???
+    edges:
+      - Targets:
+        - Arn
+        - RoleArn
+        - EcsParameters:
+          - TaskDefinitionArn
+
+  #
+  # AWS::Greengrass resource types.
+  #
+        
+  AWS::Greengrass::CoreDefinition:
+    kind: node
+    icon:
+      classname: diagrams.aws.iot.IotGreengrass
+
+  AWS::Greengrass::CoreDefinitionVersion:
+    kind: cluster
+    style: IoT
+    icon:
+      classname: diagrams.aws.iot.IotGreengrass
+    edges:
+      - CoreDefinitionId
+      - Cores:
+        - CertificateArn
+    children:
+      - CoreDefinitionId
+
+  AWS::Greengrass::FunctionDefinition:
+    kind: node
+    icon:
+      classname: diagrams.aws.iot.IotGreengrass
+    edges:
+      - InitialVersion:
+        - Functions:
+          - FunctionArn
+
+  AWS::Greengrass::Group:
+    kind: cluster
+    style: IoT
+    icon:
+      classname: diagrams.aws.iot.IotGreengrass
+    edges:
+      - InitialVersion:
+        - CoreDefinitionVersionArn
+        - FunctionDefinitionVersionArn
+        - SubscriptionDefinitionVersionArn
+      - RoleArn
+    children:
+      - InitialVersion:
+        - CoreDefinitionVersionArn
+        - FunctionDefinitionVersionArn
+        - SubscriptionDefinitionVersionArn
+
+  AWS::Greengrass::SubscriptionDefinition:
+    kind: node
+    icon:
+      classname: diagrams.aws.iot.IotGreengrass
+    edges:
+      - InitialVersion:
+        - Subscriptions
+
+  #
+  # AWS::IAM resource types.
+  #
+
+  AWS::IAM::InstanceProfile:
+    kind: node
+    icon:
+      classname: diagrams.aws.security.IAM
+    edges:
+      - Roles
+    parent_cluster_property: Roles
+
+  AWS::IAM::ManagedPolicy:
+    kind: node
+    icon:
+      classname: diagrams.aws.security.IAM
+
+  AWS::IAM::Role:
+    kind: cluster
+    style: Security
+    icon:
+      classname: diagrams.aws.security.IdentityAndAccessManagementIamRole
+    edges:
+      - ManagedPolicyArns
+      - Policies:
+        - PolicyDocument:
+            - Statement:
+              - Resource
+
+  AWS::IAM::RolePolicy:
+    kind: node
+    icon:
+      classname: diagrams.aws.security.IdentityAndAccessManagementIamRole
+    edges:
+      - PolicyDocument:
+        - Statement:
+          - Resource
+      - RoleName
+    parent_cluster_property: RoleName
+
+  #
+  # AWS::IoT resource types.
+  #
+
+  AWS::IoT::Policy:
+    kind: node
+    icon:
+      classname: diagrams.aws.iot.IotPolicy
+    edges:
+      - PolicyDocument:
+        - Statement:
+          - Resource
+
+  AWS::IoT::PolicyPrincipalAttachment:
+    kind: edge
+    style: Association
+    from: PolicyName
+    to: Principal
+
+  AWS::IoT::Thing:
+    kind: node
+    icon:
+      classname: diagrams.aws.iot.InternetOfThings
+
+  AWS::IoT::ThingPrincipalAttachment:
+    kind: edge
+    style: Association
+    from: ThingName
+    to: Principal
+
+  AWS::IoT::TopicRule:
+    kind: node
+    icon:
+      classname: diagrams.aws.iot.IotRule
+    edges:
+      - TopicRulePayload:
+        - Actions:
+          - Lambda:
+            - FunctionArn
+
+  #
+  # AWS::IoTAnalytics resource types.
+  #
+
+  AWS::IoTAnalytics::Channel:
+    kind: node
+    icon:
+      classname: diagrams.aws.iot.IotAnalyticsChannel
+
+  AWS::IoTAnalytics::Dataset:
+    kind: node
+    icon:
+      classname: diagrams.aws.iot.IotAnalyticsDataSet
+
+  AWS::IoTAnalytics::Datastore:
+    kind: node
+    icon:
+      classname: diagrams.aws.iot.IotAnalyticsDataStore
+
+  AWS::IoTAnalytics::Pipeline:
+    kind: node
+    icon:
+      classname: diagrams.aws.iot.IotAnalyticsPipeline
+
+  #
+  # AWS::KinesisFirehose resource types.
+  #
+
+  AWS::KinesisFirehose::DeliveryStream:
+    kind: node
+    icon:
+      classname: diagrams.aws.analytics.KinesisDataFirehose
+    edges:
+      - ExtendedS3DestinationConfiguration:
+        - CloudWatchLoggingOptions:
+          - LogGroupName
+          - LogStreamName
+        - RoleARN
+        # - BucketARN ?
+
+  #
+  # AWS::KMS resource types.
+  #
+
+  AWS::KMS::Alias:
+    kind: node
+    icon:
+      classname: diagrams.aws.security.KeyManagementService
+    edges:
+      - TargetKeyId
+
+  AWS::KMS::Key:
+    kind: node
+    icon:
+      classname: diagrams.aws.security.KeyManagementService
+
+  #
+  # AWS::Lambda resource types.
+  #
+
+  AWS::Lambda::Function:
+    kind: cluster
+    style: Compute
+    icon:
+      classname: diagrams.aws.compute.LambdaFunction
+    edges:
+      - Role
+      - VpcConfig:
+          - SubnetIds
+          - SecurityGroupIds
+      - Environment
+    parent_cluster_property:
+      - VpcConfig:
+          - SecurityGroupIds
+          - SubnetIds
+
+  AWS::Lambda::Permission:
+    kind: node
+    icon:
+      classname: diagrams.aws.compute.Lambda
+    edges:
+      - FunctionName
+      - SourceArn
+    parent_cluster_property: FunctionName
+
+  AWS::Lambda::Version:
+    kind: node
+    icon:
+      classname: diagrams.aws.compute.Lambda
+    edges:
+      - FunctionName
+    parent_cluster_property: FunctionName
+
+  #
+  # AWS::Logs resource types.
+  #
+
+  AWS::Logs::LogGroup:
+    kind: cluster
+    style: Management
+    icon:
+      classname: diagrams.aws.management.CloudwatchLogs
+    edges:
+      - KmsKeyId
+
+  AWS::Logs::LogStream:
+    kind: node
+    icon:
+      classname: diagrams.aws.management.CloudwatchLogs
+    edges:
+      - LogGroupName
+    parent_cluster_property: LogGroupName
+
+  AWS::Logs::QueryDefinition:
+    kind: node
+    icon:
+      classname: diagrams.aws.management.Cloudwatch
+
+  #
+  # AWS::Neptune resources.
+  #
+
+  AWS::Neptune::DBCluster:
+    kind: cluster
+    style: Database
+    icon:
+      classname: diagrams.aws.database.Neptune
+    edges:
+      - DBClusterParameterGroupName
+      - DBSubnetGroupName
+      - KmsKeyId
+      - VpcSecurityGroupIds
+    children:
+      - DBClusterParameterGroupName
+      - DBSubnetGroupName
+
+  AWS::Neptune::DBInstance:
+    kind: cluster
+    style: Database
+    icon:
+      classname: diagrams.aws.database.Neptune
+    edges:
+      - DBClusterIdentifier
+      - DBParameterGroupName
+      - DBSubnetGroupName
+    parent_cluster_property: DBClusterIdentifier
+    children:
+      - DBParameterGroupName
+
+  AWS::Neptune::DBClusterParameterGroup:
+    kind: node
+    icon:
+      classname: diagrams.aws.database.Neptune
+
+  AWS::Neptune::DBParameterGroup:
+    kind: node
+    icon:
+      classname: diagrams.aws.database.Neptune
+
+  AWS::Neptune::DBSubnetGroup:
+    kind: node
+    icon:
+      classname: diagrams.aws.database.Neptune
+    edges:
+      - SubnetIds
+
+  #
+  # AWS::RDS resource types.
+  #
+
+  AWS::RDS::DBCluster:
+    kind: cluster
+    style: Database
+    icon:
+      classname: diagrams.aws.database.RDS
+    edges:
+      - DBSubnetGroupName
+      - VpcSecurityGroupIds
+    children:
+      - DBSubnetGroupName
+
+  AWS::RDS::DBInstance:
+    kind: cluster
+    style: Database
+    icon:
+      eval: get_rds_dbinstance_icon(properties)
+    edges:
+      - DBClusterIdentifier
+      - DBParameterGroupName
+      - DBSubnetGroupName
+      - SourceDBInstanceIdentifier
+      - VPCSecurityGroups
+    parent_cluster_property:
+      - SourceDBInstanceIdentifier
+      - DBClusterIdentifier
+    children:
+      - DBParameterGroupName
+
+  AWS::RDS::DBParameterGroup:
+    kind: node
+    style: Database
+    icon:
+      classname: diagrams.aws.database.RDS
+
+  AWS::RDS::DBSubnetGroup:
+    kind: node
+    icon:
+      classname: diagrams.aws.database.RDS
+    edges:
+      - SubnetIds
+
+  #
+  # AWS::Route53 resource types.
+  #
+
+  AWS::Route53::HostedZone:
+    kind: node
+    icon:
+      classname: diagrams.aws.network.Route53HostedZone
+
+  #
+  # AWS::S3 resource types.
+  #
+
+  AWS::S3::Bucket:
+    kind: cluster
+    style: Storage
+    icon:
+      classname: diagrams.aws.storage.SimpleStorageServiceS3Bucket
+    edges:
+      - BucketEncryption:
+        - ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+            - KMSMasterKeyID
+      - LoggingConfiguration:
+        - DestinationBucketName
+      - NotificationConfiguration:
+        - LambdaConfigurations:
+          - Function
+      - ReplicationConfiguration:
+        - Role
+        - Rules:
+          - Destination:
+              - Bucket
+
+  AWS::S3::BucketPolicy:
+    kind: node
+    icon:
+      classname: diagrams.aws.storage.SimpleStorageServiceS3
+    edges:
+      - Bucket
+    parent_cluster_property: Bucket
+
+  #
+  # AWS::SecretsManager resource types.
+  #
+
+  AWS::SecretsManager::Secret:
+    kind: node
+    icon:
+      classname: diagrams.aws.security.SecretsManager
+    edges:
+      - KmsKeyId
+
+  #
+  # AWS::Serverless resource types.
+  #
+
+  AWS::Serverless::Function:
+    kind: node
+    icon:
+      classname: #TODO
+
+  #
+  # AWS::ServiceCatalog resource types.
+  #
+
+  AWS::ServiceCatalog::CloudFormationProduct:
+    kind: node
+    icon:
+      classname: diagrams.aws.management.ServiceCatalog
+
+  AWS::ServiceCatalog::Portfolio:
+    kind: node
+    icon:
+      classname: diagrams.aws.management.ServiceCatalog
+    
+  AWS::ServiceCatalog::PortfolioProductAssociation:
+    kind: node
+    icon:
+      classname: diagrams.aws.management.ServiceCatalog
+    edges:
+      - ProductId
+
+  AWS::ServiceCatalog::PortfolioShare:
+    kind: node
+    icon:
+      classname: diagrams.aws.management.ServiceCatalog
+    edges:
+      - AccountId
+      - PortfolioId
+
+  AWS::ServiceCatalog::TagOption:
+    kind: node
+    icon:
+      classname: diagrams.aws.management.ServiceCatalog
+
+  AWS::ServiceCatalog::TagOptionAssociation:
+    kind: node
+    icon:
+      classname: diagrams.aws.management.ServiceCatalog
+    edges:
+      - TagOptionId
+      - ResourceId
+
+  #
+  # AWS::SNS resource types.
+  #
+
+  AWS::SNS::Topic:
+    kind: node
+    icon:
+      classname: diagrams.aws.integration.SimpleNotificationServiceSnsTopic
+
+  AWS::SNS::TopicPolicy:
+    kind: node
+    icon:
+      classname: diagrams.aws.integration.SNS
+    edges:
+      - Topics
+
+  AWS::SNS::Subscription:
+    kind: node
+    icon:
+      classname: diagrams.aws.integration.SimpleNotificationServiceSns
+    edges:
+      - TopicArn
+
+  #
+  # AWS::SQS resource types.
+  #
+
+  AWS::SQS::Queue:
+    kind: node
+    icon:
+      classname: diagrams.aws.integration.SimpleQueueServiceSqsQueue
+    edges:
+      - RedrivePolicy
+
+  #
+  # AWS::SSM resource types.
+  #
+
+  AWS::SSM::Association:
+    kind: node
+    icon:
+      classname: diagrams.aws.management.SSM
+    edges:
+      - Targets:
+        - Values
+
+  AWS::SSM::Document:
+    kind: node
+    icon:
+      classname: diagrams.aws.management.SSM
+
+  #
+  # AWS::WAFv2 resource types.
+  #
+
+  AWS::WAFv2::WebACL:
+    kind: node
+    icon:
+      classname: diagrams.aws.security.WAF
+
+  #
+  # Custom resources.
+  #
+
+  Custom:
+    kind: node
+    icon:
+      classname: diagrams.aws.enablement.CustomerEnablement
+
+  #
+  # Rain resources.
+  #
+
+  Rain::Module:
+    kind: node
+    icon:
+      classname: #TODO
