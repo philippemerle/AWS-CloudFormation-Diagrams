@@ -9,7 +9,7 @@ A simple CLI script to generate AWS architecture diagrams from AWS CloudFormatio
 ## Features
 
 * Parses both YAML and JSON AWS CloudFormation templates
-* Supports 140 AWS resource types and any custom resource types
+* Supports [140 AWS resource types and any custom resource types](docs/supported_resource_types.md)
 * Generates DOT, GIF, JPEG, PDF, PNG, SVG, and TIFF diagrams
 * Provides 126 generated diagram examples
 

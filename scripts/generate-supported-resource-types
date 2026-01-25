@@ -1,0 +1,82 @@
+#!/usr/bin/env python3
+"""Script to generate documentation about supported AWS CloudFormation resource types."""
+
+import diagrams
+import importlib
+import pathlib
+import os
+import yaml
+
+#
+# Extensions to the Diagrams library.
+#
+
+# Inspired from https://github.com/mingrammer/diagrams/pull/853
+def get_icon_path(diagrams_node_class: object):
+    """
+    Get the icon path of a Diagrams node class.
+
+    :param diagrams_node_class: Diagrams node class, like VPC or Docker
+    :returns: The path to the icon
+    """
+    # pylint: disable-next=too-few-public-methods
+    class Node(diagrams_node_class):
+        """Overloading Node class."""
+        def __init__(self):
+            """Initialisation."""
+            # pass # do nothing!
+
+    # pylint: disable-next=protected-access
+    return Node()._load_icon()
+
+DIAGRAMS_PATH = str(pathlib.Path(os.path.abspath(os.path.dirname(diagrams.__file__))).parent)
+DIAGRAMS_URL = \
+        "https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master"
+
+def get_icon_url(diagrams_node_class: object):
+    return get_icon_path(diagrams_node_class).replace(DIAGRAMS_PATH, DIAGRAMS_URL)
+
+def get_class(classname):
+    """
+        Get the class from a class name.
+    """
+    # Import class module
+    idx = classname.rfind('.')
+    if idx != -1:
+        module = importlib.import_module(classname[:idx])
+        # Get diagram node class
+        return getattr(module, classname[idx+1:])
+    return None
+
+# Load configuration.
+configuration = {}
+with open("aws-cfn-diagrams.yaml", encoding="utf-8") as stream:
+    configuration = yaml.safe_load(stream) # load YAML configuration file
+
+print("# Supported AWS CloudFormation Resource Types")
+print()
+print("| Type | Represented by |")
+print("| :---: | :---: |")
+for rtype, rconfig in configuration.get("resources").items():
+    rckind = rconfig.get("kind")
+    if rckind in ("node", "cluster"):
+        classname = rconfig.get("icon", {}).get("classname")
+        if classname is None:
+            icon = get_icon_url(get_class("diagrams.aws.enablement.ManagedServices"))
+            represented_by = f"![{rtype}]({icon})"
+        elif isinstance(classname, str):
+            icon = get_icon_url(get_class(classname))
+            represented_by = f"![{rtype}]({icon})"
+        elif isinstance(classname, list):
+            represented_by = ""
+            for cn in classname:
+              icon = get_icon_url(get_class(cn))
+              represented_by += f" ![{rtype}]({icon})"
+        else:
+            represented_by = "INVALID CLASSNAME TYPE!"
+        print(f"| `{rtype}` | {represented_by} |")
+    elif rckind == "edge":
+        print(f"| `{rtype}` | an `{rconfig.get('style')}` edge |")
+    else:
+        print(f"| `{rtype}` | `{rckind}` UNSUPPORTED! |")
+print()

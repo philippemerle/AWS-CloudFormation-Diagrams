@@ -636,6 +636,9 @@ resources:
         "diagrams.aws.network.PrivateSubnet" \
           if properties.get("MapPublicIpOnLaunch") == False \
         else "diagrams.aws.network.PublicSubnet"
+      classname:
+        - diagrams.aws.network.PublicSubnet
+        - diagrams.aws.network.PrivateSubnet
     edges:
       - AvailabilityZone
       - VpcId
@@ -846,6 +849,9 @@ resources:
         "diagrams.aws.network.ElbApplicationLoadBalancer" \
           if properties.get("Type") == "application" \
         else "diagrams.aws.network.ElasticLoadBalancing"
+      classname:
+        - diagrams.aws.network.ElasticLoadBalancing
+        - diagrams.aws.network.ElbApplicationLoadBalancer
     edges:
       - AccessLoggingPolicy:
         - S3BucketName
@@ -890,6 +896,10 @@ resources:
         else "diagrams.aws.network.ElbNetworkLoadBalancer" \
           if properties.get("Type") == "network" \
         else "diagrams.aws.network.ElasticLoadBalancing"
+      classname:
+        - diagrams.aws.network.ElasticLoadBalancing
+        - diagrams.aws.network.ElbNetworkLoadBalancer
+        - diagrams.aws.network.ElbApplicationLoadBalancer
     edges:
       - SecurityGroups
       - SubnetMappings:
@@ -1257,6 +1267,13 @@ resources:
     style: Database
     icon:
       eval: get_rds_dbinstance_icon(properties)
+      classname:
+        - diagrams.aws.database.RDSInstance
+        - diagrams.aws.database.RDSMariadbInstance
+        - diagrams.aws.database.RDSMysqlInstance
+        - diagrams.aws.database.RDSOracleInstance
+        - diagrams.aws.database.RDSPostgresqlInstance
+        - diagrams.aws.database.RDSSqlServerInstance
     edges:
       - DBClusterIdentifier
       - DBParameterGroupName
