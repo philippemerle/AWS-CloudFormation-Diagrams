@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """Script to generate documentation about supported AWS CloudFormation resource types."""
 
-import diagrams
 import importlib
 import pathlib
 import os
 import yaml
+import diagrams
 
 #
 # Extensions to the Diagrams library.
@@ -34,6 +34,12 @@ DIAGRAMS_URL = \
         "https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master"
 
 def get_icon_url(diagrams_node_class: object):
+    """
+    Get the icon url of a Diagrams node class.
+
+    :param diagrams_node_class: Diagrams node class, like VPC or Docker
+    :returns: The url to the icon
+    """
     return get_icon_path(diagrams_node_class).replace(DIAGRAMS_PATH, DIAGRAMS_URL)
 
 def get_class(classname):
@@ -70,8 +76,8 @@ for rtype, rconfig in configuration.get("resources").items():
         elif isinstance(classname, list):
             represented_by = ""
             for cn in classname:
-              icon = get_icon_url(get_class(cn))
-              represented_by += f" ![{rtype}]({icon})"
+                icon = get_icon_url(get_class(cn))
+                represented_by += f" ![{rtype}]({icon})"
         else:
             represented_by = "INVALID CLASSNAME TYPE!"
         print(f"| `{rtype}` | {represented_by} |")
