@@ -422,7 +422,9 @@ def split_node_label(node_label):
     return result
 
 GLOBALS = {
+    "Engine": None,
     "MapPublicIpOnLaunch": True,
+    "SourceDBInstanceIdentifier": None,
     "Type": None,
 }
 
@@ -434,19 +436,16 @@ def get_diagram_class(resource):
     diagram_node_classname = None
     configuration = get_config(resource)
     cicon = configuration.get("icon", {})
-    if "eval" in cicon:
-        # pylint: disable-next=unused-variable
-        properties = resource.get("Properties", {})
-        # pylint: disable-next=eval-used
-        diagram_node_classname = eval(cicon["eval"])
-    elif "classname" in cicon:
+    if "classname" in cicon:
         classname = cicon["classname"]
         if isinstance(classname, str):
             diagram_node_classname = classname
         elif isinstance(classname, list):
             for item in classname:
                 when = item.get("when", True)
-                if when is True or eval(when, globals=GLOBALS, locals=resource.get("Properties", {})):
+                properties = resource.get("Properties", {})
+                # pylint: disable-next=eval-used
+                if when is True or eval(when, globals=GLOBALS, locals=properties):
                     diagram_node_classname = item["then"]
                     break
     diagram_node_class = ManagedServices
@@ -477,31 +476,6 @@ def compute_style(style):
         return style
     return None
 
-def get_rds_dbinstance_icon(properties):
-    """
-        Get icon for AWS::RDS::DBInstance.
-        
-        :param properties: AWS::RDS::DBInstance properties 
-    """
-    engine = properties.get("Engine")
-    if engine is None:
-        sourcedb = properties.get("SourceDBInstanceIdentifier")
-        if sourcedb is not None:
-            if "Ref" in sourcedb:
-                return get_rds_dbinstance_icon(
-                    cloud_formation_data["Resources"]
-                        [sourcedb["Ref"]]["Properties"]
-                )
-    classes = { #TODO check keys
-        "MariaDB": "diagrams.aws.database.RDSMariadbInstance",
-        "MySQL": "diagrams.aws.database.RDSMysqlInstance",
-        "Oracle": "diagrams.aws.database.RDSOracleInstance",
-        "PostgreSQL": "diagrams.aws.database.RDSPostgresqlInstance",
-        "SqlServer": "diagrams.aws.database.RDSSqlServerInstance",
-    }
-    return classes.get(engine) or "diagrams.aws.database.RDSInstance"
-
-
 def get_type(resource: dict) -> str:
     """
         Get the type of an AWS resource.
@@ -515,6 +489,21 @@ def get_type(resource: dict) -> str:
         else:
             resource_type = "DICT_TYPE"
     return resource_type
+
+def get_property(resource_ref: dict, property_name: str):
+    """
+        Get a property of a referenced resource.
+
+        :param resource_ref: The reference to the resource
+        :param property_name: The name of the property
+    """
+    if resource_ref is not None and "Ref" in resource_ref:
+        return cloud_formation_data["Resources"] \
+               [resource_ref["Ref"]]["Properties"] \
+               .get(property_name)
+    return None
+
+GLOBALS["property"] = get_property
 
 def get_config(resource: dict, default_config: bool = True) -> dict:
     """
@@ -849,7 +838,7 @@ if args.format in ("svg", "dot_json"):
         "https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master"
     CFD_PATH = str(Path(os.path.abspath(os.path.dirname(__file__))).parent)
     CFD_URL = \
-        "https://raw.githubusercontent.com/philippemerle/AWS CloudFormation Diagrams/refs/heads/main"
+      "https://raw.githubusercontent.com/philippemerle/AWS CloudFormation Diagrams/refs/heads/main"
     if args.format == "svg":
         what_to_search = [
             r'image xlink:href="([^"]+)"',

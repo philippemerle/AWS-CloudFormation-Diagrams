@@ -1256,17 +1256,16 @@ resources:
     kind: cluster
     style: Database
     icon:
-      eval: get_rds_dbinstance_icon(properties)
       classname:
-        - when: # TODO
+        - when: (Engine or property(SourceDBInstanceIdentifier, "Engine")) == "MariaDB"
           then: diagrams.aws.database.RDSMariadbInstance
-        - when: # TODO
+        - when: (Engine or property(SourceDBInstanceIdentifier, "Engine")) == "MySQL"
           then: diagrams.aws.database.RDSMysqlInstance
-        - when: # TODO
+        - when: (Engine or property(SourceDBInstanceIdentifier, "Engine")) == "Oracle"
           then: diagrams.aws.database.RDSOracleInstance
-        - when: # TODO
+        - when: (Engine or property(SourceDBInstanceIdentifier, "Engine")) == "PostgreSQL"
           then: diagrams.aws.database.RDSPostgresqlInstance
-        - when: # TODO
+        - when: (Engine or property(SourceDBInstanceIdentifier, "Engine")) == "SqlServer"
           then: diagrams.aws.database.RDSSqlServerInstance
         - then: diagrams.aws.database.RDSInstance
     edges:
