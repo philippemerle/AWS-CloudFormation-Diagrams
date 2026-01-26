@@ -421,11 +421,17 @@ def split_node_label(node_label):
     result += node_label[last_pos:]
     return result
 
+GLOBALS = {
+    "MapPublicIpOnLaunch": True,
+    "Type": None,
+}
+
 def get_diagram_class(resource):
     """
         Get a diagram class from an AWS CloudFormation resource.
     """
     # Search diagram node class
+    diagram_node_classname = None
     configuration = get_config(resource)
     cicon = configuration.get("icon", {})
     if "eval" in cicon:
@@ -434,9 +440,15 @@ def get_diagram_class(resource):
         # pylint: disable-next=eval-used
         diagram_node_classname = eval(cicon["eval"])
     elif "classname" in cicon:
-        diagram_node_classname = cicon["classname"]
-    else:
-        diagram_node_classname = None
+        classname = cicon["classname"]
+        if isinstance(classname, str):
+            diagram_node_classname = classname
+        elif isinstance(classname, list):
+            for item in classname:
+                when = item.get("when", True)
+                if when is True or eval(when, globals=GLOBALS, locals=resource.get("Properties", {})):
+                    diagram_node_classname = item["then"]
+                    break
     diagram_node_class = ManagedServices
     if diagram_node_classname is not None:
         # Import Diagrams node class module

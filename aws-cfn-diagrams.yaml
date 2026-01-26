@@ -632,13 +632,10 @@ resources:
     kind: cluster
     style: Network
     icon:
-      eval: |
-        "diagrams.aws.network.PrivateSubnet" \
-          if properties.get("MapPublicIpOnLaunch") == False \
-        else "diagrams.aws.network.PublicSubnet"
       classname:
-        - diagrams.aws.network.PublicSubnet
-        - diagrams.aws.network.PrivateSubnet
+        - when: MapPublicIpOnLaunch == False
+          then: diagrams.aws.network.PrivateSubnet
+        - then: diagrams.aws.network.PublicSubnet
     edges:
       - AvailabilityZone
       - VpcId
@@ -845,13 +842,10 @@ resources:
   AWS::ElasticLoadBalancing::LoadBalancer:
     kind: node
     icon:
-      eval: |
-        "diagrams.aws.network.ElbApplicationLoadBalancer" \
-          if properties.get("Type") == "application" \
-        else "diagrams.aws.network.ElasticLoadBalancing"
       classname:
-        - diagrams.aws.network.ElasticLoadBalancing
-        - diagrams.aws.network.ElbApplicationLoadBalancer
+        - when: Type == "application"
+          then: diagrams.aws.network.ElbApplicationLoadBalancer
+        - then: diagrams.aws.network.ElasticLoadBalancing
     edges:
       - AccessLoggingPolicy:
         - S3BucketName
@@ -890,16 +884,12 @@ resources:
     kind: cluster
     style: Network
     icon:
-      eval: |
-        "diagrams.aws.network.ElbApplicationLoadBalancer" \
-          if properties.get("Type") == "application" \
-        else "diagrams.aws.network.ElbNetworkLoadBalancer" \
-          if properties.get("Type") == "network" \
-        else "diagrams.aws.network.ElasticLoadBalancing"
       classname:
-        - diagrams.aws.network.ElasticLoadBalancing
-        - diagrams.aws.network.ElbNetworkLoadBalancer
-        - diagrams.aws.network.ElbApplicationLoadBalancer
+        - when: Type == "network"
+          then: diagrams.aws.network.ElbNetworkLoadBalancer
+        - when: Type == "application"
+          then: diagrams.aws.network.ElbApplicationLoadBalancer
+        - then: diagrams.aws.network.ElasticLoadBalancing
     edges:
       - SecurityGroups
       - SubnetMappings:
@@ -1268,12 +1258,17 @@ resources:
     icon:
       eval: get_rds_dbinstance_icon(properties)
       classname:
-        - diagrams.aws.database.RDSInstance
-        - diagrams.aws.database.RDSMariadbInstance
-        - diagrams.aws.database.RDSMysqlInstance
-        - diagrams.aws.database.RDSOracleInstance
-        - diagrams.aws.database.RDSPostgresqlInstance
-        - diagrams.aws.database.RDSSqlServerInstance
+        - when: # TODO
+          then: diagrams.aws.database.RDSMariadbInstance
+        - when: # TODO
+          then: diagrams.aws.database.RDSMysqlInstance
+        - when: # TODO
+          then: diagrams.aws.database.RDSOracleInstance
+        - when: # TODO
+          then: diagrams.aws.database.RDSPostgresqlInstance
+        - when: # TODO
+          then: diagrams.aws.database.RDSSqlServerInstance
+        - then: diagrams.aws.database.RDSInstance
     edges:
       - DBClusterIdentifier
       - DBParameterGroupName

@@ -75,8 +75,8 @@ for rtype, rconfig in configuration.get("resources").items():
             represented_by = f"![{rtype}]({icon})"
         elif isinstance(classname, list):
             represented_by = ""
-            for cn in classname:
-                icon = get_icon_url(get_class(cn))
+            for item in classname:
+                icon = get_icon_url(get_class(item["then"]))
                 represented_by += f" ![{rtype}]({icon})"
         else:
             represented_by = "INVALID CLASSNAME TYPE!"
