@@ -53,7 +53,25 @@ options:
 The folder [diagrams](diagrams) contains generated diagrams for most of [AWS CloudFormation templates](
 https://github.com/aws-cloudformation/aws-cloudformation-templates).
 
+Following diagram is about WebApp:
+
 ![WebApp](diagrams/aws-cloudformation-templates-Solutions-WebApp-webapp.yaml.png)
+
+Following diagram is about Gitea:
+
+![Gitea](diagrams/aws-cloudformation-templates-Solutions-Gitea-Gitea-pkg.yaml.png)
+
+Following diagram is about AutoScaling:
+
+![AutoScaling](diagrams/aws-cloudformation-templates-AutoScaling-AutoScalingMultiAZWithNotifications.yaml.png)
+
+Following diagram is about EKS:
+
+![EKS](diagrams/aws-cloudformation-templates-EKS-template.yaml.png)
+
+Following diagram is about VPC:
+
+![VPC](diagrams/aws-cloudformation-templates-VPC-VPC_With_Managed_NAT_And_Private_Subnet.yaml.png)
 
 ## License
 
