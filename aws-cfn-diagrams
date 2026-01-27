@@ -67,6 +67,21 @@ def node_constructor(
         return constructor.construct_sequence(node)
     return node
 
+def and_constructor(
+        constructor: yaml.constructor.BaseConstructor,
+        node: object
+    ):
+    """
+        Constructor for !And AWS CloudFormation Function.
+
+        :param constructor: PyYAML constructor
+        :type constructor: yaml.constructor.BaseConstructor
+        :param node: PyYAML node
+        :type node: object
+    """
+    return { "Fn::And": constructor.construct_sequence(node) }
+yaml.add_constructor("!And", and_constructor)
+
 def base64_constructor(
         constructor: yaml.constructor.BaseConstructor,
         node: object
