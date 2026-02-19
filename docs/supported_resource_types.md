@@ -143,5 +143,5 @@
 | `AWS::SSM::Document` | ![AWS::SSM::Document](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/management/systems-manager.png) |
 | `AWS::WAFv2::WebACL` | ![AWS::WAFv2::WebACL](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/security/waf.png) |
 | `Custom` | ![Custom](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/enablement/customer-enablement.png) |
-| `Rain::Module` | ![Rain::Module](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/enablement/managed-services.png) |
+| `Rain::Module` | ![Rain::Module](../icons/Rain_Module.png) |
 

@@ -1471,6 +1471,8 @@ resources:
   #
 
   Rain::Module:
-    kind: node
+    kind: cluster
     icon:
-      classname: #TODO
+      filename: icons/Rain_Module.png
+    style:
+      bgcolor: "#F1FFE6"

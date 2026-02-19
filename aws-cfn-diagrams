@@ -9,6 +9,7 @@ import os
 import sys
 import yaml
 import diagrams
+import diagrams.custom
 from diagrams import Edge, Cluster
 from diagrams.aws.enablement import ManagedServices
 
@@ -384,24 +385,30 @@ class Diagram(diagrams.Diagram):
     __outformats = SUPPORTED_OUTPUT_FORMATS
 
 # Inspired from https://github.com/mingrammer/diagrams/pull/853
-def icon(node: object, label: str, size=64):
+def get_icon_path(diagrams_node_class: object):
     """
-    Function adds a Diagrams-compatible icon
+    Get the icon path of a Diagrams node class.
 
-    :param node: Diagrams object, like VPC or Docker
-    :param label: Label text, like "subnet-a"
-    :param size: Icon size in px.
-    :returns: "Label prefixed with a specified icon"
+    :param diagrams_node_class: Diagrams node class, like VPC or Docker
+    :returns: The path to the icon
     """
     # pylint: disable-next=too-few-public-methods
-    class Node(node):
+    class Node(diagrams_node_class):
         """Overloading Node class."""
         def __init__(self):
             """Initialisation."""
             # pass # do nothing!
 
     # pylint: disable-next=protected-access
-    icon_path = Node()._load_icon()
+    return Node()._load_icon()
+
+def label_with_icon(icon_path: str, label: str, size=64):
+    """
+    :param icon_path: An icon path
+    :param label: Label text, like "subnet-a"
+    :param size: Icon size in px.
+    :returns: "Label prefixed with a specified icon"
+    """
     return '<<table border="0" width="100%"><tr><td fixedsize="true" width="' \
             + str(size) + '" height="' + str(size) \
             + '"><img src="' + icon_path + '" /></td><td>' \
@@ -477,6 +484,15 @@ def create_diagram_node(name, resource):
     """
         Create a diagram node from an AWS CloudFormation resource.
     """
+    configuration = get_config(resource)
+    if "icon" in configuration and "filename" in configuration["icon"]:
+        filename = configuration["icon"]["filename"]
+        if filename is not None: # filename defined
+            return diagrams.custom.Custom(
+                split_node_label(name),
+                DIRNAME + "/" + filename, #.replace("$KD", DIRNAME)),
+#                tooltip=tooltip
+            )
     return get_diagram_class(resource)(split_node_label(name))
 
 def compute_style(style):
@@ -536,6 +552,16 @@ def get_config(resource: dict, default_config: bool = True) -> dict:
     return config.get("resources", {}) \
                 .get(resource_type, {} if default_config else None)
 
+def parse_aws_cloud_formation_template(template_filename):
+    with open(template_filename, encoding="utf-8") as stream:
+        file_format = template_filename[template_filename.rfind(".")+1:]
+        LOADER_FUNCTIONS = {
+            "yml": yaml.full_load,
+            "yaml": yaml.full_load,
+            "json": json.load
+        }
+        return LOADER_FUNCTIONS[file_format](stream)
+
 # Directory where this script is.
 DIRNAME = os.path.dirname(__file__)
 
@@ -547,7 +573,7 @@ with open(DIRNAME + "/aws-cfn-diagrams.yaml", encoding="utf-8") as stream:
 # Parse arguments
 parser = argparse.ArgumentParser(
     prog="aws-cfn-diagrams",
-    description="Generate AWS architecture diagrams from AWS CloudFormation templates")
+    description="Generate AWS infrastructure diagrams from AWS CloudFormation templates")
 parser.add_argument("filename",
     help="the AWS CloudFormation template to process")
 parser.add_argument("-o", "--output", type=str,
@@ -584,14 +610,7 @@ if args.format not in SUPPORTED_OUTPUT_FORMATS:
 aws_cloud_formation_filename = args.filename
 
 # Open AWS CloudFormation file.
-with open(aws_cloud_formation_filename, encoding="utf-8") as stream:
-    file_format = aws_cloud_formation_filename[aws_cloud_formation_filename.rfind(".")+1:]
-    LOADER_FUNCTIONS = {
-        "yml": yaml.full_load,
-        "yaml": yaml.full_load,
-        "json": json.load
-    }
-    cloud_formation_data = LOADER_FUNCTIONS[file_format](stream)
+cloud_formation_data = parse_aws_cloud_formation_template(aws_cloud_formation_filename)
 
 if "Parameters" not in cloud_formation_data:
     cloud_formation_data["Parameters"] = {}
@@ -622,7 +641,8 @@ for rname, rdata in cloud_formation_data["Resources"].items():
 #
 # Generate diagram
 #
-with Diagram("", filename=args.output, show=False, direction="TB", outformat=args.format):
+
+def generate_diagram(cloud_formation_data):
     nodes = {}
     def generate_node(name, data) -> None:
         """
@@ -657,11 +677,11 @@ with Diagram("", filename=args.output, show=False, direction="TB", outformat=arg
             if len(pdata) == 1:
                 if "Ref" in pdata:
                     node = pdata["Ref"]
-                    if node in cloud_formation_data["Resources"]:
+                    if node in cloud_formation_data["Resources"] or node in nodes:
                         the_nodes.append(node)
                 elif "Fn::GetAtt" in pdata:
                     node = pdata["Fn::GetAtt"][0]
-                    if node in cloud_formation_data["Resources"]:
+                    if node in cloud_formation_data["Resources"] or node in nodes:
                         the_nodes.append(node)
                 elif "Fn::Sub" in pdata:
                     sub_params = pdata["Fn::Sub"]
@@ -752,22 +772,43 @@ with Diagram("", filename=args.output, show=False, direction="TB", outformat=arg
         """
             Generate a cluster.
         """
-        if len(cdata["nodes"]) == 0:
+        if len(cdata["nodes"]) == 0 and get_type(cloud_formation_data["Resources"][cname]) != "Rain::Module":
             generate_node(cname, cloud_formation_data["Resources"][cname])
             return
 
         # Generate a visual cluster only when there are several nodes inside.
-        with Cluster(
-            icon(
-                get_diagram_class(
-                    cloud_formation_data["Resources"][cname]
+        cluster_label = cname
+        config = get_config(cloud_formation_data["Resources"][cname])
+        config_icon = config.get("icon", {})
+        if "filename" in config_icon:
+            cluster_label = label_with_icon(DIRNAME + "/" + config_icon["filename"], cname)
+        elif "classname" in config_icon:
+            cluster_label = label_with_icon(
+                get_icon_path(
+                    get_diagram_class(
+                        cloud_formation_data["Resources"][cname]
+                    )
                 ),
-                cname,
-            ),
+                cname
+            )
+        with Cluster(
+            cluster_label,
             graph_attr=compute_style(cdata["style"])
         ):
             rdata = cloud_formation_data["Resources"][cname]
-            generate_node(cname, rdata)
+            if get_type(rdata) != "Rain::Module":
+                generate_node(cname, rdata)
+
+            # Deal with Rain::Module
+            if get_type(rdata) == "Rain::Module":
+                module_filename = rdata["Type"]["Rain::Module"]
+                module_data = parse_aws_cloud_formation_template(
+                    os.path.dirname(aws_cloud_formation_filename) + "/" + module_filename
+                )
+                module_nodes = generate_diagram(module_data)
+                for k, v in module_nodes.items():
+                    nodes[cname + k] = v
+
             for rname in cdata["nodes"]:
                 if rname in clusters:
                     generate_cluster(rname, clusters[rname])
@@ -782,6 +823,18 @@ with Diagram("", filename=args.output, show=False, direction="TB", outformat=arg
             generate_cluster(cname, cdata)
 
     for rname, rdata in cloud_formation_data["Resources"].items():
+        # Deal with Rain::Module
+        if get_type(rdata) == "Rain::Module":
+            for ko, vo in (rdata.get("Overrides") or {}).items():
+                if isinstance(vo, dict):
+                    depends_on = vo.get("DependsOn")
+                    if isinstance(depends_on, str):
+                        _ = nodes[rname+ko] >> Edge(**compute_style("DependsOn")) >> nodes[depends_on]
+                    elif isinstance(depends_on, list):
+                        for d in depends_on:
+                            _ = nodes[rname+ko] >> Edge(**compute_style("DependsOn")) >> nodes[d]
+            continue # next resource
+
         rconfig = get_config(rdata)
         kind = rconfig.get("kind", "node")
         edges = []
@@ -837,6 +890,10 @@ with Diagram("", filename=args.output, show=False, direction="TB", outformat=arg
                 warning(f"Resources:{rname} - No graphical node for resource '{to_node}'")
             else:
                 _ = nodes[from_node] >> Edge(**compute_style(estyle)) >> nodes[to_node]
+    return nodes
+
+with Diagram("", filename=args.output, show=False, direction="TB", outformat=args.format):
+    generate_diagram(cloud_formation_data)
 
 print(f"{args.output}.{args.format} generated.")
 
