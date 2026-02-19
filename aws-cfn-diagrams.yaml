@@ -1353,7 +1353,7 @@ resources:
   AWS::Serverless::Function:
     kind: node
     icon:
-      classname: #TODO
+      classname: diagrams.aws.compute.LambdaFunction
 
   #
   # AWS::ServiceCatalog resource types.

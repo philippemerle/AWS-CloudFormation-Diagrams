@@ -128,7 +128,7 @@
 | `AWS::S3::Bucket` | ![AWS::S3::Bucket](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/storage/simple-storage-service-s3-bucket.png) |
 | `AWS::S3::BucketPolicy` | ![AWS::S3::BucketPolicy](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/storage/simple-storage-service-s3.png) |
 | `AWS::SecretsManager::Secret` | ![AWS::SecretsManager::Secret](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/security/secrets-manager.png) |
-| `AWS::Serverless::Function` | ![AWS::Serverless::Function](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/enablement/managed-services.png) |
+| `AWS::Serverless::Function` | ![AWS::Serverless::Function](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/compute/lambda-function.png) |
 | `AWS::ServiceCatalog::CloudFormationProduct` | ![AWS::ServiceCatalog::CloudFormationProduct](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/management/service-catalog.png) |
 | `AWS::ServiceCatalog::Portfolio` | ![AWS::ServiceCatalog::Portfolio](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/management/service-catalog.png) |
 | `AWS::ServiceCatalog::PortfolioProductAssociation` | ![AWS::ServiceCatalog::PortfolioProductAssociation](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/management/service-catalog.png) |
