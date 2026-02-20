@@ -2,6 +2,7 @@
 
 [![license](https://img.shields.io/github/license/philippemerle/AWS-CloudFormation-Diagrams)](https://github.com/philippemerle/AWS-CloudFormation-Diagrams/blob/main/LICENSE)
 ![python version](https://img.shields.io/badge/python-%3E%3D%203.9-blue?logo=python)
+[![pypi version](https://badge.fury.io/py/AWS-CloudFormation-Diagrams.svg)](https://badge.fury.io/py/AWS-CloudFormation-Diagrams)
 ![contributors](https://img.shields.io/github/contributors/philippemerle/AWS-CloudFormation-Diagrams)
 
 A simple CLI script to generate AWS infrastructure diagrams from AWS CloudFormation templates.
@@ -30,7 +31,7 @@ Following command installs required Python dependencies, i.e., [PyYAML](https://
 
 ```ssh
 # using pip (pip3)
-pip install PyYAML diagrams
+pip install AWS-CloudFormation-Diagrams
 ```
 
 ## Usage
