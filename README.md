@@ -9,11 +9,11 @@ A simple CLI script to generate AWS infrastructure diagrams from AWS CloudFormat
 ## Features
 
 * Parses both YAML and JSON AWS CloudFormation templates
-* Supports [140 AWS resource types and any custom resource types](docs/supported_resource_types.md)
+* Supports [140 AWS resource types and any custom resource types](https://github.com/philippemerle/AWS-CloudFormation-Diagrams/blob/main/docs/supported_resource_types.md)
 * Supports `Rain::Module` resource type
 * Supports `DependsOn`, `Ref`, and `Fn::GetAtt` relationships
 * Generates DOT, GIF, JPEG, PDF, PNG, SVG, and TIFF diagrams
-* Provides [126 generated diagram examples](diagrams/)
+* Provides [126 generated diagram examples](https://github.com/philippemerle/AWS-CloudFormation-Diagrams/blob/main/diagrams/)
 
 Have ideas? [Open an issue](https://github.com/philippemerle/AWS-CloudFormation-Diagrams/issues/new) or [start a discussion](https://github.com/philippemerle/AWS-CloudFormation-Diagrams/discussions/new).
 
@@ -52,32 +52,32 @@ options:
 
 ## Examples
 
-The folder [diagrams](diagrams) contains generated diagrams for most of [AWS CloudFormation templates](
+The folder [diagrams](https://github.com/philippemerle/AWS-CloudFormation-Diagrams/blob/main/diagrams) contains generated diagrams for most of [AWS CloudFormation templates](
 https://github.com/aws-cloudformation/aws-cloudformation-templates).
 
 Following diagram is about WebApp:
 
-![WebApp](diagrams/aws-cloudformation-templates-Solutions-WebApp-webapp.yaml.png)
+![WebApp](https://raw.githubusercontent.com/philippemerle/AWS-CloudFormation-Diagrams/refs/heads/main/diagrams/aws-cloudformation-templates-Solutions-WebApp-webapp.yaml.png)
 
 Following diagram is about Gitea with `Rain::Module`:
 
-![Gitea](diagrams/aws-cloudformation-templates-Solutions-Gitea-Gitea.yaml.png)
+![Gitea](https://raw.githubusercontent.com/philippemerle/AWS-CloudFormation-Diagrams/refs/heads/main/diagrams/aws-cloudformation-templates-Solutions-Gitea-Gitea.yaml.png)
 
 Following diagram is about Gitea without `Rain::Module`:
 
-![Gitea](diagrams/aws-cloudformation-templates-Solutions-Gitea-Gitea-pkg.yaml.png)
+![Gitea](https://raw.githubusercontent.com/philippemerle/AWS-CloudFormation-Diagrams/refs/heads/main/diagrams/aws-cloudformation-templates-Solutions-Gitea-Gitea-pkg.yaml.png)
 
 Following diagram is about AutoScaling:
 
-![AutoScaling](diagrams/aws-cloudformation-templates-AutoScaling-AutoScalingMultiAZWithNotifications.yaml.png)
+![AutoScaling](https://raw.githubusercontent.com/philippemerle/AWS-CloudFormation-Diagrams/refs/heads/main/diagrams/aws-cloudformation-templates-AutoScaling-AutoScalingMultiAZWithNotifications.yaml.png)
 
 Following diagram is about EKS:
 
-![EKS](diagrams/aws-cloudformation-templates-EKS-template.yaml.png)
+![EKS](https://raw.githubusercontent.com/philippemerle/AWS-CloudFormation-Diagrams/refs/heads/main/diagrams/aws-cloudformation-templates-EKS-template.yaml.png)
 
 Following diagram is about VPC:
 
-![VPC](diagrams/aws-cloudformation-templates-VPC-VPC_With_Managed_NAT_And_Private_Subnet.yaml.png)
+![VPC](https://raw.githubusercontent.com/philippemerle/AWS-CloudFormation-Diagrams/refs/heads/main/diagrams/aws-cloudformation-templates-VPC-VPC_With_Managed_NAT_And_Private_Subnet.yaml.png)
 
 ## License
 
