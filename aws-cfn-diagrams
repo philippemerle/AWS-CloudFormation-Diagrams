@@ -185,8 +185,11 @@ def getatt_constructor(
         :param node: PyYAML node
         :type node: object
     """
-    value = constructor.construct_scalar(node)
-    return { "Fn::GetAtt": value.split(".") }
+    if isinstance(node, yaml.ScalarNode):
+        value = constructor.construct_scalar(node)
+        return { "Fn::GetAtt": value.split(".") }
+    else:
+        return { "Fn::GetAtt": node_constructor(node, constructor) }
 yaml.add_constructor("!GetAtt", getatt_constructor)
 
 def getazs_constructor(
@@ -560,7 +563,21 @@ def parse_aws_cloud_formation_template(template_filename):
             "yaml": yaml.full_load,
             "json": json.load
         }
-        return LOADER_FUNCTIONS[file_format](stream)
+        data = LOADER_FUNCTIONS[file_format](stream)
+    for rname, resource in dict(data["Resources"]).items():
+        if not isinstance(resource, dict):
+            warning(f"Resources:{rname} - Type undefined")
+            del data["Resources"][rname]
+            if rname.startswith("Fn::ForEach::"):
+                variable = resource[0]
+                values = resource[1]
+                resources = resource[2]
+                for value in values:
+                    for rid, rdata in resources.items():
+                        rid = rid.replace("${" + variable +"}", value)
+                        info(f"Resources:{rname} - Resources:{rid} added")
+                        data["Resources"][rid] = rdata
+    return data
 
 # Directory where this script is.
 DIRNAME = os.path.dirname(__file__)
@@ -675,7 +692,7 @@ def generate_diagram(cloud_formation_data):
             if pname == "Bucket": # TODO: avoid specific cases
                 for k, v in cloud_formation_data["Resources"].items():
                     if get_type(v) == "AWS::S3::Bucket" \
-                            and v["Properties"].get("BucketName") == pdata:
+                            and (v.get("Properties") or {}).get("BucketName") == pdata:
                         the_nodes.append(k)
                         return
             if len(pdata) == 1:

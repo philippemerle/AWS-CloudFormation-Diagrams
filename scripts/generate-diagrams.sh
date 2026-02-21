@@ -17,7 +17,9 @@ for filename in \
   aws-cloudformation-templates/AppRunner/*.yaml \
   aws-cloudformation-templates/AutoScaling/*.yaml \
   aws-cloudformation-templates/AWSSupplyChain/SapPrivateLink/*.yaml \
+  aws-cloudformation-templates/CloudFormation/*.yaml \
   aws-cloudformation-templates/CloudFormation/CustomResources/getfromjson/*/*.yml \
+  aws-cloudformation-templates/CloudFormation/MacrosExamples/*/*.yaml \
   aws-cloudformation-templates/CloudWatch/*.yaml \
   aws-cloudformation-templates/Config/*.yaml \
   aws-cloudformation-templates/DataFirehose/*.yaml \

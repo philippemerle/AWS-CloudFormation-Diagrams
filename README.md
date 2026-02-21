@@ -10,13 +10,12 @@ A simple CLI script to generate AWS infrastructure diagrams from AWS CloudFormat
 ## Features
 
 * Parses both YAML and JSON AWS CloudFormation templates
-* Supports [140 AWS resource types and any custom resource types](https://github.com/philippemerle/AWS-CloudFormation-Diagrams/blob/main/docs/supported_resource_types.md)
+* Supports [143 AWS resource types and any custom resource types](https://github.com/philippemerle/AWS-CloudFormation-Diagrams/blob/main/docs/supported_resource_types.md)
 * Supports `Rain::Module` resource type
 * Supports `DependsOn`, `Ref`, and `Fn::GetAtt` relationships
 * Supports `::Id`-suffixed parameter types such as `AWS::EC2::Image::Id`, `AWS::EC2::SecurityGroup::Id`, `AWS::EC2::Subnet::Id`, `AWS::EC2::VPC::Id`, `AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>`, `List<AWS::EC2::SecurityGroup::Id>`, `List<AWS::EC2::Subnet::Id>`, or `List<AWS::EC2::VPC::Id>`
-
 * Generates DOT, GIF, JPEG, PDF, PNG, SVG, and TIFF diagrams
-* Provides [126 generated diagram examples](https://github.com/philippemerle/AWS-CloudFormation-Diagrams/blob/main/diagrams/)
+* Provides [148 generated diagram examples](https://github.com/philippemerle/AWS-CloudFormation-Diagrams/blob/main/diagrams/)
 
 Have ideas? [Open an issue](https://github.com/philippemerle/AWS-CloudFormation-Diagrams/issues/new) or [start a discussion](https://github.com/philippemerle/AWS-CloudFormation-Diagrams/discussions/new).
 

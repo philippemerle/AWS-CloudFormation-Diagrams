@@ -194,6 +194,13 @@ resources:
   # AWS::CloudFormation resource types.
   #
 
+  AWS::CloudFormation::Macro:
+    kind: node
+    icon:
+      classname: diagrams.aws.management.Cloudformation
+    edges:
+      - FunctionName
+
   AWS::CloudFormation::Stack:
     kind: node
     icon:
@@ -1337,6 +1344,20 @@ resources:
       - Bucket
     parent_cluster_property: Bucket
 
+  AWS::S3::Object:
+    kind: node
+    icon:
+      classname: diagrams.aws.storage.SimpleStorageServiceS3Object
+    edges:
+      - Source:
+        - Bucket
+        - Key
+      - Target:
+        - Bucket
+    parent_cluster_property:
+      - Target:
+        - Bucket
+
   #
   # AWS::SecretsManager resource types.
   #
@@ -1478,3 +1499,13 @@ resources:
       filename: icons/Rain_Module.png
     style:
       bgcolor: "#F1FFE6"
+
+  #
+  # Boto3 resources.
+  #
+  Boto3::CodeCommit.put_file:
+    kind: node
+    icon:
+      classname: diagrams.aws.devtools.Codecommit
+    edges:
+      - RepositoryName
