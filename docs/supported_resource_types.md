@@ -16,6 +16,7 @@
 | `AWS::AutoScaling::LaunchConfiguration` | ![AWS::AutoScaling::LaunchConfiguration](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/management/auto-scaling.png) |
 | `AWS::AutoScaling::ScalingPolicy` | ![AWS::AutoScaling::ScalingPolicy](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/management/auto-scaling.png) |
 | `AWS::AutoScaling::ScheduledAction` | ![AWS::AutoScaling::ScheduledAction](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/management/auto-scaling.png) |
+| `AWS::CloudFormation::Macro` | ![AWS::CloudFormation::Macro](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/management/cloudformation.png) |
 | `AWS::CloudFormation::Stack` | ![AWS::CloudFormation::Stack](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/management/cloudformation-stack.png) |
 | `AWS::CloudFormation::WaitConditionHandle` | ![AWS::CloudFormation::WaitConditionHandle](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/management/cloudformation.png) |
 | `AWS::CloudFormation::WaitCondition` | ![AWS::CloudFormation::WaitCondition](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/management/cloudformation.png) |
@@ -127,6 +128,7 @@
 | `AWS::Route53::HostedZone` | ![AWS::Route53::HostedZone](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/network/route-53-hosted-zone.png) |
 | `AWS::S3::Bucket` | ![AWS::S3::Bucket](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/storage/simple-storage-service-s3-bucket.png) |
 | `AWS::S3::BucketPolicy` | ![AWS::S3::BucketPolicy](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/storage/simple-storage-service-s3.png) |
+| `AWS::S3::Object` | ![AWS::S3::Object](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/storage/simple-storage-service-s3-object.png) |
 | `AWS::SecretsManager::Secret` | ![AWS::SecretsManager::Secret](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/security/secrets-manager.png) |
 | `AWS::Serverless::Function` | ![AWS::Serverless::Function](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/compute/lambda-function.png) |
 | `AWS::ServiceCatalog::CloudFormationProduct` | ![AWS::ServiceCatalog::CloudFormationProduct](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/management/service-catalog.png) |
@@ -144,4 +146,5 @@
 | `AWS::WAFv2::WebACL` | ![AWS::WAFv2::WebACL](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/security/waf.png) |
 | `Custom` | ![Custom](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/enablement/customer-enablement.png) |
 | `Rain::Module` | ![Rain::Module](../icons/Rain_Module.png) |
+| `Boto3::CodeCommit.put_file` | ![Boto3::CodeCommit.put_file](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/devtools/codecommit.png) |
 
