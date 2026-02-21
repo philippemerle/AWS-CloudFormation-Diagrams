@@ -944,8 +944,9 @@ resources:
 
   AWS::Events::EventBus:
     kind: cluster
+    style: Management
     icon:
-      classname: diagrams.aws.integration.Eventbridge
+      classname: diagrams.aws.integration.EventbridgeDefaultEventBusResource
     edges:
       - DeadLetterConfig:
         - Arn
