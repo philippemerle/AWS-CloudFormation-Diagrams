@@ -663,7 +663,7 @@ for rname, rdata in cloud_formation_data["Resources"].items():
 # Generate diagram
 #
 
-def generate_diagram(cloud_formation_data):
+def generate_diagram(cloud_formation_data, aws_cloud_formation_filename):
     nodes = {}
     def generate_node(name, data) -> None:
         """
@@ -822,11 +822,11 @@ def generate_diagram(cloud_formation_data):
 
             # Deal with Rain::Module
             if get_type(rdata) == "Rain::Module":
-                module_filename = rdata["Type"]["Rain::Module"]
+                module_filename = os.path.dirname(aws_cloud_formation_filename) + "/" + rdata["Type"]["Rain::Module"]
                 module_data = parse_aws_cloud_formation_template(
-                    os.path.dirname(aws_cloud_formation_filename) + "/" + module_filename
+                    module_filename
                 )
-                module_nodes = generate_diagram(module_data)
+                module_nodes = generate_diagram(module_data, module_filename)
                 for k, v in module_nodes.items():
                     nodes[cname + k] = v
 
@@ -914,7 +914,7 @@ def generate_diagram(cloud_formation_data):
     return nodes
 
 with Diagram("", filename=args.output, show=False, direction="TB", outformat=args.format):
-    generate_diagram(cloud_formation_data)
+    generate_diagram(cloud_formation_data, aws_cloud_formation_filename)
 
 print(f"{args.output}.{args.format} generated.")
 
