@@ -619,6 +619,8 @@ if "Parameters" not in cloud_formation_data:
 
 for pname, pdata in cloud_formation_data["Parameters"].items():
     ptype = pdata["Type"]
+    if ptype.startswith("AWS::SSM::Parameter::Value<") and ptype.endswith(">"):
+        ptype = ptype[len("AWS::SSM::Parameter::Value<"):-1]
     if ptype.endswith("::Id"):
         rtype = ptype[:-4]
         if pname not in cloud_formation_data["Resources"]:

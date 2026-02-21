@@ -169,6 +169,7 @@ resources:
     icon:
       classname: diagrams.aws.management.AutoScaling
     edges:
+      - ImageId
       - IamInstanceProfile
       - SecurityGroups
     parent_cluster_property: SecurityGroups
@@ -527,6 +528,7 @@ resources:
       classname: diagrams.aws.compute.EC2
     edges:
       - LaunchTemplateData:
+          - ImageId
           - SecurityGroups
           - SecurityGroupIds
           - IamInstanceProfile:
