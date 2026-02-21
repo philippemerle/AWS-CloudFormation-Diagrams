@@ -18,6 +18,7 @@
 | `AWS::AutoScaling::ScheduledAction` | ![AWS::AutoScaling::ScheduledAction](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/management/auto-scaling.png) |
 | `AWS::CloudFormation::Macro` | ![AWS::CloudFormation::Macro](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/management/cloudformation.png) |
 | `AWS::CloudFormation::Stack` | ![AWS::CloudFormation::Stack](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/management/cloudformation-stack.png) |
+| `AWS::CloudFormation::StackSet` | ![AWS::CloudFormation::StackSet](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/management/cloudformation-stack.png) |
 | `AWS::CloudFormation::WaitConditionHandle` | ![AWS::CloudFormation::WaitConditionHandle](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/management/cloudformation.png) |
 | `AWS::CloudFormation::WaitCondition` | ![AWS::CloudFormation::WaitCondition](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/management/cloudformation.png) |
 | `AWS::CloudFront::CachePolicy` | ![AWS::CloudFront::CachePolicy](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/network/cloudfront.png) |
@@ -88,7 +89,9 @@
 | `AWS::ElasticLoadBalancingV2::LoadBalancer` |  ![AWS::ElasticLoadBalancingV2::LoadBalancer](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/network/elb-network-load-balancer.png) ![AWS::ElasticLoadBalancingV2::LoadBalancer](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/network/elb-application-load-balancer.png) ![AWS::ElasticLoadBalancingV2::LoadBalancer](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/network/elastic-load-balancing.png) |
 | `AWS::ElasticLoadBalancingV2::TargetGroup` | ![AWS::ElasticLoadBalancingV2::TargetGroup](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/network/elastic-load-balancing.png) |
 | `AWS::EMR::Cluster` | ![AWS::EMR::Cluster](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/analytics/emr-cluster.png) |
-| `AWS::Events::Rule` | ![AWS::Events::Rule](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/management/cloudwatch-event-event-based.png) |
+| `AWS::Events::EventBus` | ![AWS::Events::EventBus](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/integration/eventbridge.png) |
+| `AWS::Events::EventBusPolicy` | ![AWS::Events::EventBusPolicy](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/integration/eventbridge.png) |
+| `AWS::Events::Rule` | ![AWS::Events::Rule](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/integration/eventbridge.png) |
 | `AWS::Greengrass::CoreDefinition` | ![AWS::Greengrass::CoreDefinition](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/iot/iot-greengrass.png) |
 | `AWS::Greengrass::CoreDefinitionVersion` | ![AWS::Greengrass::CoreDefinitionVersion](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/iot/iot-greengrass.png) |
 | `AWS::Greengrass::FunctionDefinition` | ![AWS::Greengrass::FunctionDefinition](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/iot/iot-greengrass.png) |
@@ -116,6 +119,7 @@
 | `AWS::Logs::LogGroup` | ![AWS::Logs::LogGroup](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/management/cloudwatch-logs.png) |
 | `AWS::Logs::LogStream` | ![AWS::Logs::LogStream](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/management/cloudwatch-logs.png) |
 | `AWS::Logs::QueryDefinition` | ![AWS::Logs::QueryDefinition](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/management/cloudwatch.png) |
+| `AWS::Logs::ResourcePolicy` | ![AWS::Logs::ResourcePolicy](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/management/cloudwatch-logs.png) |
 | `AWS::Neptune::DBCluster` | ![AWS::Neptune::DBCluster](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/database/neptune.png) |
 | `AWS::Neptune::DBInstance` | ![AWS::Neptune::DBInstance](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/database/neptune.png) |
 | `AWS::Neptune::DBClusterParameterGroup` | ![AWS::Neptune::DBClusterParameterGroup](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/database/neptune.png) |
@@ -141,6 +145,7 @@
 | `AWS::SNS::TopicPolicy` | ![AWS::SNS::TopicPolicy](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/integration/simple-notification-service-sns.png) |
 | `AWS::SNS::Subscription` | ![AWS::SNS::Subscription](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/integration/simple-notification-service-sns.png) |
 | `AWS::SQS::Queue` | ![AWS::SQS::Queue](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/integration/simple-queue-service-sqs-queue.png) |
+| `AWS::SQS::QueuePolicy` | ![AWS::SQS::QueuePolicy](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/integration/simple-queue-service-sqs.png) |
 | `AWS::SSM::Association` | ![AWS::SSM::Association](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/management/systems-manager.png) |
 | `AWS::SSM::Document` | ![AWS::SSM::Document](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/management/systems-manager.png) |
 | `AWS::WAFv2::WebACL` | ![AWS::WAFv2::WebACL](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/security/waf.png) |

@@ -208,6 +208,14 @@ resources:
     edges:
       - Parameters
 
+  AWS::CloudFormation::StackSet:
+    kind: node
+    icon:
+      classname: diagrams.aws.management.CloudformationStack
+    edges:
+      - Parameters:
+        - ParameterValue
+
   AWS::CloudFormation::WaitConditionHandle:
     kind: node
     icon:
@@ -934,16 +942,35 @@ resources:
   # AWS::Events resource types.
   #
 
+  AWS::Events::EventBus:
+    kind: cluster
+    icon:
+      classname: diagrams.aws.integration.Eventbridge
+    edges:
+      - DeadLetterConfig:
+        - Arn
+
+  AWS::Events::EventBusPolicy:
+    kind: node
+    icon:
+      classname: diagrams.aws.integration.Eventbridge
+    edges:
+      - EventBusName
+    parent_cluster_property: EventBusName
+
   AWS::Events::Rule:
     kind: node
     icon:
-      classname: diagrams.aws.management.CloudwatchEventEventBased # ???
+      classname: diagrams.aws.integration.Eventbridge
     edges:
+      - EventBusName
       - Targets:
         - Arn
-        - RoleArn
+        - DeadLetterConfig:
+          - Arn
         - EcsParameters:
           - TaskDefinitionArn
+        - RoleArn
 
   #
   # AWS::Greengrass resource types.
@@ -1197,6 +1224,13 @@ resources:
     kind: node
     icon:
       classname: diagrams.aws.management.Cloudwatch
+
+  AWS::Logs::ResourcePolicy:
+    kind: node
+    icon:
+      classname: diagrams.aws.management.CloudwatchLogs
+    edges:
+      - PolicyDocument
 
   #
   # AWS::Neptune resources.
@@ -1453,6 +1487,13 @@ resources:
       classname: diagrams.aws.integration.SimpleQueueServiceSqsQueue
     edges:
       - RedrivePolicy
+
+  AWS::SQS::QueuePolicy:
+    kind: node
+    icon:
+      classname: diagrams.aws.integration.SimpleQueueServiceSqs
+    edges:
+      - Queues
 
   #
   # AWS::SSM resource types.
