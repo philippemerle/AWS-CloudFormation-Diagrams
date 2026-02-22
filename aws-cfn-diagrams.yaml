@@ -962,7 +962,7 @@ resources:
   AWS::Events::Rule:
     kind: node
     icon:
-      classname: diagrams.aws.integration.Eventbridge
+      classname: diagrams.aws.integration.EventbridgeRule
     edges:
       - EventBusName
       - Targets:

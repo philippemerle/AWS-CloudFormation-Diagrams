@@ -91,7 +91,7 @@
 | `AWS::EMR::Cluster` | ![AWS::EMR::Cluster](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/analytics/emr-cluster.png) |
 | `AWS::Events::EventBus` | ![AWS::Events::EventBus](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/integration/eventbridge-default-event-bus-resource.png) |
 | `AWS::Events::EventBusPolicy` | ![AWS::Events::EventBusPolicy](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/integration/eventbridge.png) |
-| `AWS::Events::Rule` | ![AWS::Events::Rule](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/integration/eventbridge.png) |
+| `AWS::Events::Rule` | ![AWS::Events::Rule](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/integration/eventbridge-rule.png) |
 | `AWS::Greengrass::CoreDefinition` | ![AWS::Greengrass::CoreDefinition](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/iot/iot-greengrass.png) |
 | `AWS::Greengrass::CoreDefinitionVersion` | ![AWS::Greengrass::CoreDefinitionVersion](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/iot/iot-greengrass.png) |
 | `AWS::Greengrass::FunctionDefinition` | ![AWS::Greengrass::FunctionDefinition](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/iot/iot-greengrass.png) |
