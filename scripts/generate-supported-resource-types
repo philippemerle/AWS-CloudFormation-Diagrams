@@ -32,6 +32,8 @@ def get_icon_path(diagrams_node_class: object):
 DIAGRAMS_PATH = str(pathlib.Path(os.path.abspath(os.path.dirname(diagrams.__file__))).parent)
 DIAGRAMS_URL = \
         "https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master"
+CFD_URL = \
+        "https://raw.githubusercontent.com/philippemerle/AWS-CloudFormation-Diagrams/refs/heads/main"
 
 def get_icon_url(diagrams_node_class: object):
     """
@@ -66,10 +68,15 @@ print("| :---: | :---: |")
 for rtype, rconfig in configuration.get("resources").items():
     rckind = rconfig.get("kind")
     if rckind in ("node", "cluster"):
-        classname = rconfig.get("icon", {}).get("classname")
+        rcicon = rconfig.get("icon", {})
+        classname = rcicon.get("classname")
         if classname is None:
-            icon = get_icon_url(get_class("diagrams.aws.enablement.ManagedServices"))
-            represented_by = f"![{rtype}]({icon})"
+            filename = rcicon.get("filename")
+            if filename is not None:
+                represented_by = f"![{rtype}]({CFD_URL}/{filename})"
+            else:
+                icon = get_icon_url(get_class("diagrams.aws.enablement.ManagedServices"))
+                represented_by = f"![{rtype}]({icon})"
         elif isinstance(classname, str):
             icon = get_icon_url(get_class(classname))
             represented_by = f"![{rtype}]({icon})"
