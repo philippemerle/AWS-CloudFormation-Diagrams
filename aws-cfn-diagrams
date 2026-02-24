@@ -685,7 +685,7 @@ def generate_diagram(cloud_formation_data, aws_cloud_formation_filename):
         """
             Compute edges.
         """
-        if isinstance(pdata, (int, datetime.date)):
+        if isinstance(pdata, (int, float, datetime.date)):
             pass # nothing to do
         elif isinstance(pdata, str):
             if pname == "Roles": # TODO: avoid specific cases
