@@ -1,0 +1,124 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Simple WordPress deployment with RDS generated with ChatGPT
+
+Parameters:
+  VpcId:
+    Description: VPC where resources will be deployed
+    Type: AWS::EC2::VPC::Id
+
+  KeyName:
+    Description: EC2 KeyPair
+    Type: AWS::EC2::KeyPair::KeyName
+
+  InstanceType:
+    Type: String
+    Default: t3.micro
+
+  DBName:
+    Type: String
+    Default: wordpress
+
+  DBUser:
+    Type: String
+    Default: wpuser
+
+  DBPassword:
+    Type: String
+    NoEcho: true
+    MinLength: 8
+
+Resources:
+
+  #########################
+  # Security Groups
+  #########################
+
+  WebSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow HTTP and SSH
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+
+  DBSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow MySQL from Web server
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          SourceSecurityGroupId: !Ref WebSecurityGroup
+
+  #########################
+  # RDS
+  #########################
+
+  WordPressDB:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceIdentifier: wordpress-db
+      AllocatedStorage: 20
+      DBInstanceClass: db.t3.micro
+      Engine: MySQL
+      EngineVersion: 8.0
+      MasterUsername: !Ref DBUser
+      MasterUserPassword: !Ref DBPassword
+      DBName: !Ref DBName
+      VPCSecurityGroups:
+        - !Ref DBSecurityGroup
+      PubliclyAccessible: false
+      BackupRetentionPeriod: 7
+      MultiAZ: false
+
+  #########################
+  # EC2 Instance
+  #########################
+
+  WordPressInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref InstanceType
+      KeyName: !Ref KeyName
+      SecurityGroupIds:
+        - !Ref WebSecurityGroup
+      ImageId: ami-0c02fb55956c7d316
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          yum update -y
+          amazon-linux-extras enable php8.0
+          yum install -y httpd php php-mysqlnd wget
+
+          systemctl start httpd
+          systemctl enable httpd
+
+          cd /var/www/html
+          wget https://wordpress.org/latest.tar.gz
+          tar -xzf latest.tar.gz
+          chown -R apache:apache wordpress
+
+          cp wordpress/wp-config-sample.php wordpress/wp-config.php
+
+          sed -i "s/database_name_here/${DBName}/" wordpress/wp-config.php
+          sed -i "s/username_here/${DBUser}/" wordpress/wp-config.php
+          sed -i "s/password_here/${DBPassword}/" wordpress/wp-config.php
+          sed -i "s/localhost/${WordPressDB.Endpoint.Address}/" wordpress/wp-config.php
+
+Outputs:
+  WebsiteURL:
+    Description: WordPress URL
+    Value: !Sub "http://${WordPressInstance.PublicDnsName}/wordpress"
+
+  RDSHost:
+    Description: RDS Endpoint
+    Value: !GetAtt WordPressDB.Endpoint.Address

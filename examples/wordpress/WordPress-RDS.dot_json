@@ -1,0 +1,235 @@
+{
+  "name": "%3",
+  "directed": true,
+  "strict": false,
+  "fontcolor": "#2D3436",
+  "fontname": "Sans-Serif",
+  "fontsize": "15",
+  "label": "",
+  "nodesep": "0.60",
+  "pad": "2.0",
+  "rankdir": "TB",
+  "ranksep": "0.75",
+  "splines": "ortho",
+  "_subgraph_cnt": 3,
+  "objects": [
+    {
+      "name": "cluster_VpcId",
+      "bgcolor": "#f2e6ff",
+      "fontcolor": "#2D3436",
+      "fontname": "Sans-Serif",
+      "fontsize": "12",
+      "label": "VpcId",
+      "labeljust": "l",
+      "nodesep": "0.60",
+      "pad": "2.0",
+      "pencolor": "#AEB6BE",
+      "rankdir": "LR",
+      "ranksep": "0.75",
+      "shape": "box",
+      "splines": "ortho",
+      "style": "rounded",
+      "_gvid": 0,
+      "subgraphs": [
+        1,
+2
+      ],
+      "nodes": [
+        3,4,5,6,7
+      ],
+      "edges": [
+        0,4,3,5,1,2
+      ]
+    },
+    {
+      "name": "cluster_WebSecurityGroup",
+      "bgcolor": "#fff5e6",
+      "fontcolor": "#2D3436",
+      "fontname": "Sans-Serif",
+      "fontsize": "12",
+      "label": "WebSecurityGroup",
+      "labeljust": "l",
+      "nodesep": "0.60",
+      "pad": "2.0",
+      "pencolor": "#AEB6BE",
+      "rankdir": "LR",
+      "ranksep": "0.75",
+      "shape": "box",
+      "splines": "ortho",
+      "style": "rounded",
+      "_gvid": 1,
+      "nodes": [
+        4,5
+      ],
+      "edges": [
+        1
+      ]
+    },
+    {
+      "name": "cluster_DBSecurityGroup",
+      "bgcolor": "#fff5e6",
+      "fontcolor": "#2D3436",
+      "fontname": "Sans-Serif",
+      "fontsize": "12",
+      "label": "DBSecurityGroup",
+      "labeljust": "l",
+      "nodesep": "0.60",
+      "pad": "2.0",
+      "pencolor": "#AEB6BE",
+      "rankdir": "LR",
+      "ranksep": "0.75",
+      "shape": "box",
+      "splines": "ortho",
+      "style": "rounded",
+      "_gvid": 2,
+      "nodes": [
+        6,7
+      ],
+      "edges": [
+        5
+      ]
+    },
+    {
+      "_gvid": 3,
+      "name": "b6b7a60762104aaf86fe687615bf47d0",
+      "fixedsize": "true",
+      "fontcolor": "#2D3436",
+      "fontname": "Sans-Serif",
+      "fontsize": "13",
+      "height": "1.9",
+      "image": "https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master\/resources\/aws\/network\/vpc.png",
+      "imagescale": "true",
+      "label": "VpcId",
+      "labelloc": "b",
+      "shape": "none",
+      "style": "rounded",
+      "width": "1.4"
+    },
+    {
+      "_gvid": 4,
+      "name": "b0dcd9b0cec741aea51b8f2558c58496",
+      "fixedsize": "true",
+      "fontcolor": "#2D3436",
+      "fontname": "Sans-Serif",
+      "fontsize": "13",
+      "height": "1.9",
+      "image": "https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master\/resources\/aws\/compute\/ec2.png",
+      "imagescale": "true",
+      "label": "WebSecurityGroup",
+      "labelloc": "b",
+      "shape": "none",
+      "style": "rounded",
+      "width": "1.4"
+    },
+    {
+      "_gvid": 5,
+      "name": "ef0f2835af2a4819904c89569bd2c65c",
+      "fixedsize": "true",
+      "fontcolor": "#2D3436",
+      "fontname": "Sans-Serif",
+      "fontsize": "13",
+      "height": "2.3",
+      "image": "https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master\/resources\/aws\/compute\/ec2-instance.png",
+      "imagescale": "true",
+      "label": "WordPressInstanc\ne",
+      "labelloc": "b",
+      "shape": "none",
+      "style": "rounded",
+      "width": "1.4"
+    },
+    {
+      "_gvid": 6,
+      "name": "b13d2ad25935444ab0535d935f880f11",
+      "fixedsize": "true",
+      "fontcolor": "#2D3436",
+      "fontname": "Sans-Serif",
+      "fontsize": "13",
+      "height": "1.9",
+      "image": "https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master\/resources\/aws\/compute\/ec2.png",
+      "imagescale": "true",
+      "label": "DBSecurityGroup",
+      "labelloc": "b",
+      "shape": "none",
+      "style": "rounded",
+      "width": "1.4"
+    },
+    {
+      "_gvid": 7,
+      "name": "7b7f331fdbce48b59998ea8ac7429d79",
+      "fixedsize": "true",
+      "fontcolor": "#2D3436",
+      "fontname": "Sans-Serif",
+      "fontsize": "13",
+      "height": "1.9",
+      "image": "https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master\/resources\/aws\/database\/rds-mysql-instance.png",
+      "imagescale": "true",
+      "label": "WordPressDB",
+      "labelloc": "b",
+      "shape": "none",
+      "style": "rounded",
+      "width": "1.4"
+    }
+  ],
+  "edges": [
+    {
+      "_gvid": 0,
+      "tail": 4,
+      "head": 3,
+      "color": "black",
+      "dir": "forward",
+      "fontcolor": "#2D3436",
+      "fontname": "Sans-Serif",
+      "fontsize": "13"
+    },
+    {
+      "_gvid": 4,
+      "tail": 6,
+      "head": 4,
+      "color": "black",
+      "dir": "forward",
+      "fontcolor": "#2D3436",
+      "fontname": "Sans-Serif",
+      "fontsize": "13"
+    },
+    {
+      "_gvid": 3,
+      "tail": 6,
+      "head": 3,
+      "color": "black",
+      "dir": "forward",
+      "fontcolor": "#2D3436",
+      "fontname": "Sans-Serif",
+      "fontsize": "13"
+    },
+    {
+      "_gvid": 5,
+      "tail": 7,
+      "head": 6,
+      "color": "black",
+      "dir": "forward",
+      "fontcolor": "#2D3436",
+      "fontname": "Sans-Serif",
+      "fontsize": "13"
+    },
+    {
+      "_gvid": 1,
+      "tail": 5,
+      "head": 4,
+      "color": "black",
+      "dir": "forward",
+      "fontcolor": "#2D3436",
+      "fontname": "Sans-Serif",
+      "fontsize": "13"
+    },
+    {
+      "_gvid": 2,
+      "tail": 5,
+      "head": 7,
+      "color": "black",
+      "dir": "forward",
+      "fontcolor": "#2D3436",
+      "fontname": "Sans-Serif",
+      "fontsize": "13"
+    }
+  ]
+}
