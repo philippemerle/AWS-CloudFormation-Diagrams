@@ -925,7 +925,7 @@ def generate_diagram(cloud_formation_data, aws_cloud_formation_filename):
 with Diagram("", filename=args.output, show=False, direction="TB", outformat=args.format):
     generate_diagram(cloud_formation_data, aws_cloud_formation_filename)
 
-print(f"{args.output}.{args.format} generated.")
+info(f"{args.output}.{args.format} generated")
 
 if is_drawio_format:
     command = ["graphviz2drawio", f"{args.output}.{args.format}", "-o", f"{drawio_filename}.drawio"]
@@ -936,7 +936,7 @@ if is_drawio_format:
 
 if args.format in ("svg", "dot_json"):
     FILENAME = f"{args.output}.{args.format}"
-    print("Post-process paths of icons...")
+    info("Post-process paths of icons..")
     # read all the lines of the generated file
     with open(FILENAME, "rt", encoding="utf-8") as fs:
         lines = fs.readlines()
@@ -989,7 +989,7 @@ if args.format in ("svg", "dot_json"):
                         # replace absolute path by image encoded in base64
                         line = line.replace(img_path, DATA_URI)
                     else:
-                        print(f"Warning: Image not found: {full_img_path}")
+                        warning(f"Image not found: {full_img_path}")
             # write the line
             fs.write(line)
-    print(f"{FILENAME} saved.")
+    info(f"{FILENAME} saved")
