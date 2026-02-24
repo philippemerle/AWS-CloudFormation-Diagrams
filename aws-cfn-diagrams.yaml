@@ -354,6 +354,7 @@ resources:
     icon:
       classname: diagrams.aws.security.Cognito
     edges:
+      - CallbackURLs
       - UserPoolId
     parent_cluster_property: UserPoolId
 
@@ -622,9 +623,9 @@ resources:
     parent_cluster_property:
       - GroupId
       - SourceSecurityGroupId
-      - SecurityGroupIngress:
-        - SourceSecurityGroupId
-        - SourceSecurityGroupName
+#      - SecurityGroupIngress:
+#        - SourceSecurityGroupId
+#        - SourceSecurityGroupName
       - VpcId
 
   AWS::EC2::SecurityGroupEgress:
@@ -1378,6 +1379,7 @@ resources:
       classname: diagrams.aws.storage.SimpleStorageServiceS3
     edges:
       - Bucket
+      - PolicyDocument
     parent_cluster_property: Bucket
 
   AWS::S3::Object:
@@ -1413,6 +1415,9 @@ resources:
     kind: node
     icon:
       classname: diagrams.aws.compute.LambdaFunction
+    edges:
+      - Environment:
+        - Variables
 
   #
   # AWS::ServiceCatalog resource types.
