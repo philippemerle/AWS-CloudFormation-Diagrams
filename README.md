@@ -16,8 +16,8 @@ A simple CLI script to generate AWS infrastructure diagrams from AWS CloudFormat
 * Supports `::Id`-suffixed parameter types such as `AWS::EC2::Image::Id`, `AWS::EC2::SecurityGroup::Id`, `AWS::EC2::Subnet::Id`, `AWS::EC2::VPC::Id`, `AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>`, `List<AWS::EC2::SecurityGroup::Id>`, `List<AWS::EC2::Subnet::Id>`, or `List<AWS::EC2::VPC::Id>`
 * Generates DOT, draw.io, GIF, JPEG, PDF, PNG, SVG, and TIFF diagrams
 * Provides [156 generated diagram examples](https://github.com/philippemerle/AWS-CloudFormation-Diagrams/blob/main/diagrams/)
-* [AWS CloudFormation Diagrams Interactive Viewer](https://github.com/philippemerle/AWS-CloudFormation-Diagrams?tab=readme-ov-file#interactive_viewer)
-* [Editable draw.io export](https://github.com/philippemerle/AWS-CloudFormation-Diagrams?tab=readme-ov-file#editable_draw.io_export)
+* [AWS CloudFormation Diagrams Interactive Viewer](https://github.com/philippemerle/AWS-CloudFormation-Diagrams#interactive-viewer)
+* [Editable draw.io export](https://github.com/philippemerle/AWS-CloudFormation-Diagrams?editable-draw.io-export)
 
 
 Have ideas? [Open an issue](https://github.com/philippemerle/AWS-CloudFormation-Diagrams/issues/new) or [start a discussion](https://github.com/philippemerle/AWS-CloudFormation-Diagrams/discussions/new).
@@ -75,7 +75,7 @@ Then open [examples/wordpress/WordPress-RDS.dot_json](examples/wordpress/WordPre
 
 **AWS CloudFormation Diagrams Interactive Viewer** allows users to zoom in/out diagrams, to see cluster/node/edge tooltips, open/close clusters, move clusters/nodes interactively, and save as PNG/JPG images.
 
-## Editable [draw.io](https://www.drawio.com/) Export
+## Editable draw.io Export
 
 **AWS CloudFormation Diagrams** could output diagrams in the `drawio` format. For instance, type:
 
