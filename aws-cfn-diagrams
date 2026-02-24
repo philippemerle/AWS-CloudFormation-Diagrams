@@ -806,23 +806,25 @@ def generate_diagram(cloud_formation_data, aws_cloud_formation_filename):
 
         # Generate a visual cluster only when there are several nodes inside.
         cluster_label = cname
-        config = get_config(cloud_formation_data["Resources"][cname])
-        config_icon = config.get("icon", {})
-        if "filename" in config_icon:
-            cluster_label = label_with_icon(DIRNAME + "/" + config_icon["filename"], cname)
-        elif "classname" in config_icon:
-            cluster_label = label_with_icon(
-                get_icon_path(
-                    get_diagram_class(
-                        cloud_formation_data["Resources"][cname]
-                    )
-                ),
-                cname
-            )
+        if not is_drawio_format and args.format != "dot_json":
+            config = get_config(cloud_formation_data["Resources"][cname])
+            config_icon = config.get("icon", {})
+            if "filename" in config_icon:
+                cluster_label = label_with_icon(DIRNAME + "/" + config_icon["filename"], cname)
+            elif "classname" in config_icon:
+                cluster_label = label_with_icon(
+                    get_icon_path(
+                        get_diagram_class(
+                            cloud_formation_data["Resources"][cname]
+                        )
+                    ),
+                    cname
+                )
         with Cluster(
             cluster_label,
             graph_attr=compute_style(cdata["style"])
-        ):
+        ) as cluster:
+            cluster.dot.name = f"cluster_{cname}"
             rdata = cloud_formation_data["Resources"][cname]
             if get_type(rdata) != "Rain::Module":
                 generate_node(cname, rdata)
