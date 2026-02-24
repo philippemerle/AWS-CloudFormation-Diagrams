@@ -1321,6 +1321,7 @@ resources:
     parent_cluster_property:
       - SourceDBInstanceIdentifier
       - DBClusterIdentifier
+      - VPCSecurityGroups
     children:
       - DBParameterGroupName
 
