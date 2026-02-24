@@ -12,10 +12,13 @@ A simple CLI script to generate AWS infrastructure diagrams from AWS CloudFormat
 * Parses both YAML and JSON AWS CloudFormation templates
 * Supports [148 AWS resource types and any custom resource types](https://github.com/philippemerle/AWS-CloudFormation-Diagrams/blob/main/docs/supported_resource_types.md)
 * Supports `Rain::Module` resource type
-* Supports `DependsOn`, `Ref`, and `Fn::GetAtt` relationships
+* Supports `DependsOn`, `Ref`, and `Fn::GetAtt` relationships and `${}` resource attributes
 * Supports `::Id`-suffixed parameter types such as `AWS::EC2::Image::Id`, `AWS::EC2::SecurityGroup::Id`, `AWS::EC2::Subnet::Id`, `AWS::EC2::VPC::Id`, `AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>`, `List<AWS::EC2::SecurityGroup::Id>`, `List<AWS::EC2::Subnet::Id>`, or `List<AWS::EC2::VPC::Id>`
 * Generates DOT, draw.io, GIF, JPEG, PDF, PNG, SVG, and TIFF diagrams
 * Provides [156 generated diagram examples](https://github.com/philippemerle/AWS-CloudFormation-Diagrams/blob/main/diagrams/)
+* [AWS CloudFormation Diagrams Interactive Viewer](https://github.com/philippemerle/AWS-CloudFormation-Diagrams?tab=readme-ov-file#interactive_viewer)
+* [Editable draw.io export](https://github.com/philippemerle/AWS-CloudFormation-Diagrams?tab=readme-ov-file#editable_draw.io_export)
+
 
 Have ideas? [Open an issue](https://github.com/philippemerle/AWS-CloudFormation-Diagrams/issues/new) or [start a discussion](https://github.com/philippemerle/AWS-CloudFormation-Diagrams/discussions/new).
 
@@ -52,7 +55,37 @@ options:
   --embed-all-icons    embed all icons into svg or dot_json output diagrams
 ```
 
+## Interactive Viewer
+
+**AWS CloudFormation Diagrams** could output diagrams in the `dot_json` format. For instance, type:
+
+```sh
+aws-cfn-diagrams examples/wordpress/WordPress-RDS.yaml -f dot_json
+```
+
+Diagrams in the `dot_json` format can be viewed and manipulated interactively thanks to **AWS CloudFormation Diagrams Interactive Viewer**. Just type:
+
+```sh
+open interactive_viewer/index.html
+```
+
+Then open [examples/wordpress/WordPress-RDS.dot_json](examples/wordpress/WordPress-RDS.dot_json) in **AWS CloudFormation Diagrams Interactive Viewer**.
+
+![AWS CloudFormation Diagrams Interactive Viewer](https://raw.githubusercontent.com/philippemerle/AWS-CloudFormation-Diagrams/refs/heads/main/examples/wordpress/WordPress-RDS-in-interactive-viewer.png)
+
+**AWS CloudFormation Diagrams Interactive Viewer** allows users to zoom in/out diagrams, to see cluster/node/edge tooltips, open/close clusters, move clusters/nodes interactively, and save as PNG/JPG images.
+
+## Editable [draw.io](https://www.drawio.com/) Export
+
+**AWS CloudFormation Diagrams** could output diagrams in the `drawio` format. For instance, type:
+
+```sh
+aws-cfn-diagrams examples/wordpress/WordPress-RDS.yaml -f drawio
+```
+
 ✨ Generated `drawio` files can be opened with [draw.io](https://www.drawio.com/) or your favorite diagram editor.
+
+![AWS CloudFormation Diagrams in draw.io](https://raw.githubusercontent.com/philippemerle/AWS-CloudFormation-Diagrams/refs/heads/main/examples/wordpress/WordPress-RDS-in-drawio.png)
 
 ## Examples
 
