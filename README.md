@@ -17,7 +17,7 @@ A simple CLI script to generate AWS infrastructure diagrams from AWS CloudFormat
 * Generates DOT, draw.io, GIF, JPEG, PDF, PNG, SVG, and TIFF diagrams
 * Provides [156 generated diagram examples](https://github.com/philippemerle/AWS-CloudFormation-Diagrams/blob/main/diagrams/)
 * [AWS CloudFormation Diagrams Interactive Viewer](https://github.com/philippemerle/AWS-CloudFormation-Diagrams#interactive-viewer)
-* [Editable draw.io export](https://github.com/philippemerle/AWS-CloudFormation-Diagrams?editable-draw.io-export)
+* [Editable draw.io export](https://github.com/philippemerle/AWS-CloudFormation-Diagrams#editable-drawio-export)
 
 
 Have ideas? [Open an issue](https://github.com/philippemerle/AWS-CloudFormation-Diagrams/issues/new) or [start a discussion](https://github.com/philippemerle/AWS-CloudFormation-Diagrams/discussions/new).
