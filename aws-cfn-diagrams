@@ -6,6 +6,7 @@ import datetime
 import importlib
 import json
 import os
+import re
 import subprocess
 import sys
 import yaml
@@ -670,6 +671,8 @@ for rname, rdata in cloud_formation_data["Resources"].items():
 # Generate diagram
 #
 
+CNF_RESOURCE_ATTRIBUTE_PATTERN = re.compile(r"\$\{([A-Za-z][A-Za-z0-9]*)\.([A-Za-z0-9_.-]+)\}")
+
 def generate_diagram(cloud_formation_data, aws_cloud_formation_filename):
     nodes = {}
     def generate_node(name, data) -> None:
@@ -692,6 +695,10 @@ def generate_diagram(cloud_formation_data, aws_cloud_formation_filename):
                         the_nodes.append(k)
                         return
 #TBR            debug(f"{pname}: {pdata}")
+            for match in CNF_RESOURCE_ATTRIBUTE_PATTERN.finditer(pdata):
+                node = match.group(1)
+                if node in cloud_formation_data["Resources"] or node in nodes:
+                    the_nodes.append(node)
         elif isinstance(pdata, list):
             for data in pdata:
                 compute_edges(pname, data, the_nodes)
@@ -711,18 +718,8 @@ def generate_diagram(cloud_formation_data, aws_cloud_formation_filename):
                     node = pdata["Fn::GetAtt"][0]
                     if node in cloud_formation_data["Resources"] or node in nodes:
                         the_nodes.append(node)
-                elif "Fn::Sub" in pdata:
-                    sub_params = pdata["Fn::Sub"]
-                    if isinstance(sub_params, str):
-#TBR                        if sub_params.startswith("arn:"):
-#TBR                            debug(f"{pname}: {pdata}")
-                        idx1 = sub_params.rfind(".Arn}")
-                        if idx1 != -1:
-                            idx2 = sub_params[:idx1].rfind("{")
-                            the_nodes.append(sub_params[idx2+1:idx1])
-                else:
-                    for k, v in pdata.items():
-                        compute_edges(k, v, the_nodes)
+                for k, v in pdata.items():
+                    compute_edges(k, v, the_nodes)
             else:
                 for k, v in pdata.items():
                     compute_edges(k, v, the_nodes)
