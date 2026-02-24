@@ -14,7 +14,7 @@ A simple CLI script to generate AWS infrastructure diagrams from AWS CloudFormat
 * Supports `Rain::Module` resource type
 * Supports `DependsOn`, `Ref`, and `Fn::GetAtt` relationships
 * Supports `::Id`-suffixed parameter types such as `AWS::EC2::Image::Id`, `AWS::EC2::SecurityGroup::Id`, `AWS::EC2::Subnet::Id`, `AWS::EC2::VPC::Id`, `AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>`, `List<AWS::EC2::SecurityGroup::Id>`, `List<AWS::EC2::Subnet::Id>`, or `List<AWS::EC2::VPC::Id>`
-* Generates DOT, GIF, JPEG, PDF, PNG, SVG, and TIFF diagrams
+* Generates DOT, draw.io, GIF, JPEG, PDF, PNG, SVG, and TIFF diagrams
 * Provides [156 generated diagram examples](https://github.com/philippemerle/AWS-CloudFormation-Diagrams/blob/main/diagrams/)
 
 Have ideas? [Open an issue](https://github.com/philippemerle/AWS-CloudFormation-Diagrams/issues/new) or [start a discussion](https://github.com/philippemerle/AWS-CloudFormation-Diagrams/discussions/new).
@@ -28,7 +28,7 @@ Following software must be installed:
 
 ## Installation
 
-Following command installs required Python dependencies, i.e., [PyYAML](https://pyyaml.org) and [Diagrams](https://diagrams.mingrammer.com/).
+Following command installs required Python dependencies, i.e., [PyYAML](https://pyyaml.org), [Diagrams](https://diagrams.mingrammer.com/), and [graphviz2drawio](https://pypi.org/project/graphviz2drawio).
 
 ```ssh
 # using pip (pip3)
@@ -48,9 +48,11 @@ positional arguments:
 options:
   -h, --help           show this help message and exit
   -o, --output OUTPUT  output diagram filename
-  -f, --format FORMAT  output format, allowed formats are dot, dot_json, gif, jp2, jpe, jpeg, jpg, pdf, png, svg, tif, tiff, set to png by default
+  -f, --format FORMAT  output format, allowed formats are dot, dot_json, drawio, gif, jp2, jpe, jpeg, jpg, pdf, png, svg, tif, tiff, set to png by default
   --embed-all-icons    embed all icons into svg or dot_json output diagrams
 ```
+
+✨ Generated `drawio` files can be opened with [draw.io](https://www.drawio.com/) or your favorite diagram editor.
 
 ## Examples
 

@@ -7,7 +7,7 @@ from setuptools import setup
 with open("README.md", encoding="utf-8") as readme:
     setup(
         name="AWS-CloudFormation-Diagrams",
-        version="0.2.0",
+        version="0.3.0",
         author="Philippe Merle",
         author_email="philippe.merle@inria.fr",
         maintainer="Philippe Merle",
@@ -37,6 +37,7 @@ with open("README.md", encoding="utf-8") as readme:
         install_requires=[
             "PyYAML",
             "diagrams",
+            "graphviz2drawio",
         ],
         packages=[],
         package_dir={},

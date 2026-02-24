@@ -6,6 +6,7 @@ import datetime
 import importlib
 import json
 import os
+import subprocess
 import sys
 import yaml
 import diagrams
@@ -26,14 +27,14 @@ def debug(message: str) -> None:
     """
     print(f"\33[34m[Debug] {message}.\33[0m")
 
-def info(message: str) -> None:
+def info(message: str, end: str = ".") -> None:
     """
         Print an info message.
         
         :param message: Info message to print
         :type message: str
     """
-    print(f"[Info] {message}.")
+    print(f"[Info] {message}{end}")
 
 def warning(message: str) -> None:
     """
@@ -379,8 +380,8 @@ yaml.add_constructor("!ValueOf", valueof_constructor)
 # All dot output formats are listed in https://graphviz.org/docs/outputs/
 # If you need a format not listed below, just add it below.
 SUPPORTED_OUTPUT_FORMATS = (
-    "dot", "dot_json", "gif", "jp2", "jpe", "jpeg", "jpg", "pdf", "png",
-    "svg", "tif", "tiff"
+    "dot", "dot_json", "drawio", "gif", "jp2", "jpe", "jpeg", "jpg", "pdf", "png",
+    "svg", "tif", "tiff",
 )
 class Diagram(diagrams.Diagram):
     """ Enhanced Diagram class with new output formats. """
@@ -623,6 +624,12 @@ if args.format not in SUPPORTED_OUTPUT_FORMATS:
     print(f"Error: '{args.format}' output format unsupported,"
             f" use '{SOF}' instead!", file=sys.stderr)
     sys.exit(1)
+
+is_drawio_format = args.format == "drawio"
+if is_drawio_format:
+    drawio_filename = args.output
+    args.output = "/tmp/drawio"
+    args.format = "dot"
 
 aws_cloud_formation_filename = args.filename
 
@@ -917,6 +924,13 @@ with Diagram("", filename=args.output, show=False, direction="TB", outformat=arg
     generate_diagram(cloud_formation_data, aws_cloud_formation_filename)
 
 print(f"{args.output}.{args.format} generated.")
+
+if is_drawio_format:
+    command = ["graphviz2drawio", f"{args.output}.{args.format}", "-o", f"{drawio_filename}.drawio"]
+    info(f"Execute {' '.join(command)}", end="")
+    subprocess.run(command)
+    os.remove(f"{args.output}.{args.format}")
+    info(f"{drawio_filename}.drawio generated")
 
 if args.format in ("svg", "dot_json"):
     FILENAME = f"{args.output}.{args.format}"
