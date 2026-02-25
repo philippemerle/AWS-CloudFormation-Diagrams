@@ -1,5 +1,15 @@
 #!/bin/bash
 
+# Generate diagrams for all examples
+cd examples
+for example in wordpress
+do
+  cd ${example}
+  ./generate.sh
+  cd ..
+done
+cd ..
+
 # Update or clone aws-cloudformation-templates github repo
 if [ -d aws-cloudformation-templates ]; then
   # Update aws-cloudformation-templates github repo
