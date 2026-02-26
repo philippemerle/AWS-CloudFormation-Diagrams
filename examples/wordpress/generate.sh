@@ -3,7 +3,8 @@
 PATH=../..:$PATH
 
 # Generate the infrastructure diagrams in different formats for the WordPress template.
-for format in png dot_json drawio
+for format in dot_json drawio pdf png
 do
   aws-cfn-diagrams -f ${format} WordPress-RDS.yaml
 done
+aws-cfn-diagrams -f svg --embed-all-icons WordPress-RDS.yaml
