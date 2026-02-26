@@ -15,6 +15,26 @@ to generate the following `png` diagram.
 Type
 
 ```sh
+aws-cfn-diagrams -f pdf WordPress-RDS.yaml
+```
+
+to generate the following `pdf` diagram.
+
+![WordPress RDS Diagram](WordPress-RDS.pdf)
+
+Type
+
+```sh
+aws-cfn-diagrams -f svg --embed-all-icons WordPress-RDS.yaml
+```
+
+to generate the following `svg` diagram.
+
+![WordPress RDS Diagram](WordPress-RDS.svg)
+
+Type
+
+```sh
 aws-cfn-diagrams -f dot_json WordPress-RDS.yaml
 ```
 
