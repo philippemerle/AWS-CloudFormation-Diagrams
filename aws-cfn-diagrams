@@ -489,6 +489,13 @@ def create_diagram_node(name, resource):
     """
         Create a diagram node from an AWS CloudFormation resource.
     """
+    tooltip = yaml.dump(
+                resource,
+                default_flow_style=False,
+                sort_keys=False
+              )[:-1].replace("\n\n", "\n")
+    if len(tooltip) > 16384: # dot parsing limit!
+        tooltip = tooltip[:16380] + "\n..."
     configuration = get_config(resource)
     if "icon" in configuration and "filename" in configuration["icon"]:
         filename = configuration["icon"]["filename"]
@@ -496,9 +503,9 @@ def create_diagram_node(name, resource):
             return diagrams.custom.Custom(
                 split_node_label(name),
                 DIRNAME + "/" + filename, #.replace("$KD", DIRNAME)),
-#                tooltip=tooltip
+                tooltip=tooltip
             )
-    return get_diagram_class(resource)(split_node_label(name))
+    return get_diagram_class(resource)(split_node_label(name), tooltip=tooltip)
 
 def compute_style(style):
     """
@@ -819,7 +826,10 @@ def generate_diagram(cloud_formation_data, aws_cloud_formation_filename):
                 )
         with Cluster(
             cluster_label,
-            graph_attr=compute_style(cdata["style"])
+            graph_attr={
+                "tooltip": f"{cname}: {get_type(cloud_formation_data["Resources"][cname])}",
+                **compute_style(cdata["style"])
+            }
         ) as cluster:
             cluster.dot.name = f"cluster_{cname}"
             rdata = cloud_formation_data["Resources"][cname]
