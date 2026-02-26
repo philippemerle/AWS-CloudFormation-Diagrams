@@ -424,7 +424,7 @@ def label_with_icon(icon_path: str, label: str, size=64):
 #
 
 # Maximum length for diagram node labels
-MAX_NODE_LABEL_LENGTH = 16
+MAX_NODE_LABEL_LENGTH = 14
 
 # Separators in node labels
 NODE_LABEL_SEPARATORS = [" ", ":", "-", "."]
@@ -501,11 +501,16 @@ def create_diagram_node(name, resource):
         filename = configuration["icon"]["filename"]
         if filename is not None: # filename defined
             return diagrams.custom.Custom(
-                split_node_label(name),
-                DIRNAME + "/" + filename, #.replace("$KD", DIRNAME)),
+                label=split_node_label(name),
+                icon_path=DIRNAME + "/" + filename, #.replace("$KD", DIRNAME)),
+                nodeid=f"resource_{name}",
                 tooltip=tooltip
             )
-    return get_diagram_class(resource)(split_node_label(name), tooltip=tooltip)
+    return get_diagram_class(resource)(
+        label=split_node_label(name),
+        nodeid=f"resource_{name}",
+        tooltip=tooltip
+    )
 
 def compute_style(style):
     """
