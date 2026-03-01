@@ -1,0 +1,105 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  Full example CloudFormation template:
+  - Creates a Log Group
+  - Creates a Lambda function
+  - Forwards all logs from the Log Group to the Lambda via Subscription Filter
+
+Parameters:
+  LogGroupName:
+    Type: String
+    Default: MyExampleLogGroup
+    Description: Name of the CloudWatch Log Group
+
+  LambdaFunctionName:
+    Type: String
+    Default: MyLogProcessorLambda
+    Description: Name of the Lambda function to receive log events
+
+Resources:
+  # CloudWatch Log Group
+  MyLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Ref LogGroupName
+      RetentionInDays: 14  # Optional: keep logs for 14 days
+
+  # IAM Role for Lambda to allow logging and execution
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "${LambdaFunctionName}-ExecutionRole"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      # Permissions for Lambda to write logs to CloudWatch
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+
+  # Lambda Function to process logs
+  LogProcessorLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Ref LambdaFunctionName
+      Runtime: python3.11
+      Handler: index.handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code:
+        ZipFile: |
+          import json
+          def handler(event, context):
+              print("Received event:", json.dumps(event))
+              return {"statusCode": 200}
+
+  # IAM Role for CloudWatch Logs to invoke Lambda
+  LogsToLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "${LambdaFunctionName}-LogsInvokeRole"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - logs.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: InvokeLambdaPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - lambda:InvokeFunction
+                Resource: !GetAtt LogProcessorLambda.Arn
+
+  # Subscription Filter: forwards logs from the Log Group to Lambda
+  MySubscriptionFilter:
+    Type: AWS::Logs::SubscriptionFilter
+    Properties:
+      FilterName: SendAllLogsToLambda
+      LogGroupName: !Ref MyLogGroup
+      FilterPattern: ""  # Match all log events
+      DestinationArn: !GetAtt LogProcessorLambda.Arn
+      RoleArn: !GetAtt LogsToLambdaRole.Arn
+
+Outputs:
+  LambdaFunctionArn:
+    Description: ARN of the Lambda receiving logs
+    Value: !GetAtt LogProcessorLambda.Arn
+
+  LogGroupName:
+    Description: Name of the CloudWatch Log Group
+    Value: !Ref MyLogGroup
+
+  SubscriptionFilterName:
+    Description: Name of the subscription filter
+    Value: !Ref MySubscriptionFilter

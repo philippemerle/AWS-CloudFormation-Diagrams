@@ -9,6 +9,10 @@
 | `AWS::ApiGateway::Resource` | ![AWS::ApiGateway::Resource](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/network/api-gateway.png) |
 | `AWS::ApiGateway::RestApi` | ![AWS::ApiGateway::RestApi](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/network/api-gateway.png) |
 | `AWS::ApiGateway::Stage` | ![AWS::ApiGateway::Stage](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/network/api-gateway.png) |
+| `AWS::AppConfig::Application` | ![AWS::AppConfig::Application](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/management/systems-manager-app-config.png) |
+| `AWS::AppConfig::ConfigurationProfile` | ![AWS::AppConfig::ConfigurationProfile](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/management/systems-manager-app-config.png) |
+| `AWS::AppConfig::DeploymentStrategy` | ![AWS::AppConfig::DeploymentStrategy](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/management/systems-manager-app-config.png) |
+| `AWS::AppConfig::Environment` | ![AWS::AppConfig::Environment](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/management/systems-manager-app-config.png) |
 | `AWS::ApplicationAutoScaling::ScalableTarget` | ![AWS::ApplicationAutoScaling::ScalableTarget](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/compute/application-auto-scaling.png) |
 | `AWS::ApplicationAutoScaling::ScalingPolicy` | ![AWS::ApplicationAutoScaling::ScalingPolicy](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/compute/application-auto-scaling.png) |
 | `AWS::AppRunner::Service` | ![AWS::AppRunner::Service](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/compute/app-runner.png) |
@@ -16,6 +20,7 @@
 | `AWS::AutoScaling::LaunchConfiguration` | ![AWS::AutoScaling::LaunchConfiguration](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/management/auto-scaling.png) |
 | `AWS::AutoScaling::ScalingPolicy` | ![AWS::AutoScaling::ScalingPolicy](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/management/auto-scaling.png) |
 | `AWS::AutoScaling::ScheduledAction` | ![AWS::AutoScaling::ScheduledAction](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/management/auto-scaling.png) |
+| `AWS::CDK::Metadata` | ![AWS::CDK::Metadata](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/devtools/cloud-development-kit.png) |
 | `AWS::CloudFormation::Macro` | ![AWS::CloudFormation::Macro](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/management/cloudformation.png) |
 | `AWS::CloudFormation::Stack` | ![AWS::CloudFormation::Stack](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/management/cloudformation-stack.png) |
 | `AWS::CloudFormation::StackSet` | ![AWS::CloudFormation::StackSet](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/management/cloudformation-stack.png) |
@@ -47,6 +52,7 @@
 | `AWS::EC2::DHCPOptions` | ![AWS::EC2::DHCPOptions](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/compute/ec2.png) |
 | `AWS::EC2::EIP` | ![AWS::EC2::EIP](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/compute/ec2-elastic-ip-address.png) |
 | `AWS::EC2::EIPAssociation` | an `Association` edge |
+| `AWS::EC2::EgressOnlyInternetGateway` | ![AWS::EC2::EgressOnlyInternetGateway](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/network/internet-gateway.png) |
 | `AWS::EC2::FlowLog` | ![AWS::EC2::FlowLog](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/network/vpc-flow-logs.png) |
 | `AWS::EC2::Image` | ![AWS::EC2::Image](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/compute/ec2-ami.png) |
 | `AWS::EC2::Instance` | ![AWS::EC2::Instance](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/compute/ec2-instance.png) |
@@ -67,6 +73,7 @@
 | `AWS::EC2::Volume` | ![AWS::EC2::Volume](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/storage/elastic-block-store-ebs-volume.png) |
 | `AWS::EC2::VPC` | ![AWS::EC2::VPC](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/network/vpc.png) |
 | `AWS::EC2::VPCDHCPOptionsAssociation` | an `Association` edge |
+| `AWS::EC2::VPCCidrBlock` | ![AWS::EC2::VPCCidrBlock](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/network/vpc.png) |
 | `AWS::EC2::VPCEndpoint` | ![AWS::EC2::VPCEndpoint](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/network/endpoint.png) |
 | `AWS::EC2::VPCEndpointService` | ![AWS::EC2::VPCEndpointService](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/network/vpc.png) |
 | `AWS::EC2::VPCEndpointServicePermissions` | ![AWS::EC2::VPCEndpointServicePermissions](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/network/vpc.png) |
@@ -80,6 +87,7 @@
 | `AWS::EFS::AccessPoint` | ![AWS::EFS::AccessPoint](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/storage/elastic-file-system-efs.png) |
 | `AWS::EKS::Cluster` | ![AWS::EKS::Cluster](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/compute/elastic-kubernetes-service.png) |
 | `AWS::EKS::Nodegroup` | ![AWS::EKS::Nodegroup](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/compute/elastic-kubernetes-service.png) |
+| `AWS::ElastiCache::CacheCluster` |  ![AWS::ElastiCache::CacheCluster](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/database/elasticache-for-redis.png) ![AWS::ElastiCache::CacheCluster](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/database/elasticache-for-memcached.png) |
 | `AWS::ElastiCache::ParameterGroup` | ![AWS::ElastiCache::ParameterGroup](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/database/elasticache.png) |
 | `AWS::ElastiCache::ReplicationGroup` | ![AWS::ElastiCache::ReplicationGroup](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/database/elasticache.png) |
 | `AWS::ElastiCache::SubnetGroup` | ![AWS::ElastiCache::SubnetGroup](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/database/elasticache.png) |
@@ -101,6 +109,7 @@
 | `AWS::IAM::ManagedPolicy` | ![AWS::IAM::ManagedPolicy](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/security/identity-and-access-management-iam.png) |
 | `AWS::IAM::Role` | ![AWS::IAM::Role](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/security/identity-and-access-management-iam-role.png) |
 | `AWS::IAM::RolePolicy` | ![AWS::IAM::RolePolicy](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/security/identity-and-access-management-iam-role.png) |
+| `AWS::IAM::Policy` | ![AWS::IAM::Policy](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/security/identity-and-access-management-iam.png) |
 | `AWS::IoT::Policy` | ![AWS::IoT::Policy](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/iot/iot-policy.png) |
 | `AWS::IoT::PolicyPrincipalAttachment` | an `Association` edge |
 | `AWS::IoT::Thing` | ![AWS::IoT::Thing](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/iot/internet-of-things.png) |
@@ -120,6 +129,7 @@
 | `AWS::Logs::LogStream` | ![AWS::Logs::LogStream](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/management/cloudwatch-logs.png) |
 | `AWS::Logs::QueryDefinition` | ![AWS::Logs::QueryDefinition](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/management/cloudwatch.png) |
 | `AWS::Logs::ResourcePolicy` | ![AWS::Logs::ResourcePolicy](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/management/cloudwatch-logs.png) |
+| `AWS::Logs::SubscriptionFilter` | ![AWS::Logs::SubscriptionFilter](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/management/cloudwatch-logs.png) |
 | `AWS::Neptune::DBCluster` | ![AWS::Neptune::DBCluster](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/database/neptune.png) |
 | `AWS::Neptune::DBInstance` | ![AWS::Neptune::DBInstance](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/database/neptune.png) |
 | `AWS::Neptune::DBClusterParameterGroup` | ![AWS::Neptune::DBClusterParameterGroup](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/database/neptune.png) |
@@ -134,6 +144,7 @@
 | `AWS::S3::BucketPolicy` | ![AWS::S3::BucketPolicy](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/storage/simple-storage-service-s3.png) |
 | `AWS::S3::Object` | ![AWS::S3::Object](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/storage/simple-storage-service-s3-object.png) |
 | `AWS::SecretsManager::Secret` | ![AWS::SecretsManager::Secret](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/security/secrets-manager.png) |
+| `AWS::SecretsManager::SecretTargetAttachment` | an `Association` edge |
 | `AWS::Serverless::Function` | ![AWS::Serverless::Function](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/compute/lambda-function.png) |
 | `AWS::ServiceCatalog::CloudFormationProduct` | ![AWS::ServiceCatalog::CloudFormationProduct](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/management/service-catalog.png) |
 | `AWS::ServiceCatalog::Portfolio` | ![AWS::ServiceCatalog::Portfolio](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/management/service-catalog.png) |

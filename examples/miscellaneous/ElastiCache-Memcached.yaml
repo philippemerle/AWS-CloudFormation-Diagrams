@@ -1,0 +1,67 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Simple ElastiCache Memcached Cluster
+
+Parameters:
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Description: VPC where Memcached will be deployed
+
+  SubnetIds:
+    Type: List<AWS::EC2::Subnet::Id>
+    Description: Subnets for the cache subnet group
+
+  CacheNodeType:
+    Type: String
+    Default: cache.t3.micro
+    AllowedValues:
+      - cache.t3.micro
+      - cache.t3.small
+      - cache.t3.medium
+    Description: Memcached node type
+
+  NumCacheNodes:
+    Type: Number
+    Default: 2
+    MinValue: 1
+    MaxValue: 20
+    Description: Number of Memcached nodes
+
+Resources:
+
+  MemcachedSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow Memcached access
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 11211
+          ToPort: 11211
+          CidrIp: 10.0.0.0/16  # Adapter selon ton réseau
+
+  MemcachedSubnetGroup:
+    Type: AWS::ElastiCache::SubnetGroup
+    Properties:
+      Description: Subnet group for Memcached
+      SubnetIds: !Ref SubnetIds
+
+  MemcachedCluster:
+    Type: AWS::ElastiCache::CacheCluster
+    Properties:
+      Engine: memcached
+      CacheNodeType: !Ref CacheNodeType
+      NumCacheNodes: !Ref NumCacheNodes
+      CacheSubnetGroupName: !Ref MemcachedSubnetGroup
+      VpcSecurityGroupIds:
+        - !Ref MemcachedSecurityGroup
+      Port: 11211
+
+Outputs:
+
+  ConfigurationEndpoint:
+    Description: Configuration endpoint for Memcached cluster
+    Value: !GetAtt MemcachedCluster.ConfigurationEndpoint.Address
+
+  Port:
+    Description: Memcached port
+    Value: !GetAtt MemcachedCluster.ConfigurationEndpoint.Port

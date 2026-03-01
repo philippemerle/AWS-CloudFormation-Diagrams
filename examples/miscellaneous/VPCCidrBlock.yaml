@@ -1,0 +1,57 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+# -----------------------------------------------------------------------------
+# Template Description
+# -----------------------------------------------------------------------------
+Description: >
+  Simple CloudFormation template that associates a secondary IPv4
+  CIDR block to an existing VPC using AWS::EC2::VPCCidrBlock.
+
+# -----------------------------------------------------------------------------
+# Parameters
+# -----------------------------------------------------------------------------
+Parameters:
+
+  # ID of the existing VPC where the secondary CIDR will be attached
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Description: The ID of the existing VPC.
+
+  # Secondary IPv4 CIDR block to associate with the VPC
+  # Example: 10.1.0.0/16
+  SecondaryCidrBlock:
+    Type: String
+    Description: Secondary IPv4 CIDR block to associate with the VPC.
+    AllowedPattern: ^([0-9]{1,3}\.){3}[0-9]{1,3}\/([1-2][0-9]|3[0-2])$
+    ConstraintDescription: Must be a valid IPv4 CIDR block (e.g., 10.1.0.0/16).
+
+# -----------------------------------------------------------------------------
+# Resources
+# -----------------------------------------------------------------------------
+Resources:
+
+  # This resource associates an additional IPv4 CIDR block
+  # to an existing VPC
+  VpcSecondaryCidr:
+    Type: AWS::EC2::VPCCidrBlock
+    Properties:
+      # Reference to the target VPC
+      VpcId: !Ref VpcId
+
+      # Secondary IPv4 CIDR block to attach
+      CidrBlock: !Ref SecondaryCidrBlock
+
+# -----------------------------------------------------------------------------
+# Outputs
+# -----------------------------------------------------------------------------
+Outputs:
+
+  # Outputs the VPC ID used in the association
+  AssociatedVpcId:
+    Description: The VPC ID where the secondary CIDR was attached.
+    Value: !Ref VpcId
+
+  # Outputs the secondary CIDR block that was associated
+  AssociatedCidrBlock:
+    Description: The secondary IPv4 CIDR block associated with the VPC.
+    Value: !Ref SecondaryCidrBlock

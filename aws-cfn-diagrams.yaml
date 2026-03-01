@@ -114,6 +114,39 @@ resources:
     parent_cluster_property: RestApiId
 
   #
+  # AWS::AppConfig resource types.
+  #
+
+  AWS::AppConfig::Application:
+    kind: cluster
+    style: Management
+    icon:
+      classname: diagrams.aws.management.SystemsManagerAppConfig
+
+  AWS::AppConfig::ConfigurationProfile:
+    kind: node
+    icon:
+      classname: diagrams.aws.management.SystemsManagerAppConfig
+    edges:
+      - ApplicationId
+    parent_cluster_property:
+      - ApplicationId
+
+  AWS::AppConfig::DeploymentStrategy:
+    kind: node
+    icon:
+      classname: diagrams.aws.management.SystemsManagerAppConfig
+
+  AWS::AppConfig::Environment:
+    kind: node
+    icon:
+      classname: diagrams.aws.management.SystemsManagerAppConfig
+    edges:
+      - ApplicationId
+    parent_cluster_property:
+      - ApplicationId
+
+  #
   # AWS::ApplicationAutoScaling resource types.
   #
 
@@ -192,9 +225,17 @@ resources:
     parent_cluster_property: AutoScalingGroupName
 
   #
-  # AWS::CloudFormation resource types.
+  # AWS::CDK resource types.
   #
 
+  AWS::CDK::Metadata:
+    kind: node
+    icon:
+      classname: diagrams.aws.devtools.CloudDevelopmentKit
+
+  #
+  # AWS::CloudFormation resource types.
+  #
   AWS::CloudFormation::Macro:
     kind: node
     icon:
@@ -500,6 +541,14 @@ resources:
       - InstanceId
       - NetworkInterfaceId
 
+  AWS::EC2::EgressOnlyInternetGateway:
+    kind: node
+    icon:
+      classname: diagrams.aws.network.InternetGateway
+    edges:
+      - VpcId
+    parent_cluster_property: VpcId
+
   AWS::EC2::FlowLog:
     kind: node
     icon:
@@ -691,6 +740,14 @@ resources:
     from: VpcId
     to: DhcpOptionsId
 
+  AWS::EC2::VPCCidrBlock:
+    kind: node
+    icon:
+        classname: diagrams.aws.network.VPC
+    edges:
+      - VpcId
+    parent_cluster_property: VpcId
+
   AWS::EC2::VPCEndpoint:
     kind: node
     icon:
@@ -831,6 +888,21 @@ resources:
   #
   # AWS::ElastiCache resource types.
   #
+
+  AWS::ElastiCache::CacheCluster:
+    kind: cluster
+    style: Database
+    icon:
+      classname:
+        - when: Engine == "redis"
+          then: diagrams.aws.database.ElasticacheForRedis
+        - when: Engine == "memcached"
+          then: diagrams.aws.database.ElasticacheForMemcached
+    edges:
+      - VpcSecurityGroupIds
+      - CacheSubnetGroupName
+    children:
+      - CacheSubnetGroupName
 
   AWS::ElastiCache::ParameterGroup:
     kind: node
@@ -1074,6 +1146,14 @@ resources:
       - RoleName
     parent_cluster_property: RoleName
 
+  AWS::IAM::Policy:
+    kind: node
+    icon:
+      classname: diagrams.aws.security.IAM
+    edges:
+      - Roles
+    parent_cluster_property: Roles
+
   #
   # AWS::IoT resource types.
   #
@@ -1238,6 +1318,15 @@ resources:
       classname: diagrams.aws.management.CloudwatchLogs
     edges:
       - PolicyDocument
+
+  AWS::Logs::SubscriptionFilter:
+    kind: node
+    icon:
+      classname: diagrams.aws.management.CloudwatchLogs
+    edges:
+      - DestinationArn
+      - LogGroupName
+      - RoleArn
 
   #
   # AWS::Neptune resources.
@@ -1411,6 +1500,12 @@ resources:
       classname: diagrams.aws.security.SecretsManager
     edges:
       - KmsKeyId
+
+  AWS::SecretsManager::SecretTargetAttachment:
+    kind: edge
+    style: Association
+    from: SecretId
+    to: TargetId
 
   #
   # AWS::Serverless resource types.

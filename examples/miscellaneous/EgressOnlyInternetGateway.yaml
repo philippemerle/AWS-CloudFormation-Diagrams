@@ -1,0 +1,40 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+# -----------------------------------------------------------------------------
+# Template Description
+# -----------------------------------------------------------------------------
+Description: >
+  Minimal CloudFormation template that creates an
+  Egress-Only Internet Gateway attached to an existing VPC.
+
+# -----------------------------------------------------------------------------
+# Parameters
+# -----------------------------------------------------------------------------
+Parameters:
+
+  # The ID of the existing VPC where the Egress-Only IGW will be created
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Description: The ID of the existing VPC.
+
+# -----------------------------------------------------------------------------
+# Resources
+# -----------------------------------------------------------------------------
+Resources:
+
+  # Egress-Only Internet Gateway
+  # Allows outbound IPv6 traffic only.
+  # Blocks unsolicited inbound IPv6 traffic.
+  EgressOnlyInternetGateway:
+    Type: AWS::EC2::EgressOnlyInternetGateway
+    Properties:
+      VpcId: !Ref VpcId
+
+# -----------------------------------------------------------------------------
+# Outputs
+# -----------------------------------------------------------------------------
+Outputs:
+
+  EgressOnlyInternetGatewayId:
+    Description: The ID of the created Egress-Only Internet Gateway.
+    Value: !Ref EgressOnlyInternetGateway

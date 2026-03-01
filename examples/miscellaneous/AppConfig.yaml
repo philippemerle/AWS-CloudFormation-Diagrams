@@ -1,0 +1,79 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Simple AWS AppConfig setup including:
+  - Application
+  - Environment
+  - Configuration Profile
+  - Deployment Strategy
+
+Resources:
+
+  # ------------------------------------------------------------
+  # AppConfig Application
+  # Represents a logical application that uses AppConfig
+  # ------------------------------------------------------------
+  AppConfigApplication:
+    Type: AWS::AppConfig::Application
+    Properties:
+      Name: MyAppConfigApplication
+      Description: Application used to manage feature flags and configuration
+
+  # ------------------------------------------------------------
+  # AppConfig Environment
+  # Logical deployment environment (e.g., Dev, Test, Prod)
+  # ------------------------------------------------------------
+  AppConfigEnvironment:
+    Type: AWS::AppConfig::Environment
+    Properties:
+      ApplicationId: !Ref AppConfigApplication
+      Name: Dev
+      Description: Development environment
+      Monitors: []  # Optional CloudWatch alarms can be added here
+
+  # ------------------------------------------------------------
+  # AppConfig Configuration Profile
+  # Defines where configuration data is stored
+  # In this example, we use hosted configuration
+  # ------------------------------------------------------------
+  AppConfigConfigurationProfile:
+    Type: AWS::AppConfig::ConfigurationProfile
+    Properties:
+      ApplicationId: !Ref AppConfigApplication
+      Name: HostedConfigurationProfile
+      Description: Hosted configuration profile example
+      LocationUri: hosted
+      Type: AWS.AppConfig.FeatureFlags  # Optional; can be removed if not needed
+
+  # ------------------------------------------------------------
+  # AppConfig Deployment Strategy
+  # Defines how configuration changes are rolled out
+  # ------------------------------------------------------------
+  AppConfigDeploymentStrategy:
+    Type: AWS::AppConfig::DeploymentStrategy
+    Properties:
+      Name: Linear10PercentEvery1Minute
+      Description: Deploys 10% of traffic every 1 minute
+      DeploymentDurationInMinutes: 10
+      GrowthFactor: 10
+      GrowthType: LINEAR
+      FinalBakeTimeInMinutes: 5
+      ReplicateTo: NONE
+
+Outputs:
+
+  # Export useful IDs for reuse in other stacks
+  ApplicationId:
+    Description: AppConfig Application ID
+    Value: !Ref AppConfigApplication
+
+  EnvironmentId:
+    Description: AppConfig Environment ID
+    Value: !Ref AppConfigEnvironment
+
+  ConfigurationProfileId:
+    Description: AppConfig Configuration Profile ID
+    Value: !Ref AppConfigConfigurationProfile
+
+  DeploymentStrategyId:
+    Description: AppConfig Deployment Strategy ID
+    Value: !Ref AppConfigDeploymentStrategy
