@@ -2,7 +2,7 @@
 
 # Generate diagrams for all examples
 cd examples
-for example in wordpress
+for example in miscellaneous wordpress
 do
   cd ${example}
   ./generate.sh
