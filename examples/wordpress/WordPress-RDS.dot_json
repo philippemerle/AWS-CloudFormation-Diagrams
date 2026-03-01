@@ -187,7 +187,8 @@
       "dir": "forward",
       "fontcolor": "#2D3436",
       "fontname": "Sans-Serif",
-      "fontsize": "13"
+      "fontsize": "13",
+      "tooltip": "VpcId"
     },
     {
       "_gvid": 4,
@@ -197,7 +198,8 @@
       "dir": "forward",
       "fontcolor": "#2D3436",
       "fontname": "Sans-Serif",
-      "fontsize": "13"
+      "fontsize": "13",
+      "tooltip": "SecurityGroupIngress.SourceSecurityGroupId"
     },
     {
       "_gvid": 3,
@@ -207,7 +209,8 @@
       "dir": "forward",
       "fontcolor": "#2D3436",
       "fontname": "Sans-Serif",
-      "fontsize": "13"
+      "fontsize": "13",
+      "tooltip": "VpcId"
     },
     {
       "_gvid": 5,
@@ -217,7 +220,8 @@
       "dir": "forward",
       "fontcolor": "#2D3436",
       "fontname": "Sans-Serif",
-      "fontsize": "13"
+      "fontsize": "13",
+      "tooltip": "VPCSecurityGroups"
     },
     {
       "_gvid": 1,
@@ -227,7 +231,8 @@
       "dir": "forward",
       "fontcolor": "#2D3436",
       "fontname": "Sans-Serif",
-      "fontsize": "13"
+      "fontsize": "13",
+      "tooltip": "SecurityGroupIds"
     },
     {
       "_gvid": 2,
@@ -237,7 +242,8 @@
       "dir": "forward",
       "fontcolor": "#2D3436",
       "fontname": "Sans-Serif",
-      "fontsize": "13"
+      "fontsize": "13",
+      "tooltip": "UserData.Fn::Base64.Fn::Sub"
     }
   ]
 }

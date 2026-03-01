@@ -158,6 +158,7 @@ resources:
       - LaunchConfigurationName
       - LaunchTemplate:
         - LaunchTemplateId
+        - Version
       - LoadBalancerNames
       - NotificationConfigurations:
         - TopicARN
@@ -257,6 +258,7 @@ resources:
           - Bucket
         - Origins:
           - DomainName
+          - Id
           - OriginAccessControlId
         - WebACLId
 
@@ -617,8 +619,9 @@ resources:
       - GroupId
       - SourceSecurityGroupId
       - SecurityGroupIngress:
-        - SourceSecurityGroupId # ???
+        - SourceSecurityGroupId
         - SourceSecurityGroupName
+        - SourceSecurityGroupOwnerId
       - VpcId
     parent_cluster_property:
       - GroupId
@@ -818,6 +821,7 @@ resources:
       classname: diagrams.aws.compute.ElasticKubernetesService
     edges:
       - ClusterName
+      - Labels
       - LaunchTemplate:
          - Id
       - NodeRole
@@ -1038,6 +1042,7 @@ resources:
     icon:
       classname: diagrams.aws.security.IAM
     edges:
+      - InstanceProfileName
       - Roles
     parent_cluster_property: Roles
 
@@ -1500,6 +1505,9 @@ resources:
     icon:
       classname: diagrams.aws.integration.SimpleQueueServiceSqs
     edges:
+      - PolicyDocument:
+        - Statement:
+          - Resource
       - Queues
 
   #

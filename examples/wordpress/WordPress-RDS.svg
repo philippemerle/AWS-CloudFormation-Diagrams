@@ -57,8 +57,11 @@
 <!-- resource_WebSecurityGroup&#45;&gt;resource_VpcId -->
 <g id="edge1" class="edge">
 <title>resource_WebSecurityGroup&#45;&gt;resource_VpcId</title>
+<g id="a_edge1"><a xlink:title="VpcId">
 <path fill="none" stroke="black" d="M229,-207.02C229,-207.02 229,-163.67 229,-163.67"/>
 <polygon fill="black" stroke="black" points="232.5,-163.67 229,-153.67 225.5,-163.67 232.5,-163.67"/>
+</a>
+</g>
 </g>
 <!-- resource_WordPressInstance -->
 <g id="node3" class="node">
@@ -73,8 +76,11 @@
 <!-- resource_WordPressInstance&#45;&gt;resource_WebSecurityGroup -->
 <g id="edge5" class="edge">
 <title>resource_WordPressInstance&#45;&gt;resource_WebSecurityGroup</title>
+<g id="a_edge5"><a xlink:title="SecurityGroupIds">
 <path fill="none" stroke="black" d="M265,-426.49C265,-426.49 265,-383.23 265,-383.23"/>
 <polygon fill="black" stroke="black" points="268.5,-383.23 265,-373.23 261.5,-383.23 268.5,-383.23"/>
+</a>
+</g>
 </g>
 <!-- resource_WordPressDB -->
 <g id="node5" class="node">
@@ -88,8 +94,11 @@
 <!-- resource_WordPressInstance&#45;&gt;resource_WordPressDB -->
 <g id="edge6" class="edge">
 <title>resource_WordPressInstance&#45;&gt;resource_WordPressDB</title>
+<g id="a_edge6"><a xlink:title="UserData.Fn::Base64.Fn::Sub">
 <path fill="none" stroke="black" d="M214.64,-509C214.64,-509 182.09,-509 182.09,-509"/>
 <polygon fill="black" stroke="black" points="182.09,-505.5 172.09,-509 182.09,-512.5 182.09,-505.5"/>
+</a>
+</g>
 </g>
 <!-- resource_DBSecurityGroup -->
 <g id="node4" class="node">
@@ -104,20 +113,29 @@
 <!-- resource_DBSecurityGroup&#45;&gt;resource_VpcId -->
 <g id="edge3" class="edge">
 <title>resource_DBSecurityGroup&#45;&gt;resource_VpcId</title>
+<g id="a_edge3"><a xlink:title="VpcId">
 <path fill="none" stroke="black" d="M157,-207.02C157,-207.02 157,-163.67 157,-163.67"/>
 <polygon fill="black" stroke="black" points="160.5,-163.67 157,-153.67 153.5,-163.67 160.5,-163.67"/>
+</a>
+</g>
 </g>
 <!-- resource_DBSecurityGroup&#45;&gt;resource_WebSecurityGroup -->
 <g id="edge2" class="edge">
 <title>resource_DBSecurityGroup&#45;&gt;resource_WebSecurityGroup</title>
+<g id="a_edge2"><a xlink:title="SecurityGroupIngress.SourceSecurityGroupId">
 <path fill="none" stroke="black" d="M171.36,-289C171.36,-289 203.91,-289 203.91,-289"/>
 <polygon fill="black" stroke="black" points="203.91,-292.5 213.91,-289 203.91,-285.5 203.91,-292.5"/>
+</a>
+</g>
 </g>
 <!-- resource_WordPressDB&#45;&gt;resource_DBSecurityGroup -->
 <g id="edge4" class="edge">
 <title>resource_WordPressDB&#45;&gt;resource_DBSecurityGroup</title>
+<g id="a_edge4"><a xlink:title="VPCSecurityGroups">
 <path fill="none" stroke="black" d="M121,-440.92C121,-440.92 121,-383.12 121,-383.12"/>
 <polygon fill="black" stroke="black" points="124.5,-383.12 121,-373.12 117.5,-383.12 124.5,-383.12"/>
+</a>
+</g>
 </g>
 </g>
 </svg>

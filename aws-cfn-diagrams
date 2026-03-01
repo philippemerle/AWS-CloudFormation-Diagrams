@@ -693,7 +693,7 @@ def generate_diagram(cloud_formation_data, aws_cloud_formation_filename):
         """
         nodes[name] = create_diagram_node(name, data)
 
-    def compute_edges(pname, pdata, the_nodes) -> None:
+    def compute_edges(pname, pdata, the_nodes, property_path=None) -> None:
         """
             Compute edges.
         """
@@ -704,64 +704,68 @@ def generate_diagram(cloud_formation_data, aws_cloud_formation_filename):
                 for k, v in cloud_formation_data["Resources"].items():
                     if get_type(v) == "AWS::IAM::Role" \
                             and v["Properties"].get("RoleName") == pdata:
-                        the_nodes.append(k)
+                        the_nodes.append([k, property_path])
                         return
 #TBR            debug(f"{pname}: {pdata}")
             for match in CNF_RESOURCE_ATTRIBUTE_PATTERN.finditer(pdata):
                 node = match.group(1)
                 if node in cloud_formation_data["Resources"] or node in nodes:
-                    the_nodes.append(node)
+                    the_nodes.append([node, property_path])
         elif isinstance(pdata, list):
             for data in pdata:
-                compute_edges(pname, data, the_nodes)
+                compute_edges(pname, data, the_nodes, property_path)
         elif isinstance(pdata, dict):
             if pname == "Bucket": # TODO: avoid specific cases
                 for k, v in cloud_formation_data["Resources"].items():
                     if get_type(v) == "AWS::S3::Bucket" \
                             and (v.get("Properties") or {}).get("BucketName") == pdata:
-                        the_nodes.append(k)
+                        the_nodes.append([k, property_path])
                         return
             if len(pdata) == 1:
                 if "Ref" in pdata:
                     node = pdata["Ref"]
                     if node in cloud_formation_data["Resources"] or node in nodes:
-                        the_nodes.append(node)
+                        the_nodes.append([node, property_path])
+                    return
                 elif "Fn::GetAtt" in pdata:
                     node = pdata["Fn::GetAtt"][0]
                     if node in cloud_formation_data["Resources"] or node in nodes:
-                        the_nodes.append(node)
+                        the_nodes.append([node, property_path])
+                    return
                 for k, v in pdata.items():
-                    compute_edges(k, v, the_nodes)
+                    compute_edges(pname, v, the_nodes, f"{property_path}.{k}" if property_path is not None else k)
             else:
                 for k, v in pdata.items():
-                    compute_edges(k, v, the_nodes)
+                    compute_edges(pname, v, the_nodes, f"{property_path}.{k}" if property_path is not None else k)
         else:
-            warning(f"[TODO] Resources:{rname}:Properties:{pname} - {pdata} ({type(pdata)})")
+            warning(f"[TODO] Resources:{rname}:Properties:{property_path} - {pdata} ({type(pdata)})")
 
-    def process_edge_to(edge, pdata, nodes) -> None:
+    def process_edge_to(edge, pdata, nodes, property_path=None) -> None:
         """
             Process edge to.
         """
         if isinstance(edge, str):
             if isinstance(pdata, dict):
                 if edge in pdata:
-                    compute_edges(edge, pdata[edge], nodes)
+                    property_path = f"{property_path}.{edge}" if property_path is not None else edge
+                    compute_edges(edge, pdata[edge], nodes, property_path)
             elif isinstance(pdata, list):
                 for vv in pdata:
-                    process_edge_to(edge, vv, nodes)
+                    process_edge_to(edge, vv, nodes, property_path)
 #           else:
 #                        print("TODO", edge, pdata)
         elif isinstance(edge, dict):
             if isinstance(pdata, dict):
                 for k, v in edge.items():
+                    property_path = f"{property_path}.{k}" if property_path is not None else k
                     if k in pdata:
-                        process_edge_to(v, pdata[k], nodes)
+                        process_edge_to(v, pdata[k], nodes, property_path)
             elif isinstance(pdata, list):
                 for vv in pdata:
-                    process_edge_to(edge, vv, nodes)
+                    process_edge_to(edge, vv, nodes, property_path)
         elif isinstance(edge, list):
             for v in edge:
-                process_edge_to(v, pdata, nodes)
+                process_edge_to(v, pdata, nodes, property_path)
         else:
             warning(f"TODO process_edge_to {edge}")
 
@@ -785,8 +789,8 @@ def generate_diagram(cloud_formation_data, aws_cloud_formation_filename):
                 )
                 children.extend(clusters[rname]["nodes"])
                 for n in clusters[rname]["nodes"]:
-                    if n in clusters:
-                        clusters[n]["is_root"] = False
+                    if n[0] in clusters:
+                        clusters[n[0]]["is_root"] = False
 
     for rname, rdata in cloud_formation_data["Resources"].items():
         rconfig = get_config(rdata)
@@ -794,8 +798,8 @@ def generate_diagram(cloud_formation_data, aws_cloud_formation_filename):
         if pcp is not None:
             parents = []
             process_edge_to(pcp, rdata["Properties"], parents)
-            if len(parents) == 1 and parents[0] in clusters:
-                clusters[parents[0]]["nodes"].append(rname)
+            if len(parents) == 1 and parents[0][0] in clusters:
+                clusters[parents[0][0]]["nodes"].append(rname)
                 if rname in clusters:
                     clusters[rname]["is_root"] = False
             else:
@@ -852,6 +856,8 @@ def generate_diagram(cloud_formation_data, aws_cloud_formation_filename):
                     nodes[cname + k] = v
 
             for rname in cdata["nodes"]:
+                if isinstance(rname, list):
+                    rname = rname[0]
                 if rname in clusters:
                     generate_cluster(rname, clusters[rname])
                 else:
@@ -900,15 +906,15 @@ def generate_diagram(cloud_formation_data, aws_cloud_formation_filename):
             rconfig_style = rconfig.get("style", {})
             for from_node in compute_nodes(rdata["Properties"], rconfig.get("from")):
                 for to_node in compute_nodes(rdata["Properties"], rconfig.get("to")):
-                    edges.append([from_node, to_node, rconfig_style])
+                    edges.append([from_node[0], to_node, rconfig_style])
 
         elif kind in ["node", "cluster"]:
             depends_on = rdata.get("DependsOn")
             if isinstance(depends_on, str):
-                edges.append([rname, depends_on, "DependsOn"])
+                edges.append([rname, [depends_on, "DependsOn"], "DependsOn"])
             elif isinstance(depends_on, list):
                 for d in depends_on:
-                    edges.append([rname, d, "DependsOn"])
+                    edges.append([rname, [d, "DependsOn"], "DependsOn"])
             config_node_edges = rconfig.get("edges", [])
             to_nodes = []
             process_edge_to(config_node_edges, rdata.get("Properties") or {}, to_nodes)
@@ -916,7 +922,7 @@ def generate_diagram(cloud_formation_data, aws_cloud_formation_filename):
                 edges.append([rname, to_node, "Reference"])
 
             other_nodes = []
-            compute_edges("", rdata.get("Properties") or {}, other_nodes)
+            compute_edges(None, rdata.get("Properties") or {}, other_nodes)
             for other_node in other_nodes:
                 if other_node not in to_nodes:
                     debug(f"Resources:{rname} - Other link to resource '{other_node}'")
@@ -924,14 +930,16 @@ def generate_diagram(cloud_formation_data, aws_cloud_formation_filename):
 
         for edge in edges:
             from_node = edge[0]
-            to_node = edge[1]
+            to_node = edge[1][0]
             estyle = edge[2]
             if from_node not in nodes:
                 warning(f"Resources:{rname} - No graphical node for resource '{from_node}'")
             elif to_node not in nodes:
                 warning(f"Resources:{rname} - No graphical node for resource '{to_node}'")
             else:
-                _ = nodes[from_node] >> Edge(**compute_style(estyle)) >> nodes[to_node]
+#                debug(f"{from_node} connected to {to_node} via {edge[1][1]}")
+                de = Edge(**compute_style(estyle), tooltip=edge[1][1])
+                _ = nodes[from_node] >> de >> nodes[to_node]
     return nodes
 
 with Diagram("", filename=args.output, show=False, direction="TB", outformat=args.format):
