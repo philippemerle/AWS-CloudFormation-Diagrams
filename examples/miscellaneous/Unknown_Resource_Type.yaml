@@ -1,0 +1,7 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  Minimal CloudFormation template including an Unknown::Resource::Type resource.
+
+Resources:
+  UnknownResource:
+    Type: Unknown::Resource::Type

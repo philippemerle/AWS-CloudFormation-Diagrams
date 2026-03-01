@@ -1660,3 +1660,11 @@ resources:
       classname: diagrams.aws.devtools.Codecommit
     edges:
       - RepositoryName
+
+  #
+  # Unknown resource types.
+  #
+  Unknown Resource Type:
+    kind: node
+    icon:
+      classname: diagrams.aws.general.General

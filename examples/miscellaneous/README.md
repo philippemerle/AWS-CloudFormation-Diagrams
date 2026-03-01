@@ -37,3 +37,7 @@ Infrastructure diagram generated from [Logs_SubscriptionFilter.yaml](Logs_Subscr
 Infrastructure diagram generated from [CDK_Metadata.yaml](CDK_Metadata.yaml):
 
 ![CDK Metadata Diagram](CDK_Metadata.png)
+
+Infrastructure diagram generated from [Unknown_Resource_Type.yaml](Unknown_Resource_Type.yaml):
+
+![Unknown Resource Type Diagram](Unknown_Resource_Type.png)
