@@ -814,14 +814,15 @@ def generate_diagram(cloud_formation_data, aws_cloud_formation_filename):
         """
             Generate a cluster.
         """
-        if len(cdata["nodes"]) == 0 and get_type(cloud_formation_data["Resources"][cname]) != "Rain::Module":
-            generate_node(cname, cloud_formation_data["Resources"][cname])
+        rdata = cloud_formation_data["Resources"][cname]
+        if len(cdata["nodes"]) == 0 and get_type(rdata) != "Rain::Module":
+            generate_node(cname, rdata)
             return
 
         # Generate a visual cluster only when there are several nodes inside.
         cluster_label = cname
         if not is_drawio_format and args.format != "dot_json":
-            config = get_config(cloud_formation_data["Resources"][cname])
+            config = get_config(rdata)
             config_icon = config.get("icon", {})
             if "filename" in config_icon:
                 cluster_label = label_with_icon(DIRNAME + "/" + config_icon["filename"], cname)
@@ -829,7 +830,7 @@ def generate_diagram(cloud_formation_data, aws_cloud_formation_filename):
                 cluster_label = label_with_icon(
                     get_icon_path(
                         get_diagram_class(
-                            cloud_formation_data["Resources"][cname]
+                            rdata
                         )
                     ),
                     cname
@@ -837,12 +838,11 @@ def generate_diagram(cloud_formation_data, aws_cloud_formation_filename):
         with Cluster(
             cluster_label,
             graph_attr={
-                "tooltip": f"{cname}: {get_type(cloud_formation_data["Resources"][cname])}",
+                "tooltip": f"{cname}: {get_type(rdata)}",
                 **compute_style(cdata["style"])
             }
         ) as cluster:
             cluster.dot.name = f"cluster_{cname}"
-            rdata = cloud_formation_data["Resources"][cname]
             if get_type(rdata) != "Rain::Module":
                 generate_node(cname, rdata)
 
