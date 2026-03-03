@@ -485,17 +485,21 @@ def get_diagram_class(resource):
             diagram_node_class = getattr(module, diagram_node_classname[idx+1:])
     return diagram_node_class
 
+def dump_resource(rname, rdata):
+    result = yaml.dump(
+                {rname: rdata},
+                default_flow_style=False,
+                sort_keys=False
+             )[:-1].replace("\n\n", "\n")
+    if len(result) > 16384: # dot parsing limit!
+        result = result[:16380] + "\n..."
+    return result
+
 def create_diagram_node(name, resource):
     """
         Create a diagram node from an AWS CloudFormation resource.
     """
-    tooltip = yaml.dump(
-                resource,
-                default_flow_style=False,
-                sort_keys=False
-              )[:-1].replace("\n\n", "\n")
-    if len(tooltip) > 16384: # dot parsing limit!
-        tooltip = tooltip[:16380] + "\n..."
+    tooltip = dump_resource(name, resource)
     configuration = get_config(resource)
     if "icon" in configuration and "filename" in configuration["icon"]:
         filename = configuration["icon"]["filename"]
@@ -905,9 +909,10 @@ def generate_diagram(cloud_formation_data, aws_cloud_formation_filename):
                 return nodes
 
             rconfig_style = rconfig.get("style", {})
+            tooltip = dump_resource(rname, rdata)
             for from_node in compute_nodes(rdata["Properties"], rconfig.get("from")):
                 for to_node in compute_nodes(rdata["Properties"], rconfig.get("to")):
-                    edges.append([from_node[0], to_node, rconfig_style])
+                    edges.append([from_node[0], [to_node[0], tooltip], rconfig_style])
 
         elif kind in ["node", "cluster"]:
             depends_on = rdata.get("DependsOn")

@@ -106,7 +106,7 @@
       "labelloc": "b",
       "shape": "none",
       "style": "rounded",
-      "tooltip": "Type: AWS::EC2::VPC\nProperties: {}",
+      "tooltip": "VpcId:\n  Type: AWS::EC2::VPC\n  Properties: {}",
       "width": "1.4"
     },
     {
@@ -123,7 +123,7 @@
       "labelloc": "b",
       "shape": "none",
       "style": "rounded",
-      "tooltip": "Type: AWS::EC2::SecurityGroup\nProperties:\n  GroupDescription: Allow HTTP and SSH\n  VpcId:\n    Ref: VpcId\n  SecurityGroupIngress:\n  - IpProtocol: tcp\n    FromPort: 22\n    ToPort: 22\n    CidrIp: 0.0.0.0\/0\n  - IpProtocol: tcp\n    FromPort: 80\n    ToPort: 80\n    CidrIp: 0.0.0.0\/0",
+      "tooltip": "WebSecurityGroup:\n  Type: AWS::EC2::SecurityGroup\n  Properties:\n    GroupDescription: Allow HTTP and SSH\n    VpcId:\n      Ref: VpcId\n    SecurityGroupIngress:\n    - IpProtocol: tcp\n      FromPort: 22\n      ToPort: 22\n      CidrIp: 0.0.0.0\/0\n    - IpProtocol: tcp\n      FromPort: 80\n      ToPort: 80\n      CidrIp: 0.0.0.0\/0",
       "width": "1.4"
     },
     {
@@ -140,7 +140,7 @@
       "labelloc": "b",
       "shape": "none",
       "style": "rounded",
-      "tooltip": "Type: AWS::EC2::Instance\nProperties:\n  InstanceType:\n    Ref: InstanceType\n  KeyName:\n    Ref: KeyName\n  SecurityGroupIds:\n  - Ref: WebSecurityGroup\n  ImageId: ami-0c02fb55956c7d316\n  UserData:\n    Fn::Base64:\n      Fn::Sub: '#!\/bin\/bash\n        yum update -y\n        amazon-linux-extras enable php8.0\n        yum install -y httpd php php-mysqlnd wget\n\n        systemctl start httpd\n        systemctl enable httpd\n\n        cd \/var\/www\/html\n        wget https:\/\/wordpress.org\/latest.tar.gz\n        tar -xzf latest.tar.gz\n        chown -R apache:apache wordpress\n\n        cp wordpress\/wp-config-sample.php wordpress\/wp-config.php\n\n        sed -i \"s\/database_name_here\/${DBName}\/\" wordpress\/wp-config.php\n        sed -i \"s\/username_here\/${DBUser}\/\" wordpress\/wp-config.php\n        sed -i \"s\/password_here\/${DBPassword}\/\" wordpress\/wp-config.php\n        sed -i \"s\/localhost\/${WordPressDB.Endpoint.Address}\/\" wordpress\/wp-config.php\n        '",
+      "tooltip": "WordPressInstance:\n  Type: AWS::EC2::Instance\n  Properties:\n    InstanceType:\n      Ref: InstanceType\n    KeyName:\n      Ref: KeyName\n    SecurityGroupIds:\n    - Ref: WebSecurityGroup\n    ImageId: ami-0c02fb55956c7d316\n    UserData:\n      Fn::Base64:\n        Fn::Sub: '#!\/bin\/bash\n          yum update -y\n          amazon-linux-extras enable php8.0\n          yum install -y httpd php php-mysqlnd wget\n\n          systemctl start httpd\n          systemctl enable httpd\n\n          cd \/var\/www\/html\n          wget https:\/\/wordpress.org\/latest.tar.gz\n          tar -xzf latest.tar.gz\n          chown -R apache:apache wordpress\n\n          cp wordpress\/wp-config-sample.php wordpress\/wp-config.php\n\n          sed -i \"s\/database_name_here\/${DBName}\/\" wordpress\/wp-config.php\n          sed -i \"s\/username_here\/${DBUser}\/\" wordpress\/wp-config.php\n          sed -i \"s\/password_here\/${DBPassword}\/\" wordpress\/wp-config.php\n          sed -i \"s\/localhost\/${WordPressDB.Endpoint.Address}\/\" wordpress\/wp-config.php\n          '",
       "width": "1.4"
     },
     {
@@ -157,7 +157,7 @@
       "labelloc": "b",
       "shape": "none",
       "style": "rounded",
-      "tooltip": "Type: AWS::EC2::SecurityGroup\nProperties:\n  GroupDescription: Allow MySQL from Web server\n  VpcId:\n    Ref: VpcId\n  SecurityGroupIngress:\n  - IpProtocol: tcp\n    FromPort: 3306\n    ToPort: 3306\n    SourceSecurityGroupId:\n      Ref: WebSecurityGroup",
+      "tooltip": "DBSecurityGroup:\n  Type: AWS::EC2::SecurityGroup\n  Properties:\n    GroupDescription: Allow MySQL from Web server\n    VpcId:\n      Ref: VpcId\n    SecurityGroupIngress:\n    - IpProtocol: tcp\n      FromPort: 3306\n      ToPort: 3306\n      SourceSecurityGroupId:\n        Ref: WebSecurityGroup",
       "width": "1.4"
     },
     {
@@ -174,7 +174,7 @@
       "labelloc": "b",
       "shape": "none",
       "style": "rounded",
-      "tooltip": "Type: AWS::RDS::DBInstance\nProperties:\n  DBInstanceIdentifier: wordpress-db\n  AllocatedStorage: 20\n  DBInstanceClass: db.t3.micro\n  Engine: MySQL\n  EngineVersion: 8.0\n  MasterUsername:\n    Ref: DBUser\n  MasterUserPassword:\n    Ref: DBPassword\n  DBName:\n    Ref: DBName\n  VPCSecurityGroups:\n  - Ref: DBSecurityGroup\n  PubliclyAccessible: false\n  BackupRetentionPeriod: 7\n  MultiAZ: false",
+      "tooltip": "WordPressDB:\n  Type: AWS::RDS::DBInstance\n  Properties:\n    DBInstanceIdentifier: wordpress-db\n    AllocatedStorage: 20\n    DBInstanceClass: db.t3.micro\n    Engine: MySQL\n    EngineVersion: 8.0\n    MasterUsername:\n      Ref: DBUser\n    MasterUserPassword:\n      Ref: DBPassword\n    DBName:\n      Ref: DBName\n    VPCSecurityGroups:\n    - Ref: DBSecurityGroup\n    PubliclyAccessible: false\n    BackupRetentionPeriod: 7\n    MultiAZ: false",
       "width": "1.4"
     }
   ],
