@@ -56,7 +56,7 @@ resources:
     edges:
       - ProviderARNs
       - RestApiId
-    parent_cluster_property: RestApiId
+    parents: RestApiId
 
   AWS::ApiGateway::Deployment:
     kind: node
@@ -64,7 +64,7 @@ resources:
       classname: diagrams.aws.network.APIGateway
     edges:
       - RestApiId
-    parent_cluster_property: RestApiId
+    parents: RestApiId
 
   AWS::ApiGateway::Method:
     kind: node
@@ -78,7 +78,7 @@ resources:
         - application/json
       - ResourceId
       - RestApiId
-    parent_cluster_property: ResourceId
+    parents: ResourceId
 
   AWS::ApiGateway::Model:
     kind: node
@@ -86,7 +86,7 @@ resources:
       classname: diagrams.aws.network.APIGateway
     edges:
       - RestApiId
-    parent_cluster_property: RestApiId
+    parents: RestApiId
 
   AWS::ApiGateway::Resource:
     kind: cluster
@@ -96,7 +96,7 @@ resources:
     edges:
       - ParentId # ???
       - RestApiId
-    parent_cluster_property: RestApiId
+    parents: RestApiId
 
   AWS::ApiGateway::RestApi:
     kind: cluster
@@ -111,7 +111,7 @@ resources:
     edges:
       - DeploymentId
       - RestApiId
-    parent_cluster_property: RestApiId
+    parents: RestApiId
 
   #
   # AWS::AppConfig resource types.
@@ -129,7 +129,7 @@ resources:
       classname: diagrams.aws.management.SystemsManagerAppConfig
     edges:
       - ApplicationId
-    parent_cluster_property:
+    parents:
       - ApplicationId
 
   AWS::AppConfig::DeploymentStrategy:
@@ -143,7 +143,7 @@ resources:
       classname: diagrams.aws.management.SystemsManagerAppConfig
     edges:
       - ApplicationId
-    parent_cluster_property:
+    parents:
       - ApplicationId
 
   #
@@ -206,7 +206,7 @@ resources:
       - ImageId
       - IamInstanceProfile
       - SecurityGroups
-    parent_cluster_property: SecurityGroups
+    parents: SecurityGroups
 
   AWS::AutoScaling::ScalingPolicy:
     kind: node
@@ -214,7 +214,7 @@ resources:
       classname: diagrams.aws.management.AutoScaling
     edges:
       - AutoScalingGroupName
-    parent_cluster_property: AutoScalingGroupName
+    parents: AutoScalingGroupName
 
   AWS::AutoScaling::ScheduledAction:
     kind: node
@@ -222,7 +222,7 @@ resources:
       classname: diagrams.aws.management.AutoScaling
     edges:
       - AutoScalingGroupName
-    parent_cluster_property: AutoScalingGroupName
+    parents: AutoScalingGroupName
 
   #
   # AWS::CDK resource types.
@@ -321,7 +321,7 @@ resources:
       - Dimensions:
         - Value
       - InsufficientDataActions
-    parent_cluster_property:
+    parents:
       Dimensions:
         - Value
 
@@ -390,7 +390,7 @@ resources:
       classname: diagrams.aws.security.Cognito
     edges:
       - UserPoolId
-    parent_cluster_property: UserPoolId
+    parents: UserPoolId
 
   AWS::Cognito::UserPoolClient:
     kind: node
@@ -399,7 +399,7 @@ resources:
     edges:
       - CallbackURLs
       - UserPoolId
-    parent_cluster_property: UserPoolId
+    parents: UserPoolId
 
   #
   # AWS::Config resource types.
@@ -547,7 +547,7 @@ resources:
       classname: diagrams.aws.network.InternetGateway
     edges:
       - VpcId
-    parent_cluster_property: VpcId
+    parents: VpcId
 
   AWS::EC2::FlowLog:
     kind: node
@@ -558,7 +558,7 @@ resources:
       - LogDestination
       - LogGroupName
       - ResourceId
-    parent_cluster_property: ResourceId
+    parents: ResourceId
 
   AWS::EC2::Image:
     kind: node
@@ -580,7 +580,7 @@ resources:
         - DocumentName
       - SubnetId
       - UserData
-    parent_cluster_property:
+    parents:
       - SecurityGroupIds
       - SubnetId
 
@@ -601,7 +601,7 @@ resources:
           - IamInstanceProfile:
             - Arn
             - Name
-    parent_cluster_property:
+    parents:
       - LaunchTemplateData:
         - SecurityGroups
         - SecurityGroupIds
@@ -613,7 +613,7 @@ resources:
     edges:
       - AllocationId
       - SubnetId
-    parent_cluster_property: SubnetId
+    parents: SubnetId
 
   AWS::EC2::NetworkAcl:
     kind: cluster
@@ -622,7 +622,7 @@ resources:
       classname: diagrams.aws.network.Nacl
     edges:
       - VpcId
-    parent_cluster_property: VpcId
+    parents: VpcId
 
   AWS::EC2::NetworkAclEntry:
     kind: node
@@ -630,7 +630,7 @@ resources:
       classname: diagrams.aws.network.Nacl
     edges:
       - NetworkAclId
-    parent_cluster_property: NetworkAclId
+    parents: NetworkAclId
 
   AWS::EC2::NetworkInterface:
     kind: node
@@ -639,7 +639,7 @@ resources:
     edges:
       - GroupSet
       - SubnetId
-    parent_cluster_property:
+    parents:
       - GroupSet
       - SubnetId
 
@@ -657,7 +657,7 @@ resources:
       classname: diagrams.aws.network.RouteTable
     edges:
       - VpcId
-    parent_cluster_property: VpcId
+    parents: VpcId
 
   AWS::EC2::SecurityGroup:
     kind: cluster
@@ -672,7 +672,7 @@ resources:
         - SourceSecurityGroupName
         - SourceSecurityGroupOwnerId
       - VpcId
-    parent_cluster_property:
+    parents:
       - GroupId
       - SourceSecurityGroupId
 #      - SecurityGroupIngress:
@@ -687,7 +687,7 @@ resources:
     edges:
       - GroupId
       - DestinationSecurityGroupId
-    parent_cluster_property: GroupId
+    parents: GroupId
 
   AWS::EC2::SecurityGroupIngress:
     kind: node
@@ -696,7 +696,7 @@ resources:
     edges:
       - GroupId
       - SourceSecurityGroupId
-    parent_cluster_property: GroupId
+    parents: GroupId
 
   AWS::EC2::Subnet:
     kind: cluster
@@ -709,7 +709,7 @@ resources:
     edges:
       - AvailabilityZone
       - VpcId
-    parent_cluster_property: VpcId
+    parents: VpcId
 
   AWS::EC2::SubnetNetworkAclAssociation:
     kind: edge
@@ -746,7 +746,7 @@ resources:
         classname: diagrams.aws.network.VPC
     edges:
       - VpcId
-    parent_cluster_property: VpcId
+    parents: VpcId
 
   AWS::EC2::VPCEndpoint:
     kind: node
@@ -757,7 +757,7 @@ resources:
       - SecurityGroupIds
       - SubnetIds
       - VpcId
-    parent_cluster_property: VpcId
+    parents: VpcId
 
   AWS::EC2::VPCEndpointService:
     kind: cluster
@@ -766,7 +766,7 @@ resources:
       classname: diagrams.aws.network.VPC
     edges:
       - NetworkLoadBalancerArns
-    parent_cluster_property: NetworkLoadBalancerArns
+    parents: NetworkLoadBalancerArns
 
   AWS::EC2::VPCEndpointServicePermissions:
     kind: node
@@ -774,7 +774,7 @@ resources:
       classname: diagrams.aws.network.VPC
     edges:
       - ServiceId
-    parent_cluster_property: ServiceId
+    parents: ServiceId
 
   AWS::EC2::VPCGatewayAttachment:
     kind: edge
@@ -791,7 +791,7 @@ resources:
       - PeerVpcId
       - PeerOwnerId
       - PeerRoleArn
-    parent_cluster_property: VpcId
+    parents: VpcId
 
   #
   # AWS::ECS resource types.
@@ -813,7 +813,7 @@ resources:
         - TargetGroupArn
       - Role
       - TaskDefinition
-    parent_cluster_property: Cluster
+    parents: Cluster
 
   AWS::ECS::TaskDefinition:
     kind: node
@@ -843,7 +843,7 @@ resources:
       - FileSystemId
       - SecurityGroups
       - SubnetId
-    parent_cluster_property: FileSystemId
+    parents: FileSystemId
 
   AWS::EFS::AccessPoint:
     kind: node
@@ -851,7 +851,7 @@ resources:
       classname: diagrams.aws.storage.EFS
     edges:
       - FileSystemId
-    parent_cluster_property: FileSystemId
+    parents: FileSystemId
 
   #
   # AWS::EKS resource types.
@@ -867,7 +867,7 @@ resources:
           - SecurityGroupIds
           - SubnetIds
       - RoleArn
-    parent_cluster_property:
+    parents:
       - ResourcesVpcConfig:
           - SecurityGroupIds
 #          - SubnetIds
@@ -883,7 +883,7 @@ resources:
          - Id
       - NodeRole
       - Subnets
-    parent_cluster_property: ClusterName
+    parents: ClusterName
 
   #
   # AWS::ElastiCache resource types.
@@ -962,7 +962,7 @@ resources:
       - DefaultActions:
         - TargetGroupArn
       - LoadBalancerArn
-    parent_cluster_property: LoadBalancerArn
+    parents: LoadBalancerArn
 
   AWS::ElasticLoadBalancingV2::ListenerRule:
     kind: node
@@ -972,7 +972,7 @@ resources:
       - Actions:
         - TargetGroupArn
       - ListenerArn
-    parent_cluster_property: ListenerArn
+    parents: ListenerArn
   
   AWS::ElasticLoadBalancingV2::LoadBalancer:
     kind: cluster
@@ -999,7 +999,7 @@ resources:
       - Targets:
         - Id
       - VpcId
-    parent_cluster_property: VpcId
+    parents: VpcId
 
   #
   # AWS::EMR resource types.
@@ -1034,7 +1034,7 @@ resources:
       classname: diagrams.aws.integration.Eventbridge
     edges:
       - EventBusName
-    parent_cluster_property: EventBusName
+    parents: EventBusName
 
   AWS::Events::Rule:
     kind: node
@@ -1116,7 +1116,7 @@ resources:
     edges:
       - InstanceProfileName
       - Roles
-    parent_cluster_property: Roles
+    parents: Roles
 
   AWS::IAM::ManagedPolicy:
     kind: node
@@ -1144,7 +1144,7 @@ resources:
         - Statement:
           - Resource
       - RoleName
-    parent_cluster_property: RoleName
+    parents: RoleName
 
   AWS::IAM::Policy:
     kind: node
@@ -1152,7 +1152,7 @@ resources:
       classname: diagrams.aws.security.IAM
     edges:
       - Roles
-    parent_cluster_property: Roles
+    parents: Roles
 
   #
   # AWS::IoT resource types.
@@ -1265,7 +1265,7 @@ resources:
           - SubnetIds
           - SecurityGroupIds
       - Environment
-    parent_cluster_property:
+    parents:
       - VpcConfig:
           - SecurityGroupIds
           - SubnetIds
@@ -1277,7 +1277,7 @@ resources:
     edges:
       - FunctionName
       - SourceArn
-    parent_cluster_property: FunctionName
+    parents: FunctionName
 
   AWS::Lambda::Version:
     kind: node
@@ -1285,7 +1285,7 @@ resources:
       classname: diagrams.aws.compute.Lambda
     edges:
       - FunctionName
-    parent_cluster_property: FunctionName
+    parents: FunctionName
 
   #
   # AWS::Logs resource types.
@@ -1305,7 +1305,7 @@ resources:
       classname: diagrams.aws.management.CloudwatchLogs
     edges:
       - LogGroupName
-    parent_cluster_property: LogGroupName
+    parents: LogGroupName
 
   AWS::Logs::QueryDefinition:
     kind: node
@@ -1355,7 +1355,7 @@ resources:
       - DBClusterIdentifier
       - DBParameterGroupName
       - DBSubnetGroupName
-    parent_cluster_property: DBClusterIdentifier
+    parents: DBClusterIdentifier
     children:
       - DBParameterGroupName
 
@@ -1413,7 +1413,7 @@ resources:
       - DBSubnetGroupName
       - SourceDBInstanceIdentifier
       - VPCSecurityGroups
-    parent_cluster_property:
+    parents:
       - SourceDBInstanceIdentifier
       - DBClusterIdentifier
       - VPCSecurityGroups
@@ -1474,7 +1474,7 @@ resources:
     edges:
       - Bucket
       - PolicyDocument
-    parent_cluster_property: Bucket
+    parents: Bucket
 
   AWS::S3::Object:
     kind: node
@@ -1486,7 +1486,7 @@ resources:
         - Key
       - Target:
         - Bucket
-    parent_cluster_property:
+    parents:
       - Target:
         - Bucket
 

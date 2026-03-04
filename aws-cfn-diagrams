@@ -799,7 +799,7 @@ def generate_diagram(cloud_formation_data, aws_cloud_formation_filename):
 
     for rname, rdata in cloud_formation_data["Resources"].items():
         rconfig = get_config(rdata)
-        pcp = rconfig.get("parent_cluster_property")
+        pcp = rconfig.get("parents")
         if pcp is not None:
             parents = []
             process_edge_to(pcp, rdata["Properties"], parents)
