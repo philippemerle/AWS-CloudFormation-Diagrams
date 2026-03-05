@@ -347,7 +347,6 @@ resources:
   #
 
   AWS::CodeBuild::Project:
-    Properties:
     kind: node
     icon:
       classname: diagrams.aws.devtools.Codebuild
