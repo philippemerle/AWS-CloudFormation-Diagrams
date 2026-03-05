@@ -128,6 +128,4 @@ This project is licensed under the [Apache 2.0 License](https://github.com/phili
 
 [![Star History Chart](https://api.star-history.com/svg?repos=philippemerle/AWS-CloudFormation-Diagrams&type=date&legend=top-left)](https://www.star-history.com/#philippemerle/AWS-CloudFormation-Diagrams&type=date&legend=top-left)
 
-<div align="center">
 **[Star this project](https://github.com/philippemerle/AWS-CloudFormation-Diagrams)** if you find it useful!
-</div>
