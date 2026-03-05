@@ -5,7 +5,7 @@
 [![pypi version](https://badge.fury.io/py/AWS-CloudFormation-Diagrams.svg)](https://badge.fury.io/py/AWS-CloudFormation-Diagrams)
 [![PyPI Downloads](https://static.pepy.tech/personalized-badge/aws-cloudformation-diagrams?period=total&units=INTERNATIONAL_SYSTEM&left_color=GRAY&right_color=GREEN&left_text=pypi+downloads)](https://pepy.tech/projects/aws-cloudformation-diagrams)![contributors](https://img.shields.io/github/contributors/philippemerle/AWS-CloudFormation-Diagrams)
 
-A simple CLI script to generate AWS infrastructure diagrams from AWS CloudFormation templates.
+An open source tool to generate AWS infrastructure diagrams from AWS CloudFormation templates.
 
 ## Features
 
@@ -127,3 +127,7 @@ This project is licensed under the [Apache 2.0 License](https://github.com/phili
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=philippemerle/AWS-CloudFormation-Diagrams&type=date&legend=top-left)](https://www.star-history.com/#philippemerle/AWS-CloudFormation-Diagrams&type=date&legend=top-left)
+
+<div align="center">
+**[Star this project](https://github.com/philippemerle/AWS-CloudFormation-Diagrams)** if you find it useful!
+</div>
