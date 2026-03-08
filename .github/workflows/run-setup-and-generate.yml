@@ -1,0 +1,51 @@
+name: Build & Generate
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ "**" ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-generate:
+    name: Run setup.py and generate.sh
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [ '3.x' ]
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+          cache-dependency-path: setup.py
+
+      - name: Upgrade pip & build tooling
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --upgrade setuptools wheel
+
+      - name: Install system dependencies (Graphviz)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends graphviz libgraphviz-dev
+
+      - name: Install package via setup.py
+        run: python -m pip install .
+
+      - name: Run generate.sh
+        shell: bash
+        run: ./examples/miscellaneous/generate.sh
