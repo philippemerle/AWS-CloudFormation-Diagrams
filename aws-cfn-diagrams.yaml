@@ -707,6 +707,7 @@ resources:
         - then: diagrams.aws.network.PublicSubnet
     edges:
       - AvailabilityZone
+      - Ipv6CidrBlock
       - VpcId
     parents: VpcId
 
@@ -1383,9 +1384,15 @@ resources:
     kind: cluster
     style: Database
     icon:
-      classname: diagrams.aws.database.RDS
+      classname:
+        - when: Engine in ("aurora-mysql", "mysql")
+          then: diagrams.aws.database.RDSMysqlInstance
+        - when: Engine in ("aurora-postgresql", "postgres")
+          then: diagrams.aws.database.RDSPostgresqlInstance
+        - then: diagrams.aws.database.RDS
     edges:
       - DBSubnetGroupName
+      - MasterUserPassword
       - VpcSecurityGroupIds
     children:
       - DBSubnetGroupName
@@ -1395,15 +1402,15 @@ resources:
     style: Database
     icon:
       classname:
-        - when: (Engine or property(SourceDBInstanceIdentifier, "Engine")) == "MariaDB"
+        - when: (Engine or property(SourceDBInstanceIdentifier, "Engine")) == "mariadb"
           then: diagrams.aws.database.RDSMariadbInstance
-        - when: (Engine or property(SourceDBInstanceIdentifier, "Engine")) == "MySQL"
+        - when: (Engine or property(SourceDBInstanceIdentifier, "Engine")) in ("aurora-mysql", "mysql", "MySQL")
           then: diagrams.aws.database.RDSMysqlInstance
-        - when: (Engine or property(SourceDBInstanceIdentifier, "Engine")) == "Oracle"
+        - when: (Engine or property(SourceDBInstanceIdentifier, "Engine")) in ("custom-oracle-ee", "custom-oracle-ee-cdb", "oracle-ee", "oracle-ee-cdb", "oracle-se2", "oracle-se2-cdb")
           then: diagrams.aws.database.RDSOracleInstance
-        - when: (Engine or property(SourceDBInstanceIdentifier, "Engine")) == "PostgreSQL"
+        - when: (Engine or property(SourceDBInstanceIdentifier, "Engine")) in ("aurora-postgresql", "postgres")
           then: diagrams.aws.database.RDSPostgresqlInstance
-        - when: (Engine or property(SourceDBInstanceIdentifier, "Engine")) == "SqlServer"
+        - when: (Engine or property(SourceDBInstanceIdentifier, "Engine")) in ("custom-sqlserver-ee", "custom-sqlserver-se", "custom-sqlserver-web", "sqlserver-ee", "sqlserver-se", "sqlserver-ex", "sqlserver-web")
           then: diagrams.aws.database.RDSSqlServerInstance
         - then: diagrams.aws.database.RDSInstance
     edges:
