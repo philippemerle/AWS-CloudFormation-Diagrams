@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [ '3.9', '3.10', '3.11', '3.12' ]
+        python-version: [ '3.9', '3.10', '3.11', '3.12', '3.13', '3.14' ]
 
     permissions:
       contents: read
@@ -48,4 +48,6 @@ jobs:
 
       - name: Run generate.sh
         shell: bash
-        run: ./examples/miscellaneous/generate.sh
+        run: |
+          cd examples/miscellaneous
+          ./generate.sh
