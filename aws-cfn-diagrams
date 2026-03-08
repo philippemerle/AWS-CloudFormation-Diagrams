@@ -46,6 +46,15 @@ def warning(message: str) -> None:
     """
     print(f"\33[33m[Warning] {message}!\33[0m")
 
+def error(message: str) -> None:
+    """
+        Print an error message.
+
+        :param message: Error message to print
+        :type message: str
+    """
+    print(f"\33[31m[Error] {message}!\33[0m")
+
 #
 # PyYAML constructors for AWS CloudFormation functions
 #
@@ -581,7 +590,11 @@ def parse_aws_cloud_formation_template(template_filename):
             "yaml": yaml.full_load,
             "json": json.load
         }
-        data = LOADER_FUNCTIONS[file_format](stream)
+        try:
+            data = LOADER_FUNCTIONS[file_format](stream)
+        except KeyError:
+            error(f"{template_filename} - Format {file_format} unsupported")
+            return { "Resources": {} }
     for rname, resource in dict(data["Resources"]).items():
         if not isinstance(resource, dict):
             warning(f"Resources:{rname} - Type undefined")
