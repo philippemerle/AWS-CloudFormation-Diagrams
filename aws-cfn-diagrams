@@ -94,7 +94,7 @@ def convert_attributes(command: str, name: str, attributes: dict, attr: str, ide
 
 def convert_subgraph(graph: pygraphviz.AGraph, already_created_nodes: set, ident: int, stream):
     for subgraph in graph.subgraphs():
-        print("  "*ident, "subgraph ", subgraph.name, " [", subgraph.graph_attr["tooltip"].split(":")[0], "]", sep="", file=stream)
+        print("  "*ident, "subgraph ", subgraph.name, " [", subgraph.graph_attr["label"], "]", sep="", file=stream)
         print("  "*(ident+1), "direction TB", sep="", file=stream)
         convert_attributes("style", subgraph.name, subgraph.graph_attr, None, ident+1, stream)
         convert_subgraph(subgraph, already_created_nodes, ident+1, stream)
@@ -104,6 +104,7 @@ def convert_subgraph(graph: pygraphviz.AGraph, already_created_nodes: set, ident
             already_created_nodes.add(nid)
             node = graph.get_node(nid)
             url = node.attr["image"].replace(DIAGRAMS_PATH, DIAGRAMS_URL)
+            url = url.replace(CFD_PATH, CFD_URL)
             label = node.attr["label"].replace("\n", "")
             print("  "*ident, node.name, "@{ img: \"", url, "\", label: \"", label, "\", h: 120, constraint: \"on\" }", sep="", file=stream)
             convert_attributes("style", node.name, node.attr, "fill:none", ident, stream)
