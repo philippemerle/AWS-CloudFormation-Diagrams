@@ -14,10 +14,11 @@ An open source tool to generate AWS infrastructure diagrams from AWS CloudFormat
 * Supports `Rain::Module` resource type
 * Supports `DependsOn`, `Ref`, `Fn::GetAtt` relationships, and `${}` resource attributes
 * Supports `::Id`-suffixed parameter types such as `AWS::EC2::Image::Id`, `AWS::EC2::SecurityGroup::Id`, `AWS::EC2::Subnet::Id`, `AWS::EC2::VPC::Id`, `AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>`, `List<AWS::EC2::SecurityGroup::Id>`, `List<AWS::EC2::Subnet::Id>`, or `List<AWS::EC2::VPC::Id>`
-* Generates DOT, draw.io, GIF, JPEG, PDF, PNG, SVG, and TIFF diagrams
-* Provides [156 generated diagram examples](https://github.com/philippemerle/AWS-CloudFormation-Diagrams/blob/main/diagrams/)
+* Generates DOT, draw.io, GIF, JPEG, Mermaid, PDF, PNG, SVG, and TIFF diagrams
+* [Mermaid Diagram Generation](https://github.com/philippemerle/AWS-CloudFormation-Diagrams#mermaid-diagram-generation)
 * [AWS CloudFormation Diagrams Interactive Viewer](https://github.com/philippemerle/AWS-CloudFormation-Diagrams#interactive-viewer)
 * [Editable draw.io export](https://github.com/philippemerle/AWS-CloudFormation-Diagrams#editable-drawio-export)
+* Provides [156 generated diagram examples](https://github.com/philippemerle/AWS-CloudFormation-Diagrams/blob/main/diagrams/)
 
 
 Have ideas? [Open an issue](https://github.com/philippemerle/AWS-CloudFormation-Diagrams/issues/new) or [start a discussion](https://github.com/philippemerle/AWS-CloudFormation-Diagrams/discussions/new).
@@ -51,8 +52,56 @@ positional arguments:
 options:
   -h, --help           show this help message and exit
   -o, --output OUTPUT  output diagram filename
-  -f, --format FORMAT  output format, allowed formats are dot, dot_json, drawio, gif, jp2, jpe, jpeg, jpg, pdf, png, svg, tif, tiff, set to png by default
+  -f, --format FORMAT  output format, allowed formats are dot, dot_json, drawio, gif, jp2, jpe, jpeg, jpg, mermaid, pdf, png, svg, tif, tiff, set to png by default
   --embed-all-icons    embed all icons into svg or dot_json output diagrams
+```
+
+## Mermaid Diagram Generation
+
+**AWS CloudFormation Diagrams** could output diagrams in the `mermaid` format. For instance, type:
+
+```sh
+aws-cfn-diagrams examples/wordpress/WordPress-RDS.yaml -f mermaid
+```
+
+The generated diagram is rendered as follows:
+
+```mermaid
+flowchart TB
+  subgraph cluster_VpcId [VpcId]
+    direction TB
+    style cluster_VpcId fill:#f2e6ff,color:#2D3436,font:sans-serif,font-size:12pt,stroke:box
+    subgraph cluster_WebSecurityGroup [WebSecurityGroup]
+      direction TB
+      style cluster_WebSecurityGroup fill:#fff5e6,color:#2D3436,font:sans-serif,font-size:12pt,stroke:box
+      resource_WebSecurityGroup@{ img: "https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/compute/ec2.png", label: "WebSecurityGroup", h: 120, constraint: "on" }
+      style resource_WebSecurityGroup fill:none,stroke:none
+      resource_WordPressInstance@{ img: "https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/compute/ec2-instance.png", label: "WordPressInstance", h: 120, constraint: "on" }
+      style resource_WordPressInstance fill:none,stroke:none
+    end
+    subgraph cluster_DBSecurityGroup [DBSecurityGroup]
+      direction TB
+      style cluster_DBSecurityGroup fill:#fff5e6,color:#2D3436,font:sans-serif,font-size:12pt,stroke:box
+      resource_DBSecurityGroup@{ img: "https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/compute/ec2.png", label: "DBSecurityGroup", h: 120, constraint: "on" }
+      style resource_DBSecurityGroup fill:none,stroke:none
+      resource_WordPressDB@{ img: "https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/database/rds-mysql-instance.png", label: "WordPressDB", h: 120, constraint: "on" }
+      style resource_WordPressDB fill:none,stroke:none
+    end
+    resource_VpcId@{ img: "https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/network/vpc.png", label: "VpcId", h: 120, constraint: "on" }
+    style resource_VpcId fill:none,stroke:none
+  end
+  resource_WebSecurityGroup --> resource_VpcId
+  linkStyle 0 stroke:black,color:#2D3436,font:sans-serif,font-size:13pt
+  resource_WordPressInstance --> resource_WebSecurityGroup
+  linkStyle 1 stroke:black,color:#2D3436,font:sans-serif,font-size:13pt
+  resource_WordPressInstance --> resource_WordPressDB
+  linkStyle 2 stroke:black,color:#2D3436,font:sans-serif,font-size:13pt
+  resource_DBSecurityGroup --> resource_WebSecurityGroup
+  linkStyle 3 stroke:black,color:#2D3436,font:sans-serif,font-size:13pt
+  resource_DBSecurityGroup --> resource_VpcId
+  linkStyle 4 stroke:black,color:#2D3436,font:sans-serif,font-size:13pt
+  resource_WordPressDB --> resource_DBSecurityGroup
+  linkStyle 5 stroke:black,color:#2D3436,font:sans-serif,font-size:13pt
 ```
 
 ## Interactive Viewer

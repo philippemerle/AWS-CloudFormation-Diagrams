@@ -6,6 +6,8 @@ import datetime
 import importlib
 import json
 import os
+from pathlib import Path
+import pygraphviz
 import re
 import subprocess
 import sys
@@ -14,6 +16,17 @@ import diagrams
 import diagrams.custom
 from diagrams import Edge, Cluster
 from diagrams.aws.enablement import ManagedServices
+
+#
+# Absolute paths to be replaced by urls
+#
+
+DIAGRAMS_PATH = str(Path(os.path.abspath(os.path.dirname(diagrams.__file__))).parent)
+DIAGRAMS_URL = \
+    "https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master"
+CFD_PATH = str(Path(os.path.abspath(os.path.dirname(__file__))).parent)
+CFD_URL = \
+    "https://raw.githubusercontent.com/philippemerle/AWS CloudFormation Diagrams/refs/heads/main"
 
 #
 # Trace message management
@@ -54,6 +67,61 @@ def error(message: str) -> None:
         :type message: str
     """
     print(f"\33[31m[Error] {message}!\33[0m")
+
+#
+# Conversion of dot files to Mermaid files
+#
+
+def convert_attributes(command: str, name: str, attributes: dict, attr: str, ident: int, stream):
+    mappings = []
+    if attr is not None:
+        mappings.append(attr)
+    for ak, av in attributes.items():
+        if ak == "bgcolor":
+            mappings.append(f"fill:{av}")
+#        elif ak == "color":
+#            mappings.append(f"color:{av}")
+        elif ak == "fontcolor":
+            mappings.append(f"color:{av}")
+        elif ak == "fontname":
+            mappings.append(f"font:{av.lower()}")
+        elif ak == "fontsize":
+            mappings.append(f"font-size:{av}pt")
+        elif ak == "shape":
+            mappings.append(f"stroke:{av}")
+    if len(mappings) > 0:
+        print("  "*ident, command, " ", name, " ", ",".join(mappings), sep="", file=stream)
+
+def convert_subgraph(graph: pygraphviz.AGraph, already_created_nodes: set, ident: int, stream):
+    for subgraph in graph.subgraphs():
+        print("  "*ident, "subgraph ", subgraph.name, " [", subgraph.graph_attr["tooltip"].split(":")[0], "]", sep="", file=stream)
+        print("  "*(ident+1), "direction TB", sep="", file=stream)
+        convert_attributes("style", subgraph.name, subgraph.graph_attr, None, ident+1, stream)
+        convert_subgraph(subgraph, already_created_nodes, ident+1, stream)
+        print("  "*ident, "end", sep="", file=stream)
+    for nid in graph.nodes():
+        if nid not in already_created_nodes:
+            already_created_nodes.add(nid)
+            node = graph.get_node(nid)
+            url = node.attr["image"].replace(DIAGRAMS_PATH, DIAGRAMS_URL)
+            label = node.attr["label"].replace("\n", "")
+            print("  "*ident, node.name, "@{ img: \"", url, "\", label: \"", label, "\", h: 120, constraint: \"on\" }", sep="", file=stream)
+            convert_attributes("style", node.name, node.attr, "fill:none", ident, stream)
+
+def convert_dot_to_mermaid(dot_filename, mermaid_filename):
+    graph = pygraphviz.AGraph()
+    graph.read(dot_filename)
+    with open(mermaid_filename, "wt") as stream:
+        print("flowchart TB", file=stream)
+        convert_subgraph(graph, set(), 1, stream)
+        for eid, edge in enumerate(graph.edges()):
+            edge_dir = {
+                "forward": "-->",
+                "both": "<-->",
+            }[edge.attr["dir"]]
+            print(" ", edge[0], edge_dir, edge[1], file=stream)
+            edge_color = edge.attr.get("color") or graph.edge_attr["color"]
+            convert_attributes("linkStyle", eid, edge.attr, f"stroke:{edge_color}", 1, stream)
 
 #
 # PyYAML constructors for AWS CloudFormation functions
@@ -390,7 +458,7 @@ yaml.add_constructor("!ValueOf", valueof_constructor)
 # All dot output formats are listed in https://graphviz.org/docs/outputs/
 # If you need a format not listed below, just add it below.
 SUPPORTED_OUTPUT_FORMATS = (
-    "dot", "dot_json", "drawio", "gif", "jp2", "jpe", "jpeg", "jpg", "pdf", "png",
+    "dot", "dot_json", "drawio", "gif", "jp2", "jpe", "jpeg", "jpg", "mermaid", "pdf", "png",
     "svg", "tif", "tiff",
 )
 class Diagram(diagrams.Diagram):
@@ -662,6 +730,12 @@ if is_drawio_format:
     args.output = "/tmp/drawio"
     args.format = "dot"
 
+is_mermaid_format = args.format == "mermaid"
+if is_mermaid_format:
+    mermaid_filename = args.output
+    args.output = "/tmp/mermaid"
+    args.format = "dot"
+
 aws_cloud_formation_filename = args.filename
 
 # Open AWS CloudFormation file.
@@ -838,7 +912,7 @@ def generate_diagram(cloud_formation_data, aws_cloud_formation_filename):
 
         # Generate a visual cluster only when there are several nodes inside.
         cluster_label = cname
-        if not is_drawio_format and args.format != "dot_json":
+        if not is_drawio_format and not is_mermaid_format and args.format != "dot_json":
             config = get_config(rdata)
             config_icon = config.get("icon", {})
             if "filename" in config_icon:
@@ -964,14 +1038,20 @@ def generate_diagram(cloud_formation_data, aws_cloud_formation_filename):
 with Diagram("", filename=args.output, show=False, direction="TB", outformat=args.format):
     generate_diagram(cloud_formation_data, aws_cloud_formation_filename)
 
-info(f"{args.output}.{args.format} generated")
+generated_filename = f"{args.output}.{args.format}"
+info(f"{generated_filename} generated")
 
 if is_drawio_format:
-    command = ["graphviz2drawio", f"{args.output}.{args.format}", "-o", f"{drawio_filename}.drawio"]
+    command = ["graphviz2drawio", generated_filename, "-o", f"{drawio_filename}.drawio"]
     info(f"Execute {' '.join(command)}", end="")
     subprocess.run(command)
-    os.remove(f"{args.output}.{args.format}")
+    os.remove(generated_filename)
     info(f"{drawio_filename}.drawio generated")
+
+if is_mermaid_format:
+    convert_dot_to_mermaid(generated_filename, f"{mermaid_filename}.mermaid")
+    os.remove(generated_filename)
+    info(f"{mermaid_filename}.mermaid generated")
 
 if args.format in ("svg", "dot_json"):
     FILENAME = f"{args.output}.{args.format}"
@@ -979,14 +1059,6 @@ if args.format in ("svg", "dot_json"):
     # read all the lines of the generated file
     with open(FILENAME, "rt", encoding="utf-8") as fs:
         lines = fs.readlines()
-    # compute absolute paths to be replaced by urls
-    from pathlib import Path
-    DIAGRAMS_PATH = str(Path(os.path.abspath(os.path.dirname(diagrams.__file__))).parent)
-    DIAGRAMS_URL = \
-        "https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master"
-    CFD_PATH = str(Path(os.path.abspath(os.path.dirname(__file__))).parent)
-    CFD_URL = \
-      "https://raw.githubusercontent.com/philippemerle/AWS CloudFormation Diagrams/refs/heads/main"
     if args.format == "svg":
         what_to_search = [
             r'image xlink:href="([^"]+)"',
