@@ -49,5 +49,10 @@ jobs:
       - name: Run generate.sh
         shell: bash
         run: |
-          cd examples/miscellaneous
-          ./generate.sh
+          cd examples
+          for example in miscellaneous wordpress
+          do
+            cd ${example}
+            ./generate.sh
+            cd ..
+          done
