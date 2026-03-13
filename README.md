@@ -71,7 +71,7 @@ After compiling with D2 CLI, the generated diagram is rendered as follows:
 
 ## Mermaid Diagram Generation
 
-**AWS CloudFormation Diagrams** could output diagrams in the `mermaid` format. For instance, type:
+**AWS CloudFormation Diagrams** could output diagrams in the [Mermaid](https://mermaid.js.org/) format. For instance, type:
 
 ```sh
 aws-cfn-diagrams examples/wordpress/WordPress-RDS.yaml -f mermaid
@@ -131,7 +131,7 @@ Diagrams in the `dot_json` format can be viewed and manipulated interactively th
 open interactive_viewer/index.html
 ```
 
-Then open [examples/wordpress/WordPress-RDS.dot_json](https://github.com/philippemerle/AWS-CloudFormation-Diagrams/examples/wordpress/WordPress-RDS.dot_json) in **AWS CloudFormation Diagrams Interactive Viewer**.
+Then open [examples/wordpress/WordPress-RDS.dot_json](https://github.com/philippemerle/AWS-CloudFormation-Diagrams/blob/main/examples/wordpress/WordPress-RDS.dot_json) in **AWS CloudFormation Diagrams Interactive Viewer**.
 
 ![AWS CloudFormation Diagrams Interactive Viewer](https://raw.githubusercontent.com/philippemerle/AWS-CloudFormation-Diagrams/refs/heads/main/examples/wordpress/WordPress-RDS-in-interactive-viewer.png)
 
