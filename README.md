@@ -14,7 +14,8 @@ An open source tool to generate AWS infrastructure diagrams from AWS CloudFormat
 * Supports `Rain::Module` resource type
 * Supports `DependsOn`, `Ref`, `Fn::GetAtt` relationships, and `${}` resource attributes
 * Supports `::Id`-suffixed parameter types such as `AWS::EC2::Image::Id`, `AWS::EC2::SecurityGroup::Id`, `AWS::EC2::Subnet::Id`, `AWS::EC2::VPC::Id`, `AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>`, `List<AWS::EC2::SecurityGroup::Id>`, `List<AWS::EC2::Subnet::Id>`, or `List<AWS::EC2::VPC::Id>`
-* Generates DOT, draw.io, GIF, JPEG, Mermaid, PDF, PNG, SVG, and TIFF diagrams
+* Generates D2, DOT, draw.io, GIF, JPEG, Mermaid, PDF, PNG, SVG, and TIFF diagrams
+* [D2 Diagram Generation](https://github.com/philippemerle/AWS-CloudFormation-Diagrams#d2-diagram-generation)
 * [Mermaid Diagram Generation](https://github.com/philippemerle/AWS-CloudFormation-Diagrams#mermaid-diagram-generation)
 * [AWS CloudFormation Diagrams Interactive Viewer](https://github.com/philippemerle/AWS-CloudFormation-Diagrams#interactive-viewer)
 * [Editable draw.io export](https://github.com/philippemerle/AWS-CloudFormation-Diagrams#editable-drawio-export)
@@ -52,9 +53,21 @@ positional arguments:
 options:
   -h, --help           show this help message and exit
   -o, --output OUTPUT  output diagram filename
-  -f, --format FORMAT  output format, allowed formats are dot, dot_json, drawio, gif, jp2, jpe, jpeg, jpg, mermaid, pdf, png, svg, tif, tiff, set to png by default
+  -f, --format FORMAT  output format, allowed formats are d2, dot, dot_json, drawio, gif, jp2, jpe, jpeg, jpg, mermaid, pdf, png, svg, tif, tiff, set to png by default
   --embed-all-icons    embed all icons into svg or dot_json output diagrams
 ```
+
+## D2 Diagram Generation
+
+**AWS CloudFormation Diagrams** could output diagrams in the [D2](https://d2lang.com/) format. For instance, type:
+
+```sh
+aws-cfn-diagrams examples/wordpress/WordPress-RDS.yaml -f d2
+```
+
+After compiling with D2 CLI, the generated diagram is rendered as follows:
+
+![WordPress RDS Diagram](https://raw.githubusercontent.com/philippemerle/AWS-CloudFormation-Diagrams/refs/heads/main/examples/wordpress/WordPress-RDS.d2.svg)
 
 ## Mermaid Diagram Generation
 
@@ -118,7 +131,7 @@ Diagrams in the `dot_json` format can be viewed and manipulated interactively th
 open interactive_viewer/index.html
 ```
 
-Then open [examples/wordpress/WordPress-RDS.dot_json](examples/wordpress/WordPress-RDS.dot_json) in **AWS CloudFormation Diagrams Interactive Viewer**.
+Then open [examples/wordpress/WordPress-RDS.dot_json](https://github.com/philippemerle/AWS-CloudFormation-Diagrams/examples/wordpress/WordPress-RDS.dot_json) in **AWS CloudFormation Diagrams Interactive Viewer**.
 
 ![AWS CloudFormation Diagrams Interactive Viewer](https://raw.githubusercontent.com/philippemerle/AWS-CloudFormation-Diagrams/refs/heads/main/examples/wordpress/WordPress-RDS-in-interactive-viewer.png)
 

@@ -69,6 +69,77 @@ def error(message: str) -> None:
     print(f"\33[31m[Error] {message}!\33[0m")
 
 #
+# Conversion of dot files to D2 files
+#
+
+def convert_dot_attributes_to_d2(name: str, attributes: dict, attr: str, ident: int, stream):
+    mappings = []
+    if attr is not None:
+        mappings.append(attr)
+    for ak, av in attributes.items():
+        if ak == "bgcolor":
+            mappings.append(f"fill: \"{av}\"")
+#        elif ak == "color":
+#            mappings.append(f"color:{av}")
+        elif ak == "fontcolor":
+            mappings.append(f"font-color: \"{av}\"")
+# Commented as currently d2 supports only one font.
+#        elif ak == "fontname":
+#            mappings.append(f"font: \"{av.lower()}\"")
+        elif ak == "fontsize":
+            mappings.append(f"font-size: {av}")
+#        elif ak == "shape":
+#            mappings.append(f"stroke: \"{av}\"")
+    if len(mappings) > 0:
+        print("  "*ident, "style : {", sep="", file=stream)
+        for mapping in mappings:
+            print("  "*(ident+1), mapping, sep="", file=stream)
+        print("  "*ident, "}", sep="", file=stream)
+
+def convert_dot_subgraph_to_d2(graph: pygraphviz.AGraph, already_created_nodes: dict, node_id_prefix: str, ident: int, stream):
+    for subgraph in graph.subgraphs():
+        print("  "*ident, subgraph.name, ": ", subgraph.graph_attr["tooltip"].split(":")[0], " {", sep="", file=stream)
+        convert_dot_attributes_to_d2(subgraph.name, subgraph.graph_attr, None, ident+1, stream)
+        print("  "*(ident+1), "tooltip: |`yaml", sep="", file=stream)
+        print(subgraph.graph_attr["tooltip"], file=stream)
+        print("`|", file=stream)
+        convert_dot_subgraph_to_d2(subgraph, already_created_nodes, f"{node_id_prefix}{subgraph.name}.", ident+1, stream)
+        print("  "*ident, "}", sep="", file=stream)
+    for nid in graph.nodes():
+        if nid not in already_created_nodes:
+            already_created_nodes[nid] = f"{node_id_prefix}{nid}"
+            node = graph.get_node(nid)
+            label = node.attr["label"].replace("\n", "")
+            print("  "*ident, node.name, ": ", label, " {", sep="", file=stream)
+            print("  "*(ident+1), "shape: image", sep="", file=stream)
+            url = node.attr["image"].replace(DIAGRAMS_PATH, DIAGRAMS_URL)
+            print("  "*(ident+1), "icon: ", url, sep="", file=stream)
+            print("  "*(ident+1), "tooltip: |`yaml", sep="", file=stream)
+            print(node.attr["tooltip"], file=stream)
+            print("`|", file=stream)
+            convert_dot_attributes_to_d2(node.name, node.attr, None, ident+1, stream)
+            print("  "*ident, "}", sep="", file=stream)
+
+def convert_dot_to_d2(dot_filename, d2_filename):
+    graph = pygraphviz.AGraph()
+    graph.read(dot_filename)
+    with open(d2_filename, "wt") as stream:
+        node_ids = {}
+        convert_dot_subgraph_to_d2(graph, node_ids, "", 0, stream)
+        for eid, edge in enumerate(graph.edges()):
+            edge_dir = {
+                "forward": "->",
+                "both": "<->",
+            }[edge.attr["dir"]]
+            print(node_ids[edge[0]], edge_dir, node_ids[edge[1]], "{", file=stream)
+            edge_color = edge.attr.get("color") or graph.edge_attr["color"]
+            convert_dot_attributes_to_d2(eid, edge.attr, f"stroke: \"{edge_color}\"", 1, stream)
+            print("  ", "tooltip: |`yaml", sep="", file=stream)
+            print(edge.attr["tooltip"], file=stream)
+            print("`|", file=stream)
+            print("}", file=stream)
+
+#
 # Conversion of dot files to Mermaid files
 #
 
@@ -459,8 +530,8 @@ yaml.add_constructor("!ValueOf", valueof_constructor)
 # All dot output formats are listed in https://graphviz.org/docs/outputs/
 # If you need a format not listed below, just add it below.
 SUPPORTED_OUTPUT_FORMATS = (
-    "dot", "dot_json", "drawio", "gif", "jp2", "jpe", "jpeg", "jpg", "mermaid", "pdf", "png",
-    "svg", "tif", "tiff",
+    "d2", "dot", "dot_json", "drawio", "gif", "jp2", "jpe", "jpeg", "jpg",
+    "mermaid", "pdf", "png", "svg", "tif", "tiff",
 )
 class Diagram(diagrams.Diagram):
     """ Enhanced Diagram class with new output formats. """
@@ -725,6 +796,12 @@ if args.format not in SUPPORTED_OUTPUT_FORMATS:
             f" use '{SOF}' instead!", file=sys.stderr)
     sys.exit(1)
 
+is_d2_format = args.format == "d2"
+if is_d2_format:
+    d2_filename = args.output
+    args.output = "/tmp/d2"
+    args.format = "dot"
+
 is_drawio_format = args.format == "drawio"
 if is_drawio_format:
     drawio_filename = args.output
@@ -913,7 +990,7 @@ def generate_diagram(cloud_formation_data, aws_cloud_formation_filename):
 
         # Generate a visual cluster only when there are several nodes inside.
         cluster_label = cname
-        if not is_drawio_format and not is_mermaid_format and args.format != "dot_json":
+        if not is_d2_format and not is_drawio_format and not is_mermaid_format and args.format != "dot_json":
             config = get_config(rdata)
             config_icon = config.get("icon", {})
             if "filename" in config_icon:
@@ -1041,6 +1118,11 @@ with Diagram("", filename=args.output, show=False, direction="TB", outformat=arg
 
 generated_filename = f"{args.output}.{args.format}"
 info(f"{generated_filename} generated")
+
+if is_d2_format:
+    convert_dot_to_d2(generated_filename, f"{d2_filename}.d2")
+    os.remove(generated_filename)
+    info(f"{d2_filename}.d2 generated")
 
 if is_drawio_format:
     command = ["graphviz2drawio", generated_filename, "-o", f"{drawio_filename}.drawio"]

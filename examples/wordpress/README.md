@@ -2,6 +2,8 @@
 
 This is a simple WordPress deployment with RDS generated with ChatGPT.
 
+## Generate a PNG diagram
+
 Type
 
 ```sh
@@ -11,6 +13,8 @@ aws-cfn-diagrams WordPress-RDS.yaml
 to generate the following `png` diagram.
 
 ![WordPress RDS Diagram](WordPress-RDS.png)
+
+## Generate a PDF diagram
 
 Type
 
@@ -22,6 +26,8 @@ to generate the following `pdf` diagram.
 
 ![WordPress RDS Diagram](WordPress-RDS.pdf)
 
+## Generate an SVG diagram
+
 Type
 
 ```sh
@@ -31,6 +37,28 @@ aws-cfn-diagrams -f svg --embed-all-icons WordPress-RDS.yaml
 to generate the following `svg` diagram.
 
 ![WordPress RDS Diagram](WordPress-RDS.svg)
+
+## Generate a D2 diagram
+
+Type
+
+```sh
+aws-cfn-diagrams -f d2 WordPress-RDS.yaml
+```
+
+to generate the [`WordPress-RDS.d2`](WordPress-RDS.d2) diagram.
+
+Type
+
+```sh
+d2 WordPress-RDS.d2 WordPress-RDS.d2.svg
+```
+
+to generate the following `svg` diagram.
+
+![WordPress RDS Diagram](WordPress-RDS.d2.svg)
+
+## Generate a Mermaid diagram
 
 Type
 
@@ -78,6 +106,8 @@ flowchart TB
   linkStyle 5 stroke:black,color:#2D3436,font:sans-serif,font-size:13pt
 ```
 
+## Generate an interactive diagram
+
 Type
 
 ```sh
@@ -95,6 +125,8 @@ open ../../interactive_viewer/index.html
 Load [WordPress-RDS.dot_json](WordPress-RDS.dot_json) as illustrated as follows.
 
 ![WordPress RDS in the interactive viewer](WordPress-RDS-in-interactive-viewer.png)
+
+## Generate a draw.io diagram
 
 Type
 
