@@ -15,6 +15,7 @@ An open source tool to generate AWS infrastructure diagrams from AWS CloudFormat
 * Supports `DependsOn`, `Ref`, `Fn::GetAtt` relationships, and `${}` resource attributes
 * Supports `::Id`-suffixed parameter types such as `AWS::EC2::Image::Id`, `AWS::EC2::SecurityGroup::Id`, `AWS::EC2::Subnet::Id`, `AWS::EC2::VPC::Id`, `AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>`, `List<AWS::EC2::SecurityGroup::Id>`, `List<AWS::EC2::Subnet::Id>`, or `List<AWS::EC2::VPC::Id>`
 * Generates D2, DOT, draw.io, GIF, JPEG, Mermaid, PDF, PNG, SVG, and TIFF diagrams
+* [Highly configurable visual representation](https://github.com/philippemerle/AWS-CloudFormation-Diagrams/blob/main/docs/configuration.md)
 * [D2 Diagram Generation](https://github.com/philippemerle/AWS-CloudFormation-Diagrams#d2-diagram-generation)
 * [Mermaid Diagram Generation](https://github.com/philippemerle/AWS-CloudFormation-Diagrams#mermaid-diagram-generation)
 * [AWS CloudFormation Diagrams Interactive Viewer](https://github.com/philippemerle/AWS-CloudFormation-Diagrams#interactive-viewer)
