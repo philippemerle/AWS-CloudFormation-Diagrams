@@ -32,8 +32,8 @@ styles:
     #dir: both
     forward: true
     reverse: true
-  DependsOn: { # default Diagrams style
-  }
+  DependsOn:
+    color: "#7B8894"
   Reference:
     color: black
   OtherLink:
