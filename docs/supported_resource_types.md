@@ -163,5 +163,5 @@
 | `Custom` | ![Custom](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/enablement/customer-enablement.png) |
 | `Rain::Module` | ![Rain::Module](https://raw.githubusercontent.com/philippemerle/AWS-CloudFormation-Diagrams/refs/heads/main/icons/Rain_Module.png) |
 | `Boto3::CodeCommit.put_file` | ![Boto3::CodeCommit.put_file](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/devtools/codecommit.png) |
-| `Unknown Resource Type` | ![Unknown Resource Type](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/general/general.png) |
+| `Unsupported Resource Type` | ![Unsupported Resource Type](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/general/general.png) |
 

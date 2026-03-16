@@ -76,13 +76,13 @@ By default, the mapping for any unsupported resource type is defined as follows:
 
 ```yaml
 resources:
-  Unknown Resource Type:
+  Unsupported Resource Type:
     kind: node
     icon:
       classname: diagrams.aws.general.General
 ```
 
-Then any unsupported resource type is represented by the following icon ![Unknown Resource Type](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/general/general.png)
+Then any unsupported resource type is represented by the following icon ![Unsupported Resource Type](https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/general/general.png)
 
 Sometimes, the icon to associate to an AWS resource could be dependent of the properties of this resource. For instance, an AWS EC2 subnet could be private or public according to the value of its `MapPublicIpOnLaunch` property.
 

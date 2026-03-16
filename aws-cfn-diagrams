@@ -720,7 +720,7 @@ def get_config(resource: dict, default_config: bool = True) -> dict:
             "edges": list(resource["Properties"].keys())
         }
     return config.get("resources", {}) \
-                .get(resource_type, UNKNOWN_RESOURCE_TYPE_CONFIG if default_config else None)
+                .get(resource_type, UNSUPPORTED_RESOURCE_TYPE_CONFIG if default_config else None)
 
 def parse_aws_cloud_formation_template(template_filename):
     with open(template_filename, encoding="utf-8") as stream:
@@ -757,7 +757,7 @@ DIRNAME = os.path.dirname(__file__)
 config = {}
 with open(DIRNAME + "/aws-cfn-diagrams.yaml", encoding="utf-8") as stream:
     config = yaml.safe_load(stream) # load YAML config file
-    UNKNOWN_RESOURCE_TYPE_CONFIG = config["resources"]["Unknown Resource Type"]
+    UNSUPPORTED_RESOURCE_TYPE_CONFIG = config["resources"]["Unsupported Resource Type"]
 
 # Parse arguments
 parser = argparse.ArgumentParser(

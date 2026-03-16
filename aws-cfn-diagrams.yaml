@@ -1668,9 +1668,9 @@ resources:
       - RepositoryName
 
   #
-  # Unknown resource types.
+  # Unsupported resource types.
   #
-  Unknown Resource Type:
+  Unsupported Resource Type:
     kind: node
     icon:
       classname: diagrams.aws.general.General
