@@ -36,6 +36,9 @@ WebSecurityGroup:
       ToPort: 80
       CidrIp: 0.0.0.0/0
 `|
+      style : {
+        fill: "#fff5e6"
+      }
     }
     resource_WordPressInstance: WordPressInstance {
       shape: image
@@ -102,6 +105,9 @@ DBSecurityGroup:
       SourceSecurityGroupId:
         Ref: WebSecurityGroup
 `|
+      style : {
+        fill: "#fff5e6"
+      }
     }
     resource_WordPressDB: WordPressDB {
       shape: image
@@ -127,6 +133,9 @@ WordPressDB:
     BackupRetentionPeriod: 7
     MultiAZ: false
 `|
+      style : {
+        fill: "#e6ecff"
+      }
     }
   }
   resource_VpcId: VpcId {
@@ -137,6 +146,9 @@ VpcId:
   Type: AWS::EC2::VPC
   Properties: {}
 `|
+    style : {
+      fill: "#f2e6ff"
+    }
   }
 }
 cluster_VpcId.cluster_WebSecurityGroup.resource_WebSecurityGroup -> cluster_VpcId.resource_VpcId {

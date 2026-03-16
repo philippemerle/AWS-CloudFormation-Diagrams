@@ -46,9 +46,16 @@ resources:
 The optional `style` property defines the graphical attributes of the visual node.
 Its value can be either the name of a [graphical style](#graphical-styles) or a map of [Graphviz node attributes](https://graphviz.org/docs/nodes/).
 
-**TODO**: provide examples
-
-**TODO**: must be implemented!
+For instance, following configuration
+```yaml
+resources:
+  Unsupported Resource Type:
+    kind: node
+    style:
+      fontname: Courier New Bold
+      fontcolor: orange
+```
+represents all unsupported resources as a visual node with a bold label in the Courier New font and in the orange color.
 
 #### `icon` property
 

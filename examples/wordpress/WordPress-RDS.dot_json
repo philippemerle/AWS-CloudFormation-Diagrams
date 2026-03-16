@@ -95,6 +95,7 @@
     {
       "_gvid": 3,
       "name": "resource_VpcId",
+      "bgcolor": "#f2e6ff",
       "fixedsize": "true",
       "fontcolor": "#2D3436",
       "fontname": "Sans-Serif",
@@ -112,6 +113,7 @@
     {
       "_gvid": 4,
       "name": "resource_WebSecurityGroup",
+      "bgcolor": "#fff5e6",
       "fixedsize": "true",
       "fontcolor": "#2D3436",
       "fontname": "Sans-Serif",
@@ -146,6 +148,7 @@
     {
       "_gvid": 6,
       "name": "resource_DBSecurityGroup",
+      "bgcolor": "#fff5e6",
       "fixedsize": "true",
       "fontcolor": "#2D3436",
       "fontname": "Sans-Serif",
@@ -163,6 +166,7 @@
     {
       "_gvid": 7,
       "name": "resource_WordPressDB",
+      "bgcolor": "#e6ecff",
       "fixedsize": "true",
       "fontcolor": "#2D3436",
       "fontname": "Sans-Serif",

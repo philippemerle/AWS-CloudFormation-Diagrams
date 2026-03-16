@@ -6,7 +6,7 @@ flowchart TB
       direction TB
       style cluster_WebSecurityGroup fill:#fff5e6,color:#2D3436,font:sans-serif,font-size:12pt,stroke:box
       resource_WebSecurityGroup@{ img: "https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/compute/ec2.png", label: "WebSecurityGroup", h: 120, constraint: "on" }
-      style resource_WebSecurityGroup fill:none,stroke:none
+      style resource_WebSecurityGroup fill:none,fill:#fff5e6,stroke:none
       resource_WordPressInstance@{ img: "https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/compute/ec2-instance.png", label: "WordPressInstance", h: 120, constraint: "on" }
       style resource_WordPressInstance fill:none,stroke:none
     end
@@ -14,12 +14,12 @@ flowchart TB
       direction TB
       style cluster_DBSecurityGroup fill:#fff5e6,color:#2D3436,font:sans-serif,font-size:12pt,stroke:box
       resource_DBSecurityGroup@{ img: "https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/compute/ec2.png", label: "DBSecurityGroup", h: 120, constraint: "on" }
-      style resource_DBSecurityGroup fill:none,stroke:none
+      style resource_DBSecurityGroup fill:none,fill:#fff5e6,stroke:none
       resource_WordPressDB@{ img: "https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/database/rds-mysql-instance.png", label: "WordPressDB", h: 120, constraint: "on" }
-      style resource_WordPressDB fill:none,stroke:none
+      style resource_WordPressDB fill:none,fill:#e6ecff,stroke:none
     end
     resource_VpcId@{ img: "https://raw.githubusercontent.com/mingrammer/diagrams/refs/heads/master/resources/aws/network/vpc.png", label: "VpcId", h: 120, constraint: "on" }
-    style resource_VpcId fill:none,stroke:none
+    style resource_VpcId fill:none,fill:#f2e6ff,stroke:none
   end
   resource_WebSecurityGroup --> resource_VpcId
   linkStyle 0 stroke:black,color:#2D3436,font:sans-serif,font-size:13pt

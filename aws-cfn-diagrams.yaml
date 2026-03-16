@@ -1674,3 +1674,6 @@ resources:
     kind: node
     icon:
       classname: diagrams.aws.general.General
+    style:
+      fontname: Courier New Bold
+      fontcolor: orange
