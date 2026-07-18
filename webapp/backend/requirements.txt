@@ -1,0 +1,17 @@
+blinker==1.9.0
+click==8.2.1
+diagrams==0.25.1
+Flask==3.1.2
+flask-cors==6.0.1
+graphviz==0.20.3
+graphviz2drawio==1.1.0
+gunicorn==23.0.0
+itsdangerous==2.2.0
+Jinja2==3.1.6
+AWS-CloudFormation-Diagrams @ git+https://github.com/philippemerle/AWS-CloudFormation-Diagrams.git@main
+MarkupSafe==3.0.3
+platformdirs==4.9.4
+puremagic==2.0.2
+pygraphviz==1.14
+PyYAML==6.0.3
+Werkzeug==3.1.3

@@ -1,0 +1,52 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  CloudFormation template that creates an IAM Role and attaches
+  an IAM Policy granting read-only access to S3 buckets.
+
+Resources:
+  # IAM Role to be created automatically
+  SampleIamRole:
+    Type: AWS::IAM::Role
+    Properties:
+      # Role name (optional, AWS will generate a unique one if omitted)
+      RoleName: SampleS3ReadOnlyRole
+      # Specify which service can assume this role (e.g., EC2)
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      # Optional description
+      Description: Role with read-only access to S3
+
+  # IAM Policy attached to the above role
+  SampleIamPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: SampleS3ReadOnlyPolicy
+      Roles:
+        - !Ref SampleIamRole
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          # Allow listing and reading objects in all S3 buckets
+          - Effect: Allow
+            Action:
+              - s3:ListBucket
+              - s3:GetObject
+            Resource:
+              - arn:aws:s3:::*
+              - arn:aws:s3:::*/*
+
+Outputs:
+  RoleName:
+    Description: Name of the created IAM Role
+    Value: !Ref SampleIamRole
+
+  PolicyName:
+    Description: Name of the attached IAM Policy
+    Value: !Ref SampleIamPolicy

@@ -1,0 +1,56 @@
+# =============================================================================
+# AWS CloudFormation Diagrams Web UI - Docker Compose
+# =============================================================================
+
+services:
+  # ---------------------------------------------------------------------------
+  # Frontend Service (Apache2 + React Static Files)
+  # ---------------------------------------------------------------------------
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: aws-cfn-diagrams-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    environment:
+      - BACKEND_URL=http://backend:5000
+    networks:
+      - aws-cfn-diagrams-network
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # Backend Service (Python/Flask/Gunicorn + AWS CloudFormation Diagrams)
+  # ---------------------------------------------------------------------------
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: aws-cfn-diagrams-backend
+    expose:
+      - "5000"
+    environment:
+      - FLASK_ENV=production
+      - BEHIND_PROXY=true
+      - PROXY_X_FOR=1
+    volumes:
+      - ./backend/logs:/app/logs
+    networks:
+      - aws-cfn-diagrams-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://localhost:5000/api/health"]
+      interval: 5m
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+# -----------------------------------------------------------------------------
+# Networks
+# -----------------------------------------------------------------------------
+networks:
+  aws-cfn-diagrams-network:
+    driver: bridge
