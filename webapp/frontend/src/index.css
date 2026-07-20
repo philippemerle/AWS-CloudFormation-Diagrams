@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --color-background: #0f172a;
+  --color-panel: #1e293b;
+  --color-text: #f1f5f9;
+  --color-accent: #ff9900; /* AWS orange */
+}
+
+/* Application */
+body {
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-family: 'Inter', system-ui, sans-serif;
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* Titres */
+h1 {
+  font-size: 2.5rem; /* un peu plus grand */
+  font-weight: 700;
+  margin-bottom: 1rem; /* espacement en dessous */
+}
+
+/* Boutons */
+button {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-weight: 600;
+  color: var(--color-text);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  transition:
+    background-color 0.3s,
+    transform 0.2s;
+}
+
+button:hover {
+  background-color: var(--color-accent);
+  transform: scale(1.05);
+}
+
+/* Pan/zoom overlay controls button colors. */
+.kd-controls button {
+  color: #1f2937;
+}
+
+.kd-controls button:hover {
+  background-color: #f3f4f6;
+  transform: none;
+}
+
+.diagram-viewer svg {
+  image-rendering: optimizeQuality;
+  text-rendering: geometricPrecision;
+  shape-rendering: geometricPrecision;
+}
+
+input[type='file']::file-selector-button {
+  background: var(--color-accent);
+  color: #0f172a;
+  font-weight: 700;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  transition:
+    background-color 0.2s,
+    transform 0.1s;
+  cursor: pointer;
+}
+input[type='file']::file-selector-button:hover {
+  background: #e68a00;
+  transform: scale(1.02);
+}
+.kd-panzoom img {
+  pointer-events: none;
+  -webkit-user-drag: none;
+  user-select: none;
+}
