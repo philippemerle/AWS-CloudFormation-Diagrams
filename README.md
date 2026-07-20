@@ -20,7 +20,7 @@ An open source tool to generate AWS infrastructure diagrams from AWS CloudFormat
 * [Mermaid Diagram Generation](https://github.com/philippemerle/AWS-CloudFormation-Diagrams#mermaid-diagram-generation)
 * [AWS CloudFormation Diagrams Interactive Viewer](https://github.com/philippemerle/AWS-CloudFormation-Diagrams#interactive-viewer)
 * [Editable draw.io export](https://github.com/philippemerle/AWS-CloudFormation-Diagrams#editable-drawio-export)
-* [A modern web application](https://github.com/philippemerle/KubeDiagrams/blob/main/webapp/README.md),
+* [A modern web application](https://github.com/philippemerle/AWS-CloudFormation-Diagrams/blob/main/webapp/README.md),
 * Provides [156 generated diagram examples](https://github.com/philippemerle/AWS-CloudFormation-Diagrams/blob/main/diagrams/)
 
 
