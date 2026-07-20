@@ -418,11 +418,11 @@ python3 app.py       # Start Flask server
 ### Technologies Used
 
 **Backend**:
-- Flask 3.1.2 - Web framework
+- Flask 3.1.3 - Web framework
 - Gunicorn 23.0.0 - WSGI server
 - AWS CloudFormation Diagrams (main) - Diagram generation
 - PyYAML 6.0.3 - YAML parsing
-- Werkzeug 3.1.3 - WSGI utilities
+- Werkzeug 3.1.6 - WSGI utilities
 
 **Frontend**:
 - React 19.1.0 - UI framework
