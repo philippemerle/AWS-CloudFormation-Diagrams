@@ -2,6 +2,10 @@ import Editor, { loader } from '@monaco-editor/react';
 import * as monacoEditor from 'monaco-editor';
 import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 
+// No monaco-yaml/schema validation here, unlike KubeDiagrams (which points
+// at a single maintained K8s JSON schema). The only combined CloudFormation
+// schema available, awslabs/goformation, has been archived since Oct 2024
+// and weighs ~7.6 MB — not worth pulling in for an unmaintained schema.
 loader.config({ monaco: monacoEditor });
 
 window.MonacoEnvironment = {

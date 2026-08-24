@@ -8,8 +8,10 @@ services:
   # ---------------------------------------------------------------------------
   frontend:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
+      # Repo root, so the Dockerfile can also copy ../interactive_viewer
+      # (single source of truth shared with the CLI).
+      context: ..
+      dockerfile: webapp/frontend/Dockerfile
     container_name: aws-cfn-diagrams-frontend
     ports:
       - "8080:80"
