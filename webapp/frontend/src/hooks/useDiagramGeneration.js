@@ -12,9 +12,9 @@ import toastUtil from '../utils/toast.js';
 /**
  * Hook to manage diagram generation state and logic
  * @param {Object} config - Hook configuration
- * @param {Function} config.apiFunction - The API function to call (generateManifestDiagram, generateHelmDiagram, etc.)
+ * @param {Function} config.apiFunction - The API function to call (e.g. generateCfnDiagram)
  * @param {Function} config.validateInput - Optional validation function before submission
- * @param {string} config.diagramType - Type of diagram for logging (manifest, helm, helmfile)
+ * @param {string} config.diagramType - Type of diagram for logging (cfn)
  * @returns {Object} - State and handlers for diagram generation
  */
 export function useDiagramGeneration({ apiFunction, validateInput, diagramType = 'diagram' }) {

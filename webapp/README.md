@@ -108,7 +108,9 @@ webapp/
 │   │   └── main.jsx                # Application entry point
 │   ├── public/
 │   │   ├── examples/cfn/           # Example CloudFormation templates
-│   │   └── interactive_viewer/     # Interactive viewer assets
+│   │   └── interactive_viewer/     # Synced from ../../interactive_viewer, not tracked here (see below)
+│   ├── scripts/
+│   │   └── sync-interactive-viewer.js  # Copies ../../interactive_viewer into public/ (predev/prebuild)
 │   ├── package.json                # NPM dependencies
 │   ├── vite.config.js              # Vite configuration
 │   ├── apache.conf                 # Apache reverse proxy config
@@ -406,6 +408,16 @@ npm run build        # Build for production
 npm run lint         # Run ESLint
 npm run format       # Format code with Prettier
 ```
+
+**Interactive Viewer**: `public/interactive_viewer/` is not tracked in this
+directory. The [Interactive Viewer](https://github.com/philippemerle/AWS-CloudFormation-Diagrams#interactive-viewer)
+shipped with the CLI (`../../interactive_viewer`) is the single source of
+truth, since it's also documented as a standalone tool (`open
+interactive_viewer/index.html`). `npm run dev` and `npm run build` copy it
+into `public/` automatically (`predev`/`prebuild` scripts); edit the CLI's
+copy and re-run the affected npm script to pick up changes. The Docker build
+copies it in directly (see `Dockerfile`), since the build context spans the
+whole repo (`docker-compose.yml`: `context: ..`).
 
 ### Backend Development
 

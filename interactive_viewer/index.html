@@ -1,46 +1,56 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AWS CloudFormation Diagrams Interactive Viewer</title>
-  <!-- cytoscape -->
-  <script src="https://cdn.jsdelivr.net/npm/cytoscape@3.32.0/dist/cytoscape.min.js"></script>
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>AWS CloudFormation Diagrams Interactive Viewer</title>
+      <!-- cytoscape -->
+      <script src="https://cdn.jsdelivr.net/npm/cytoscape@3.32.0/dist/cytoscape.min.js"></script>
 
-  <!-- layout dagre -->
-  <script src=https://cdn.jsdelivr.net/npm/dagre@0.8.5/dist/dagre.min.js></script>
-  <script src="https://cdn.jsdelivr.net/npm/cytoscape-dagre@2.5.0/cytoscape-dagre.min.js"></script>
+      <!-- layout dagre -->
+      <script src=https://cdn.jsdelivr.net/npm/dagre@0.8.5/dist/dagre.min.js></script>
+      <script src="https://cdn.jsdelivr.net/npm/cytoscape-dagre@2.5.0/cytoscape-dagre.min.js"></script>
 
-  <!-- layout klay -->
-  <script src="https://cdn.jsdelivr.net/npm/klayjs@0.4.1/klay.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/cytoscape-klay@3.1.4/cytoscape-klay.min.js"></script>
+      <!-- layout klay -->
+      <script src="https://cdn.jsdelivr.net/npm/klayjs@0.4.1/klay.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/cytoscape-klay@3.1.4/cytoscape-klay.min.js"></script>
 
-  <!-- cytoscape-context-menus -->
-  <script src="https://cdn.jsdelivr.net/npm/cytoscape-context-menus@4.2.1/cytoscape-context-menus.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cytoscape-context-menus@4.2.1/cytoscape-context-menus.min.css">
+      <!-- cytoscape-context-menus -->
+      <script src="https://cdn.jsdelivr.net/npm/cytoscape-context-menus@4.2.1/cytoscape-context-menus.min.js"></script>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cytoscape-context-menus@4.2.1/cytoscape-context-menus.min.css">
 
-  <!-- AWS CloudFormation Diagrams Interactive Viewer -->
-  <script src="./script/defaultStyle.js"></script>
-  <script src="./script/layout.js"></script>
-  <script src="./script/itemAndFunctionMenus.js"></script>
-  <script  src="./script/main.js"></script>
-  <link rel="stylesheet" href="./style.css">
+      <!-- AWS CloudFormation Diagrams Interactive Viewer -->
+      <script src="./script/defaultStyle.js"></script>
+      <script src="./script/layout.js"></script>
+      <script src="./script/itemAndFunctionMenus.js"></script>
+      <script src="./script/resourceData.js"></script>
+      <script src="./script/state.js"></script>
+      <script src="./script/elementsBuilder.js"></script>
+      <script src="./script/tooltip.js"></script>
+      <script src="./script/filters.js"></script>
+      <script src="./script/fileIO.js"></script>
+      <script src="./script/main.js"></script>
+      <link rel="stylesheet" href="./style.css">
 
-</head>
-<body>
-  <h1>AWS CloudFormation Diagrams Interactive Viewer</text></h1>
-  <div class="buttons">
-    Select a .dot_json file:
-    <input type="file" id="fileInput"/>
-    Choose a layout
-    <div id="layoutButtons"></div>
-    Save as
-    <div id="saveButtons">
-        <button id="savePNG">PNG</button>
-        <button id="saveJPG">JPG</button>
-    </div>
-  </div>
-  <div id="paper"></div>
-  <pre id="tooltip"></pre>
-</body>
+    </head>
+    <body>
+      <h1 style="font-family: sans-serif;"><span style="color: #FF9900;">AWS</span> CloudFormation Diagrams <span style="font-weight: normal; color: #555;">Interactive Viewer</span></h1>
+      <div class="buttons">
+        Select a .dot_json file:
+        <input type="file" id="fileInput"/>
+        Choose a layout
+        <div id="layoutButtons"></div>
+        Save as
+        <div id="saveButtons">
+            <button id="savePNG">PNG</button>
+            <button id="saveJPG">JPG</button>
+        </div>
+      </div>
+      <div class="filters-container" id="filtersContainer">
+        <span class="filters-label">Filters:</span>
+        <div id="categoryFilters"></div>
+      </div>
+      <div id="paper"></div>
+      <pre id="tooltip"></pre>
+    </body>
 </html>
