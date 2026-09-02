@@ -1,0 +1,174 @@
+*, *::before, *::after { box-sizing: border-box; }
+
+.grid-bg {
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(212,247,74,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(212,247,74,0.025) 1px, transparent 1px);
+  background-size: 44px 44px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.logo-hex {
+  width: 34px;
+  height: 34px;
+  background: #d4f74a;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  flex-shrink: 0;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: background 0.3s, box-shadow 0.3s;
+}
+
+.status-dot.is-ready {
+  background: #47ffb8 !important;
+  box-shadow: 0 0 7px #47ffb8;
+  animation: pulseDot 2.5s ease-in-out infinite;
+}
+
+.status-dot.is-error {
+  background: #ff6b4a !important;
+  box-shadow: 0 0 7px #ff6b4a;
+}
+
+.status-dot.is-loading {
+  background: #d4f74a !important;
+  animation: pulseDot 1s ease-in-out infinite;
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+
+.drop-glow {
+  background: radial-gradient(ellipse at 50% 50%, rgba(212,247,74,0.08) 0%, transparent 70%);
+}
+
+.drop-zone.drag-active {
+  border-color: rgba(212,247,74,0.7) !important;
+  background: rgba(212,247,74,0.06) !important;
+}
+
+.drop-zone.drag-active .drop-glow { opacity: 1 !important; }
+
+.stat-card {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.stat-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.tab-btn {
+  color: #4a5060;
+  font-family: 'DM Mono', monospace;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  transition: color 0.15s;
+}
+.tab-btn:hover { color: #9ea2ab; }
+.tab-btn.active {
+  background: #1a1d25;
+  color: #d4f74a;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+}
+
+.resource-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: default;
+  transition: background 0.12s ease;
+  animation: fadeUp 0.25s ease both;
+}
+.resource-item:hover { background: rgba(255,255,255,0.04); }
+
+.resource-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.resource-name {
+  font-size: 11px;
+  color: #c8cace;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: 'DM Mono', monospace;
+}
+
+.resource-type {
+  font-size: 10px;
+  color: #4a5060;
+  white-space: nowrap;
+  font-family: 'DM Mono', monospace;
+}
+
+.resource-badge {
+  font-size: 9px;
+  padding: 1px 5px;
+  border-radius: 2px;
+  background: rgba(212,247,74,0.1);
+  color: #d4f74a;
+  border: 1px solid rgba(212,247,74,0.2);
+  white-space: nowrap;
+}
+
+.dot-compute  { background: #ff6b4a; }
+.dot-network  { background: #47b8ff; }
+.dot-storage  { background: #d4f74a; }
+.dot-security { background: #b847ff; }
+.dot-database { background: #47ffb8; }
+.dot-other    { background: #4a5060; }
+
+.custom-scroll { scrollbar-width: thin; scrollbar-color: #252933 transparent; }
+.custom-scroll::-webkit-scrollbar { width: 4px; }
+.custom-scroll::-webkit-scrollbar-track { background: transparent; }
+.custom-scroll::-webkit-scrollbar-thumb { background: #252933; border-radius: 2px; }
+
+.diagram-scroll { scrollbar-width: thin; scrollbar-color: #252933 transparent; }
+.diagram-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+.diagram-scroll::-webkit-scrollbar-track { background: transparent; }
+.diagram-scroll::-webkit-scrollbar-thumb { background: #252933; border-radius: 3px; }
+
+.welcome-graphic { animation: fadeIn 0.8s ease; }
+
+.welcome-dot { animation: pulseDot 3s ease-in-out infinite; }
+.welcome-dot:nth-child(1) { animation-delay: 0s; }
+.welcome-dot:nth-child(2) { animation-delay: 0.5s; }
+.welcome-dot:nth-child(3) { animation-delay: 1s; }
+.welcome-dot:nth-child(4) { animation-delay: 1.5s; }
+.welcome-dot:nth-child(5) { animation-delay: 2s; }
+
+#diagram-output svg {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  filter: drop-shadow(0 4px 32px rgba(0,0,0,0.5));
+}
+
+.mermaid { background: transparent !important; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
